@@ -1,0 +1,17 @@
+public class Factorial {
+    public static void main (String[] args) {
+        int num = StaticJavaLib.getIntArgument(args, 0);
+        StaticJavaLib.println (count (num));
+    }
+    public static int count (int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        int result = 1;
+        while (n > 0) {
+            result = result * n;
+            n = n - 1;
+        }
+        return result;
+    }
+}

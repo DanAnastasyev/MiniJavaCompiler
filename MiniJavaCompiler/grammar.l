@@ -1,74 +1,66 @@
-%{
-#include <stdio.h>
-#include <stdlib.h>
-#include "types.h"
-#include "y.tab.h"
-
-
-void yyerror(const char *);
-string str;
-
-%}
+%option noyywrap
 %option yylineno
-%x STR
+
+%{
+	#pragma once
+	#include "LexicalScanner/LexicalScanner.h"
+	#define YY_DECL extern "C" int yylex()
+
+	CLexicalScanner lexicalScanner;
+%}
+
+LETTER			[a-zA-Z]
+DIGIT			[0-9]
+ID				({LETTER})({LETTER}|{DIGIT}|_)*
+INT				-?{DIGIT}+
+BOOL			"true"|"false"
+BINOP			[-+*/]
+SPACE 			[ \t]+
+LINE_SEPARATOR	[\n]+
 
 %%
 
-[0-9]+  {yylval.intValue = atoi(yytext);return INTEGER;}
-[0-9]+[.][0-9]*  {yylval.doubleValue = atof(yytext);return DOUBLE;}
-if      {return IF;}
-else    {return ELSE;}
-then    {return THEN;}
-while   {return WHILE;}
-"&&"    {return AND;}
-"||"    {return OR;}
-">="    {return GE;}
-"=="    {return EQ;}
-"<="   	{return LE;}
-"<"   	{return LT;}
-">"   	{return GT;}
-!=     	{return NE;}
-!      	{return NOT;}
-true   	{yylval.booleanValue = true; return BOOLEAN;}
-false  	{yylval.booleanValue = false; return BOOLEAN;}
-
-public 	{return PUBLIC;}
-private {return PRIVATE;}
-class	{return CLASS;}
-static  {return STATIC;}
-
-void	{return VOID;}
-int	{return INTEGER;}
-boolean {return BOOLEAN;}
-"String"  {return STRING;}
-double  {return DOUBLE;}
-"return"  {return RETURN;}
-
-
-"{"	{return BEGIN_BRACKET;}
-"}"	{return END_BRACKET;}
-
-["] { str = ""; BEGIN(STR); }
-<STR>[^\\\n"]+ str += yytext;
-<STR>\\n str += '\n';
-<STR>\\["] str += '"';
-<STR>\\ yyerror("Invalid escape sequence");
-<STR>\n yyerror("Newline in string literal");
-<STR>["] { BEGIN(INITIAL); yylval.stringValue = strdup(str.c_str()); return STRING; }
-
-[a-zA-Z_][a-zA-Z_0-9.]* { 
-                           yylval.stringValue = strdup(yytext);//имя                     
-                           return VARIABLE;
-                       }
-"," 	{ return *yytext;}
-[+-/*()_=;] { return *yytext;}
-
-[ \t\n] ;
-. {printf ("%s ", yytext); yyerror("Unknown symbol\n");}
+if          {    lexicalScanner.getToken("IF", yytext);	}
+else		{ 	 lexicalScanner.getToken("ELSE", yytext);	}
+while		{	 lexicalScanner.getToken("WHILE", yytext);	}
+return		{	 lexicalScanner.getToken("RETURN", yytext);	}
+public		{	 lexicalScanner.getToken("PUBLIC", yytext);	}
+class		{	 lexicalScanner.getToken("CLASS", yytext);	}
+static		{	 lexicalScanner.getToken("STATIC", yytext);	}
+void		{	 lexicalScanner.getToken("VOID", yytext);	}
+main		{	 lexicalScanner.getToken("MAIN", yytext);	}
+int 		{    lexicalScanner.getToken("INT", yytext);	}
+boolean		{    lexicalScanner.getToken("BOOL", yytext);	}
+String		{	 lexicalScanner.getToken("STRING", yytext);	}
+"{"			{	 lexicalScanner.getToken("{", yytext);	}
+"}"			{	 lexicalScanner.getToken("}", yytext);	}
+"("			{	 lexicalScanner.getToken("(", yytext);	}
+")"			{	 lexicalScanner.getToken(")", yytext);	}
+"["			{	 lexicalScanner.getToken("[", yytext);	}
+"]"			{	 lexicalScanner.getToken("]", yytext);	}
+"<"			{	 lexicalScanner.getToken("<", yytext);	}
+"<="		{	 lexicalScanner.getToken("LESSEQ", yytext);	}
+">"			{	 lexicalScanner.getToken(">", yytext);	}
+">="		{	 lexicalScanner.getToken("MOREEQ", yytext);	}
+"=="		{	 lexicalScanner.getToken("EQ", yytext);	}
+"!="		{	 lexicalScanner.getToken("NONEQ", yytext);	}
+"="			{	 lexicalScanner.getToken("=", yytext);	}
+"&&"		{	 lexicalScanner.getToken("AND", yytext);	}
+"||"		{	 lexicalScanner.getToken("OR", yytext);	}
+"+"			{	 lexicalScanner.getToken("+", yytext);	}
+"-"			{	 lexicalScanner.getToken("-", yytext);	}
+"*"			{	 lexicalScanner.getToken("*", yytext);	}
+"/"			{	 lexicalScanner.getToken("/", yytext);	}
+";"			{	 lexicalScanner.getToken(";", yytext);	}
+","			{	 lexicalScanner.getToken(",", yytext);	}
+"!"			{	 lexicalScanner.getToken("!", yytext);	}
+"."			{	 lexicalScanner.getToken(".", yytext);	}
+{BOOL}		{	 lexicalScanner.getValue("BOOL", yytext); }
+{INT}		{	 lexicalScanner.getValue("INT", yytext); }
+{ID}		{	 lexicalScanner.getValue("ID", yytext); }
+{SPACE}		{	 lexicalScanner.getSpace(yytext); }
+{LINE_SEPARATOR} {	lexicalScanner.getNewLine(yytext);	}
+.			{	 lexicalScanner.getErrorToken(yytext); }
 
 %%
-
-int yywrap(void)
-{
-  return 1;
-}
+int YYtext();

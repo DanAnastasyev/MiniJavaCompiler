@@ -13,15 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="LexicalScanner">
+      <UniqueIdentifier>{266f9a0d-db4f-4bd8-98ad-b352df0276fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="OutFlexResult.yy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LexicalScanner\LexicalScanner.cpp">
+      <Filter>LexicalScanner</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="example\factorial.mj">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LexicalScanner\LexicalScanner.h">
+      <Filter>LexicalScanner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="grammar.l">
-      <Filter>Source Files</Filter>
+      <Filter>LexicalScanner</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
