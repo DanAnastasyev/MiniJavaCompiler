@@ -33,6 +33,8 @@ int 		{    lexicalScanner.getToken("INT", yytext);	}
 boolean		{    lexicalScanner.getToken("BOOL", yytext);	}
 String		{	 lexicalScanner.getToken("STRING", yytext);	}
 System.out.println	{	lexicalScanner.getToken("PRINTLN", yytext);	}
+this		{	 lexicalScanner.getToken("THIS", yytext);	}
+length		{	 lexicalScanner.getToken("LENGTH", yytext);	}
 new			{	 lexicalScanner.getToken("NEW", yytext);	}
 "{"			{	 lexicalScanner.getToken("{", yytext);	}
 "}"			{	 lexicalScanner.getToken("}", yytext);	}
