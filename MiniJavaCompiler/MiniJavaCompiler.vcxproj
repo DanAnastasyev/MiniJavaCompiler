@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="grammar.tab.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OutFlexResult.yy.cpp" />

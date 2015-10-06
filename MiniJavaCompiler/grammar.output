@@ -1,0 +1,1628 @@
+Terminals unused in grammar
+
+   AND
+   '/'
+
+
+Грамматика
+
+    0 $accept: Program $end
+
+    1 Program: MainClassDeclaration ClassDeclarationList
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    3 ClassDeclarationList: /* пусто */
+    4                     | ClassDeclaration ClassDeclarationList
+
+    5 ClassDeclaration: CLASS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}'
+    6                 | CLASS IDENTIFIER EXTENDS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}'
+
+    7 VariableDeclarationList: /* пусто */
+    8                        | VariableDeclarationList VariableDeclaration
+
+    9 VariableDeclaration: Type IDENTIFIER ';'
+
+   10 MethodDeclarationList: /* пусто */
+   11                      | MethodDeclaration MethodDeclarationList
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+   13 FormalList: /* пусто */
+   14           | Type IDENTIFIER FormalRestList
+
+   15 FormalRestList: /* пусто */
+   16               | FormalRest FormalRestList
+
+   17 FormalRest: ',' Type IDENTIFIER
+
+   18 Type: INT '[' ']'
+   19     | BOOL
+   20     | INT
+   21     | IDENTIFIER
+
+   22 StatementList: /* пусто */
+   23              | Statement StatementList
+
+   24 Statement: '{' StatementList '}'
+   25          | IF '(' Expression ')' Statement ELSE Statement
+   26          | WHILE '(' Expression ')' Statement
+   27          | PRINTLN '(' Expression ')' ';'
+   28          | IDENTIFIER '=' Expression ';'
+   29          | IDENTIFIER '[' Expression ']' '=' Expression ';'
+
+   30 Expression: Expression '<' Expression
+   31           | Expression '+' Expression
+   32           | Expression '-' Expression
+   33           | '-' Expression
+   34           | Expression '*' Expression
+   35           | Expression '.' LENGTH
+   36           | Expression '.' IDENTIFIER '(' ExpressionList ')'
+   37           | INTEGER_VAL
+   38           | BOOLEAN_VAL
+   39           | IDENTIFIER
+   40           | THIS
+   41           | NEW INT '[' Expression ']'
+   42           | NEW IDENTIFIER '(' ')'
+   43           | '!' Expression
+   44           | '(' Expression ')'
+
+   45 ExpressionList: /* пусто */
+   46               | Expression ExpressionRestList
+
+   47 ExpressionRestList: /* пусто */
+   48                   | ExpressionRest ExpressionRestList
+
+   49 ExpressionRest: ',' Expression
+
+
+Терминальные символы с правилами, в которых они появляются
+
+$end (0) 0
+'!' (33) 43
+'(' (40) 2 12 25 26 27 36 42 44
+')' (41) 2 12 25 26 27 36 42 44
+'*' (42) 34
+'+' (43) 31
+',' (44) 17 49
+'-' (45) 32 33
+'.' (46) 35 36
+'/' (47)
+';' (59) 9 12 27 28 29
+'<' (60) 30
+'=' (61) 28 29
+'[' (91) 2 18 29 41
+']' (93) 2 18 29 41
+'{' (123) 2 5 6 12 24
+'}' (125) 2 5 6 12 24
+error (256)
+INTEGER_VAL (258) 37
+BOOLEAN_VAL (259) 38
+VOID (260) 2
+STRING (261) 2
+INT (262) 18 20 41
+BOOL (263) 19
+IDENTIFIER (264) 2 5 6 9 12 14 17 21 28 29 36 39 42
+PRINTLN (265) 27
+THIS (266) 40
+NEW (267) 41 42
+WHILE (268) 26
+IF (269) 25
+RETURN (270) 12
+EXTENDS (271) 6
+LENGTH (272) 35
+PUBLIC (273) 2 12
+CLASS (274) 2 5 6
+STATIC (275) 2
+MAIN (276) 2
+ELSE (277) 25
+AND (278)
+UMINUS (279)
+
+
+Нетерминальные символы с правилами, в которых они появляются
+
+$accept (41)
+    налево: 0
+Program (42)
+    налево: 1, направо: 0
+MainClassDeclaration (43)
+    налево: 2, направо: 1
+ClassDeclarationList (44)
+    налево: 3 4, направо: 1 4
+ClassDeclaration (45)
+    налево: 5 6, направо: 4
+VariableDeclarationList (46)
+    налево: 7 8, направо: 5 6 8 12
+VariableDeclaration (47)
+    налево: 9, направо: 8
+MethodDeclarationList (48)
+    налево: 10 11, направо: 5 6 11
+MethodDeclaration (49)
+    налево: 12, направо: 11
+FormalList (50)
+    налево: 13 14, направо: 12
+FormalRestList (51)
+    налево: 15 16, направо: 14 16
+FormalRest (52)
+    налево: 17, направо: 16
+Type (53)
+    налево: 18 19 20 21, направо: 9 12 14 17
+StatementList (54)
+    налево: 22 23, направо: 12 23 24
+Statement (55)
+    налево: 24 25 26 27 28 29, направо: 2 23 25 26
+Expression (56)
+    налево: 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44, направо:
+    12 25 26 27 28 29 30 31 32 33 34 35 36 41 43 44 46 49
+ExpressionList (57)
+    налево: 45 46, направо: 36
+ExpressionRestList (58)
+    налево: 47 48, направо: 46 48
+ExpressionRest (59)
+    налево: 49, направо: 48
+
+
+состояние 0
+
+    0 $accept: . Program $end
+
+    CLASS  сдвиг, и переход в состояние 1
+
+    Program               переход в состояние 2
+    MainClassDeclaration  переход в состояние 3
+
+
+состояние 1
+
+    2 MainClassDeclaration: CLASS . IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 4
+
+
+состояние 2
+
+    0 $accept: Program . $end
+
+    $end  сдвиг, и переход в состояние 5
+
+
+состояние 3
+
+    1 Program: MainClassDeclaration . ClassDeclarationList
+
+    CLASS  сдвиг, и переход в состояние 6
+
+    $default  вывод с использованием правила 3 (ClassDeclarationList)
+
+    ClassDeclarationList  переход в состояние 7
+    ClassDeclaration      переход в состояние 8
+
+
+состояние 4
+
+    2 MainClassDeclaration: CLASS IDENTIFIER . '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    '{'  сдвиг, и переход в состояние 9
+
+
+состояние 5
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+состояние 6
+
+    5 ClassDeclaration: CLASS . IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}'
+    6                 | CLASS . IDENTIFIER EXTENDS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 10
+
+
+состояние 7
+
+    1 Program: MainClassDeclaration ClassDeclarationList .
+
+    $default  вывод с использованием правила 1 (Program)
+
+
+состояние 8
+
+    4 ClassDeclarationList: ClassDeclaration . ClassDeclarationList
+
+    CLASS  сдвиг, и переход в состояние 6
+
+    $default  вывод с использованием правила 3 (ClassDeclarationList)
+
+    ClassDeclarationList  переход в состояние 11
+    ClassDeclaration      переход в состояние 8
+
+
+состояние 9
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' . PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    PUBLIC  сдвиг, и переход в состояние 12
+
+
+состояние 10
+
+    5 ClassDeclaration: CLASS IDENTIFIER . '{' VariableDeclarationList MethodDeclarationList '}'
+    6                 | CLASS IDENTIFIER . EXTENDS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}'
+
+    EXTENDS  сдвиг, и переход в состояние 13
+    '{'      сдвиг, и переход в состояние 14
+
+
+состояние 11
+
+    4 ClassDeclarationList: ClassDeclaration ClassDeclarationList .
+
+    $default  вывод с использованием правила 4 (ClassDeclarationList)
+
+
+состояние 12
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC . STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    STATIC  сдвиг, и переход в состояние 15
+
+
+состояние 13
+
+    6 ClassDeclaration: CLASS IDENTIFIER EXTENDS . IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 16
+
+
+состояние 14
+
+    5 ClassDeclaration: CLASS IDENTIFIER '{' . VariableDeclarationList MethodDeclarationList '}'
+
+    $default  вывод с использованием правила 7 (VariableDeclarationList)
+
+    VariableDeclarationList  переход в состояние 17
+
+
+состояние 15
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC . VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    VOID  сдвиг, и переход в состояние 18
+
+
+состояние 16
+
+    6 ClassDeclaration: CLASS IDENTIFIER EXTENDS IDENTIFIER . '{' VariableDeclarationList MethodDeclarationList '}'
+
+    '{'  сдвиг, и переход в состояние 19
+
+
+состояние 17
+
+    5 ClassDeclaration: CLASS IDENTIFIER '{' VariableDeclarationList . MethodDeclarationList '}'
+    8 VariableDeclarationList: VariableDeclarationList . VariableDeclaration
+
+    INT         сдвиг, и переход в состояние 20
+    BOOL        сдвиг, и переход в состояние 21
+    IDENTIFIER  сдвиг, и переход в состояние 22
+    PUBLIC      сдвиг, и переход в состояние 23
+
+    $default  вывод с использованием правила 10 (MethodDeclarationList)
+
+    VariableDeclaration    переход в состояние 24
+    MethodDeclarationList  переход в состояние 25
+    MethodDeclaration      переход в состояние 26
+    Type                   переход в состояние 27
+
+
+состояние 18
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID . MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    MAIN  сдвиг, и переход в состояние 28
+
+
+состояние 19
+
+    6 ClassDeclaration: CLASS IDENTIFIER EXTENDS IDENTIFIER '{' . VariableDeclarationList MethodDeclarationList '}'
+
+    $default  вывод с использованием правила 7 (VariableDeclarationList)
+
+    VariableDeclarationList  переход в состояние 29
+
+
+состояние 20
+
+   18 Type: INT . '[' ']'
+   20     | INT .
+
+    '['  сдвиг, и переход в состояние 30
+
+    $default  вывод с использованием правила 20 (Type)
+
+
+состояние 21
+
+   19 Type: BOOL .
+
+    $default  вывод с использованием правила 19 (Type)
+
+
+состояние 22
+
+   21 Type: IDENTIFIER .
+
+    $default  вывод с использованием правила 21 (Type)
+
+
+состояние 23
+
+   12 MethodDeclaration: PUBLIC . Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    INT         сдвиг, и переход в состояние 20
+    BOOL        сдвиг, и переход в состояние 21
+    IDENTIFIER  сдвиг, и переход в состояние 22
+
+    Type  переход в состояние 31
+
+
+состояние 24
+
+    8 VariableDeclarationList: VariableDeclarationList VariableDeclaration .
+
+    $default  вывод с использованием правила 8 (VariableDeclarationList)
+
+
+состояние 25
+
+    5 ClassDeclaration: CLASS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList . '}'
+
+    '}'  сдвиг, и переход в состояние 32
+
+
+состояние 26
+
+   11 MethodDeclarationList: MethodDeclaration . MethodDeclarationList
+
+    PUBLIC  сдвиг, и переход в состояние 23
+
+    $default  вывод с использованием правила 10 (MethodDeclarationList)
+
+    MethodDeclarationList  переход в состояние 33
+    MethodDeclaration      переход в состояние 26
+
+
+состояние 27
+
+    9 VariableDeclaration: Type . IDENTIFIER ';'
+
+    IDENTIFIER  сдвиг, и переход в состояние 34
+
+
+состояние 28
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN . '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    '('  сдвиг, и переход в состояние 35
+
+
+состояние 29
+
+    6 ClassDeclaration: CLASS IDENTIFIER EXTENDS IDENTIFIER '{' VariableDeclarationList . MethodDeclarationList '}'
+    8 VariableDeclarationList: VariableDeclarationList . VariableDeclaration
+
+    INT         сдвиг, и переход в состояние 20
+    BOOL        сдвиг, и переход в состояние 21
+    IDENTIFIER  сдвиг, и переход в состояние 22
+    PUBLIC      сдвиг, и переход в состояние 23
+
+    $default  вывод с использованием правила 10 (MethodDeclarationList)
+
+    VariableDeclaration    переход в состояние 24
+    MethodDeclarationList  переход в состояние 36
+    MethodDeclaration      переход в состояние 26
+    Type                   переход в состояние 27
+
+
+состояние 30
+
+   18 Type: INT '[' . ']'
+
+    ']'  сдвиг, и переход в состояние 37
+
+
+состояние 31
+
+   12 MethodDeclaration: PUBLIC Type . IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 38
+
+
+состояние 32
+
+    5 ClassDeclaration: CLASS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}' .
+
+    $default  вывод с использованием правила 5 (ClassDeclaration)
+
+
+состояние 33
+
+   11 MethodDeclarationList: MethodDeclaration MethodDeclarationList .
+
+    $default  вывод с использованием правила 11 (MethodDeclarationList)
+
+
+состояние 34
+
+    9 VariableDeclaration: Type IDENTIFIER . ';'
+
+    ';'  сдвиг, и переход в состояние 39
+
+
+состояние 35
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' . STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    STRING  сдвиг, и переход в состояние 40
+
+
+состояние 36
+
+    6 ClassDeclaration: CLASS IDENTIFIER EXTENDS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList . '}'
+
+    '}'  сдвиг, и переход в состояние 41
+
+
+состояние 37
+
+   18 Type: INT '[' ']' .
+
+    $default  вывод с использованием правила 18 (Type)
+
+
+состояние 38
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER . '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    '('  сдвиг, и переход в состояние 42
+
+
+состояние 39
+
+    9 VariableDeclaration: Type IDENTIFIER ';' .
+
+    $default  вывод с использованием правила 9 (VariableDeclaration)
+
+
+состояние 40
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING . '[' ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    '['  сдвиг, и переход в состояние 43
+
+
+состояние 41
+
+    6 ClassDeclaration: CLASS IDENTIFIER EXTENDS IDENTIFIER '{' VariableDeclarationList MethodDeclarationList '}' .
+
+    $default  вывод с использованием правила 6 (ClassDeclaration)
+
+
+состояние 42
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' . FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    INT         сдвиг, и переход в состояние 20
+    BOOL        сдвиг, и переход в состояние 21
+    IDENTIFIER  сдвиг, и переход в состояние 22
+
+    $default  вывод с использованием правила 13 (FormalList)
+
+    FormalList  переход в состояние 44
+    Type        переход в состояние 45
+
+
+состояние 43
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' . ']' IDENTIFIER ')' '{' Statement '}' '}'
+
+    ']'  сдвиг, и переход в состояние 46
+
+
+состояние 44
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList . ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    ')'  сдвиг, и переход в состояние 47
+
+
+состояние 45
+
+   14 FormalList: Type . IDENTIFIER FormalRestList
+
+    IDENTIFIER  сдвиг, и переход в состояние 48
+
+
+состояние 46
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' . IDENTIFIER ')' '{' Statement '}' '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 49
+
+
+состояние 47
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' . '{' VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    '{'  сдвиг, и переход в состояние 50
+
+
+состояние 48
+
+   14 FormalList: Type IDENTIFIER . FormalRestList
+
+    ','  сдвиг, и переход в состояние 51
+
+    $default  вывод с использованием правила 15 (FormalRestList)
+
+    FormalRestList  переход в состояние 52
+    FormalRest      переход в состояние 53
+
+
+состояние 49
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER . ')' '{' Statement '}' '}'
+
+    ')'  сдвиг, и переход в состояние 54
+
+
+состояние 50
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' . VariableDeclarationList StatementList RETURN Expression ';' '}'
+
+    $default  вывод с использованием правила 7 (VariableDeclarationList)
+
+    VariableDeclarationList  переход в состояние 55
+
+
+состояние 51
+
+   17 FormalRest: ',' . Type IDENTIFIER
+
+    INT         сдвиг, и переход в состояние 20
+    BOOL        сдвиг, и переход в состояние 21
+    IDENTIFIER  сдвиг, и переход в состояние 22
+
+    Type  переход в состояние 56
+
+
+состояние 52
+
+   14 FormalList: Type IDENTIFIER FormalRestList .
+
+    $default  вывод с использованием правила 14 (FormalList)
+
+
+состояние 53
+
+   16 FormalRestList: FormalRest . FormalRestList
+
+    ','  сдвиг, и переход в состояние 51
+
+    $default  вывод с использованием правила 15 (FormalRestList)
+
+    FormalRestList  переход в состояние 57
+    FormalRest      переход в состояние 53
+
+
+состояние 54
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' . '{' Statement '}' '}'
+
+    '{'  сдвиг, и переход в состояние 58
+
+
+состояние 55
+
+    8 VariableDeclarationList: VariableDeclarationList . VariableDeclaration
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList . StatementList RETURN Expression ';' '}'
+
+    INT         сдвиг, и переход в состояние 20
+    BOOL        сдвиг, и переход в состояние 21
+    IDENTIFIER  сдвиг, и переход в состояние 59
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    $default  вывод с использованием правила 22 (StatementList)
+
+    VariableDeclaration  переход в состояние 24
+    Type                 переход в состояние 27
+    StatementList        переход в состояние 64
+    Statement            переход в состояние 65
+
+
+состояние 56
+
+   17 FormalRest: ',' Type . IDENTIFIER
+
+    IDENTIFIER  сдвиг, и переход в состояние 66
+
+
+состояние 57
+
+   16 FormalRestList: FormalRest FormalRestList .
+
+    $default  вывод с использованием правила 16 (FormalRestList)
+
+
+состояние 58
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' . Statement '}' '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 67
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    Statement  переход в состояние 68
+
+
+состояние 59
+
+   21 Type: IDENTIFIER .
+   28 Statement: IDENTIFIER . '=' Expression ';'
+   29          | IDENTIFIER . '[' Expression ']' '=' Expression ';'
+
+    '='  сдвиг, и переход в состояние 69
+    '['  сдвиг, и переход в состояние 70
+
+    $default  вывод с использованием правила 21 (Type)
+
+
+состояние 60
+
+   27 Statement: PRINTLN . '(' Expression ')' ';'
+
+    '('  сдвиг, и переход в состояние 71
+
+
+состояние 61
+
+   26 Statement: WHILE . '(' Expression ')' Statement
+
+    '('  сдвиг, и переход в состояние 72
+
+
+состояние 62
+
+   25 Statement: IF . '(' Expression ')' Statement ELSE Statement
+
+    '('  сдвиг, и переход в состояние 73
+
+
+состояние 63
+
+   24 Statement: '{' . StatementList '}'
+
+    IDENTIFIER  сдвиг, и переход в состояние 67
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    $default  вывод с использованием правила 22 (StatementList)
+
+    StatementList  переход в состояние 74
+    Statement      переход в состояние 65
+
+
+состояние 64
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList . RETURN Expression ';' '}'
+
+    RETURN  сдвиг, и переход в состояние 75
+
+
+состояние 65
+
+   23 StatementList: Statement . StatementList
+
+    IDENTIFIER  сдвиг, и переход в состояние 67
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    $default  вывод с использованием правила 22 (StatementList)
+
+    StatementList  переход в состояние 76
+    Statement      переход в состояние 65
+
+
+состояние 66
+
+   17 FormalRest: ',' Type IDENTIFIER .
+
+    $default  вывод с использованием правила 17 (FormalRest)
+
+
+состояние 67
+
+   28 Statement: IDENTIFIER . '=' Expression ';'
+   29          | IDENTIFIER . '[' Expression ']' '=' Expression ';'
+
+    '='  сдвиг, и переход в состояние 69
+    '['  сдвиг, и переход в состояние 70
+
+
+состояние 68
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement . '}' '}'
+
+    '}'  сдвиг, и переход в состояние 77
+
+
+состояние 69
+
+   28 Statement: IDENTIFIER '=' . Expression ';'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 86
+
+
+состояние 70
+
+   29 Statement: IDENTIFIER '[' . Expression ']' '=' Expression ';'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 87
+
+
+состояние 71
+
+   27 Statement: PRINTLN '(' . Expression ')' ';'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 88
+
+
+состояние 72
+
+   26 Statement: WHILE '(' . Expression ')' Statement
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 89
+
+
+состояние 73
+
+   25 Statement: IF '(' . Expression ')' Statement ELSE Statement
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 90
+
+
+состояние 74
+
+   24 Statement: '{' StatementList . '}'
+
+    '}'  сдвиг, и переход в состояние 91
+
+
+состояние 75
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN . Expression ';' '}'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 92
+
+
+состояние 76
+
+   23 StatementList: Statement StatementList .
+
+    $default  вывод с использованием правила 23 (StatementList)
+
+
+состояние 77
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' . '}'
+
+    '}'  сдвиг, и переход в состояние 93
+
+
+состояние 78
+
+   37 Expression: INTEGER_VAL .
+
+    $default  вывод с использованием правила 37 (Expression)
+
+
+состояние 79
+
+   38 Expression: BOOLEAN_VAL .
+
+    $default  вывод с использованием правила 38 (Expression)
+
+
+состояние 80
+
+   39 Expression: IDENTIFIER .
+
+    $default  вывод с использованием правила 39 (Expression)
+
+
+состояние 81
+
+   40 Expression: THIS .
+
+    $default  вывод с использованием правила 40 (Expression)
+
+
+состояние 82
+
+   41 Expression: NEW . INT '[' Expression ']'
+   42           | NEW . IDENTIFIER '(' ')'
+
+    INT         сдвиг, и переход в состояние 94
+    IDENTIFIER  сдвиг, и переход в состояние 95
+
+
+состояние 83
+
+   33 Expression: '-' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 96
+
+
+состояние 84
+
+   43 Expression: '!' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 97
+
+
+состояние 85
+
+   44 Expression: '(' . Expression ')'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 98
+
+
+состояние 86
+
+   28 Statement: IDENTIFIER '=' Expression . ';'
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ';'  сдвиг, и переход в состояние 104
+
+
+состояние 87
+
+   29 Statement: IDENTIFIER '[' Expression . ']' '=' Expression ';'
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ']'  сдвиг, и переход в состояние 105
+
+
+состояние 88
+
+   27 Statement: PRINTLN '(' Expression . ')' ';'
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ')'  сдвиг, и переход в состояние 106
+
+
+состояние 89
+
+   26 Statement: WHILE '(' Expression . ')' Statement
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ')'  сдвиг, и переход в состояние 107
+
+
+состояние 90
+
+   25 Statement: IF '(' Expression . ')' Statement ELSE Statement
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ')'  сдвиг, и переход в состояние 108
+
+
+состояние 91
+
+   24 Statement: '{' StatementList '}' .
+
+    $default  вывод с использованием правила 24 (Statement)
+
+
+состояние 92
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression . ';' '}'
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ';'  сдвиг, и переход в состояние 109
+
+
+состояние 93
+
+    2 MainClassDeclaration: CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}' .
+
+    $default  вывод с использованием правила 2 (MainClassDeclaration)
+
+
+состояние 94
+
+   41 Expression: NEW INT . '[' Expression ']'
+
+    '['  сдвиг, и переход в состояние 110
+
+
+состояние 95
+
+   42 Expression: NEW IDENTIFIER . '(' ')'
+
+    '('  сдвиг, и переход в состояние 111
+
+
+состояние 96
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   33           | '-' Expression .
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 33 (Expression)
+
+
+состояние 97
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   43           | '!' Expression .
+
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 43 (Expression)
+
+
+состояние 98
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   44           | '(' Expression . ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ')'  сдвиг, и переход в состояние 112
+
+
+состояние 99
+
+   30 Expression: Expression '<' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 113
+
+
+состояние 100
+
+   31 Expression: Expression '+' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 114
+
+
+состояние 101
+
+   32 Expression: Expression '-' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 115
+
+
+состояние 102
+
+   34 Expression: Expression '*' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 116
+
+
+состояние 103
+
+   35 Expression: Expression '.' . LENGTH
+   36           | Expression '.' . IDENTIFIER '(' ExpressionList ')'
+
+    IDENTIFIER  сдвиг, и переход в состояние 117
+    LENGTH      сдвиг, и переход в состояние 118
+
+
+состояние 104
+
+   28 Statement: IDENTIFIER '=' Expression ';' .
+
+    $default  вывод с использованием правила 28 (Statement)
+
+
+состояние 105
+
+   29 Statement: IDENTIFIER '[' Expression ']' . '=' Expression ';'
+
+    '='  сдвиг, и переход в состояние 119
+
+
+состояние 106
+
+   27 Statement: PRINTLN '(' Expression ')' . ';'
+
+    ';'  сдвиг, и переход в состояние 120
+
+
+состояние 107
+
+   26 Statement: WHILE '(' Expression ')' . Statement
+
+    IDENTIFIER  сдвиг, и переход в состояние 67
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    Statement  переход в состояние 121
+
+
+состояние 108
+
+   25 Statement: IF '(' Expression ')' . Statement ELSE Statement
+
+    IDENTIFIER  сдвиг, и переход в состояние 67
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    Statement  переход в состояние 122
+
+
+состояние 109
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' . '}'
+
+    '}'  сдвиг, и переход в состояние 123
+
+
+состояние 110
+
+   41 Expression: NEW INT '[' . Expression ']'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 124
+
+
+состояние 111
+
+   42 Expression: NEW IDENTIFIER '(' . ')'
+
+    ')'  сдвиг, и переход в состояние 125
+
+
+состояние 112
+
+   44 Expression: '(' Expression ')' .
+
+    $default  вывод с использованием правила 44 (Expression)
+
+
+состояние 113
+
+   30 Expression: Expression . '<' Expression
+   30           | Expression '<' Expression .
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 30 (Expression)
+
+
+состояние 114
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   31           | Expression '+' Expression .
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 31 (Expression)
+
+
+состояние 115
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   32           | Expression '-' Expression .
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 32 (Expression)
+
+
+состояние 116
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   34           | Expression '*' Expression .
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 34 (Expression)
+
+
+состояние 117
+
+   36 Expression: Expression '.' IDENTIFIER . '(' ExpressionList ')'
+
+    '('  сдвиг, и переход в состояние 126
+
+
+состояние 118
+
+   35 Expression: Expression '.' LENGTH .
+
+    $default  вывод с использованием правила 35 (Expression)
+
+
+состояние 119
+
+   29 Statement: IDENTIFIER '[' Expression ']' '=' . Expression ';'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 127
+
+
+состояние 120
+
+   27 Statement: PRINTLN '(' Expression ')' ';' .
+
+    $default  вывод с использованием правила 27 (Statement)
+
+
+состояние 121
+
+   26 Statement: WHILE '(' Expression ')' Statement .
+
+    $default  вывод с использованием правила 26 (Statement)
+
+
+состояние 122
+
+   25 Statement: IF '(' Expression ')' Statement . ELSE Statement
+
+    ELSE  сдвиг, и переход в состояние 128
+
+
+состояние 123
+
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}' .
+
+    $default  вывод с использованием правила 12 (MethodDeclaration)
+
+
+состояние 124
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   41           | NEW INT '[' Expression . ']'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ']'  сдвиг, и переход в состояние 129
+
+
+состояние 125
+
+   42 Expression: NEW IDENTIFIER '(' ')' .
+
+    $default  вывод с использованием правила 42 (Expression)
+
+
+состояние 126
+
+   36 Expression: Expression '.' IDENTIFIER '(' . ExpressionList ')'
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    $default  вывод с использованием правила 45 (ExpressionList)
+
+    Expression      переход в состояние 130
+    ExpressionList  переход в состояние 131
+
+
+состояние 127
+
+   29 Statement: IDENTIFIER '[' Expression ']' '=' Expression . ';'
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ';'  сдвиг, и переход в состояние 132
+
+
+состояние 128
+
+   25 Statement: IF '(' Expression ')' Statement ELSE . Statement
+
+    IDENTIFIER  сдвиг, и переход в состояние 67
+    PRINTLN     сдвиг, и переход в состояние 60
+    WHILE       сдвиг, и переход в состояние 61
+    IF          сдвиг, и переход в состояние 62
+    '{'         сдвиг, и переход в состояние 63
+
+    Statement  переход в состояние 133
+
+
+состояние 129
+
+   41 Expression: NEW INT '[' Expression ']' .
+
+    $default  вывод с использованием правила 41 (Expression)
+
+
+состояние 130
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   46 ExpressionList: Expression . ExpressionRestList
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+    ','  сдвиг, и переход в состояние 134
+
+    $default  вывод с использованием правила 47 (ExpressionRestList)
+
+    ExpressionRestList  переход в состояние 135
+    ExpressionRest      переход в состояние 136
+
+
+состояние 131
+
+   36 Expression: Expression '.' IDENTIFIER '(' ExpressionList . ')'
+
+    ')'  сдвиг, и переход в состояние 137
+
+
+состояние 132
+
+   29 Statement: IDENTIFIER '[' Expression ']' '=' Expression ';' .
+
+    $default  вывод с использованием правила 29 (Statement)
+
+
+состояние 133
+
+   25 Statement: IF '(' Expression ')' Statement ELSE Statement .
+
+    $default  вывод с использованием правила 25 (Statement)
+
+
+состояние 134
+
+   49 ExpressionRest: ',' . Expression
+
+    INTEGER_VAL  сдвиг, и переход в состояние 78
+    BOOLEAN_VAL  сдвиг, и переход в состояние 79
+    IDENTIFIER   сдвиг, и переход в состояние 80
+    THIS         сдвиг, и переход в состояние 81
+    NEW          сдвиг, и переход в состояние 82
+    '-'          сдвиг, и переход в состояние 83
+    '!'          сдвиг, и переход в состояние 84
+    '('          сдвиг, и переход в состояние 85
+
+    Expression  переход в состояние 138
+
+
+состояние 135
+
+   46 ExpressionList: Expression ExpressionRestList .
+
+    $default  вывод с использованием правила 46 (ExpressionList)
+
+
+состояние 136
+
+   48 ExpressionRestList: ExpressionRest . ExpressionRestList
+
+    ','  сдвиг, и переход в состояние 134
+
+    $default  вывод с использованием правила 47 (ExpressionRestList)
+
+    ExpressionRestList  переход в состояние 139
+    ExpressionRest      переход в состояние 136
+
+
+состояние 137
+
+   36 Expression: Expression '.' IDENTIFIER '(' ExpressionList ')' .
+
+    $default  вывод с использованием правила 36 (Expression)
+
+
+состояние 138
+
+   30 Expression: Expression . '<' Expression
+   31           | Expression . '+' Expression
+   32           | Expression . '-' Expression
+   34           | Expression . '*' Expression
+   35           | Expression . '.' LENGTH
+   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   49 ExpressionRest: ',' Expression .
+
+    '<'  сдвиг, и переход в состояние 99
+    '+'  сдвиг, и переход в состояние 100
+    '-'  сдвиг, и переход в состояние 101
+    '*'  сдвиг, и переход в состояние 102
+    '.'  сдвиг, и переход в состояние 103
+
+    $default  вывод с использованием правила 49 (ExpressionRest)
+
+
+состояние 139
+
+   48 ExpressionRestList: ExpressionRest ExpressionRestList .
+
+    $default  вывод с использованием правила 48 (ExpressionRestList)

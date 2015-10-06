@@ -8,26 +8,27 @@
 	#include <set>
 	#include <stdlib.h>
 	#include <sstream>
-	int yylex(void);
+	extern "C" int yylex();
 	void yyerror(const char *);
 	int yydebug = 1;
-	extern int yylineno;
+	// extern int yylineno;
 %}
 
 %locations
-%token INTEGER BOOLEAN VOID STRING DOUBLE INT BOOL
-%token IDENTIFIER VOID PRINTLN BINARY_AND BINARY_OR
-%token WHILE THEN IF RETURN EXTENDS LENGTH
-%token PRIVATE PUBLIC CLASS STATIC MAIN BEGIN_BRACKET END_BRACKET
+%token INTEGER_VAL BOOLEAN_VAL VOID STRING INT BOOL
+%token IDENTIFIER PRINTLN THIS NEW
+%token WHILE IF RETURN EXTENDS LENGTH
+%token PUBLIC CLASS STATIC MAIN
 %nonassoc IF
 %nonassoc ELSE
 
-%left OR
 %left AND
-%left GE LE GT LT EQ NE
-%left NOT
+%left '<' '='
 %left '+' '-'
 %left '*' '/'
+%left UMINUS
+%left '!'
+%left '.' '[' ']'
 
 %%
 
@@ -37,7 +38,7 @@ Program:
 	}
 
 MainClassDeclaration:
-	CLASS IDENTIFIER BEGIN_BRACKET PUBLIC STATIC VOID MAIN '(' STRING_KEYWORD '[' ']' IDENTIFIER ')' BEGIN_BRACKET Statement END_BRACKET END_BRACKET {
+	CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}' {
 		$$ = NULL;
 	}
 
@@ -50,10 +51,10 @@ ClassDeclarationList:
 	}
 
 ClassDeclaration:
-	CLASS IDENTIFIER BEGIN_BRACKET  VariableDeclarationList MethodDeclarationList END_BRACKET {
+	CLASS IDENTIFIER '{'  VariableDeclarationList MethodDeclarationList '}' {
 		$$ = NULL;
 	}
-	| CLASS IDENTIFIER EXTENDS IDENTIFIER BEGIN_BRACKET  VariableDeclarationList MethodDeclarationList END_BRACKET {
+	| CLASS IDENTIFIER EXTENDS IDENTIFIER '{'  VariableDeclarationList MethodDeclarationList '}' {
 		$$ = NULL;
 	}
 
@@ -79,7 +80,7 @@ MethodDeclarationList:
 	}
 
 MethodDeclaration:
-	PUBLIC Type IDENTIFIER '(' FormalList ')' BEGIN_BRACKET VariableDeclarationList StatementList RETURN Expression ';' END_BRACKET {
+	PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}' {
 		$$ = NULL;
 	}
 
@@ -128,7 +129,7 @@ StatementList:
 	}
 
 Statement:
-	BEGIN_BRACKET StatementList END_BRACKET {
+	'{' StatementList '}' {
 		$$ = NULL;
 	}
 	| IF '(' Expression ')' Statement ELSE Statement {
@@ -148,16 +149,16 @@ Statement:
 	}
 
 Expression:
-	Expression BINARY_AND Expression {
-		$$ = NULL;
-	}
-	| Expression '<' Expression {
+	Expression '<' Expression {
 		$$ = NULL;
 	}
 	| Expression '+' Expression {
 		$$ = NULL;
 	} 
 	| Expression '-' Expression {
+		$$ = NULL;
+	}
+	| '-' Expression %prec UMINUS {
 		$$ = NULL;
 	}
 	| Expression '*' Expression {
@@ -169,10 +170,10 @@ Expression:
 	| Expression '.' IDENTIFIER '(' ExpressionList ')' {
 		$$ = NULL;
 	}
-	| INTEGER {
+	| INTEGER_VAL {
 		$$ = NULL;
 	}
-	| BOOLEAN {
+	| BOOLEAN_VAL {
 		$$ = NULL;
 	}
 	| IDENTIFIER {
@@ -214,23 +215,10 @@ ExpressionRest:
 	',' Expression {
 		$$ = NULL;
 	}
-;
 
-    
 %%
 
 void yyerror(const char *s) 
 {
-   fprintf(stderr, "%s line: %d\n", s, yylineno);
-}
-
-// инициализация перед парсингом всего
-void init() {
-    mainProgram = NULL;
-}
-
-int main(int argc, char** argv)
-{    
-    yyparse();
-    return 0;
+//    fprintf(stderr, "%s line: %d\n", s, yylineno);
 }

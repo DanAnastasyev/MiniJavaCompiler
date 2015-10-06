@@ -1,11 +1,9 @@
 #include "iostream"
 
-extern "C" {
-	int yylex();
-}
+extern int yyparse();
 
 int main( int argc, char **argv ) {
 	freopen( argv[1], "r", stdin );
-	yylex();
+	yyparse();
 	return 0;
 }
