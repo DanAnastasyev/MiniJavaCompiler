@@ -16,6 +16,9 @@
     <Filter Include="LexicalScanner">
       <UniqueIdentifier>{266f9a0d-db4f-4bd8-98ad-b352df0276fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SyntaxScanner">
+      <UniqueIdentifier>{06ac713f-8512-41dd-b6ce-e160daef34c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OutFlexResult.yy.cpp">
@@ -29,11 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="example\factorial.mj">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="LexicalScanner\LexicalScanner.h">
       <Filter>LexicalScanner</Filter>
     </ClInclude>
@@ -42,5 +40,13 @@
     <CustomBuild Include="grammar.l">
       <Filter>LexicalScanner</Filter>
     </CustomBuild>
+    <CustomBuild Include="grammar.y">
+      <Filter>SyntaxScanner</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="example\Factorial.java">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

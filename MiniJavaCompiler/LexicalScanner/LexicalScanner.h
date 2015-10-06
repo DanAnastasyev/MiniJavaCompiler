@@ -1,14 +1,15 @@
 #pragma once
+#include "grammar.tab.hpp"
 
 class CLexicalScanner {
 public:
 	CLexicalScanner();
 
-	void getToken( const char* token, const char* yytext );
-	void getValue( const char* token, const char* yytext );
-	void getNewLine( const char* yytext );
-	void getSpace( const char* yytext );
-	void getErrorToken( const char* yytext );
+	const char* getToken( const char* token, const char* yytext );
+	const char* getValue( const char* token, const char* yytext );
+	const char* getNewLine( const char* yytext );
+	const char* getSpace( const char* yytext );
+	const char* getErrorToken( const char* yytext );
 private:
 	int lineNumber;
 	int offsetInLineNumber;
