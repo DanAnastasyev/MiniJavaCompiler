@@ -24,7 +24,9 @@ if          {    lexicalScanner.getToken("IF", yytext);	}
 else		{ 	 lexicalScanner.getToken("ELSE", yytext);	}
 while		{	 lexicalScanner.getToken("WHILE", yytext);	}
 return		{	 lexicalScanner.getToken("RETURN", yytext);	}
+extends		{	 lexicalScanner.getToken("EXTENDS", yytext);	
 public		{	 lexicalScanner.getToken("PUBLIC", yytext);	}
+private		{	 lexicalScanner.getToken("PRIVATE", yytext);	}
 class		{	 lexicalScanner.getToken("CLASS", yytext);	}
 static		{	 lexicalScanner.getToken("STATIC", yytext);	}
 void		{	 lexicalScanner.getToken("VOID", yytext);	}
@@ -36,8 +38,8 @@ System.out.println	{	lexicalScanner.getToken("PRINTLN", yytext);	}
 this		{	 lexicalScanner.getToken("THIS", yytext);	}
 length		{	 lexicalScanner.getToken("LENGTH", yytext);	}
 new			{	 lexicalScanner.getToken("NEW", yytext);	}
-"{"			{	 lexicalScanner.getToken("{", yytext);	}
-"}"			{	 lexicalScanner.getToken("}", yytext);	}
+"{"			{	 lexicalScanner.getToken("BEGIN_BRACKET", yytext);	}
+"}"			{	 lexicalScanner.getToken("END_BRACKET", yytext);	}
 "("			{	 lexicalScanner.getToken("(", yytext);	}
 ")"			{	 lexicalScanner.getToken(")", yytext);	}
 "["			{	 lexicalScanner.getToken("[", yytext);	}
@@ -51,6 +53,8 @@ new			{	 lexicalScanner.getToken("NEW", yytext);	}
 "="			{	 lexicalScanner.getToken("=", yytext);	}
 "&&"		{	 lexicalScanner.getToken("AND", yytext);	}
 "||"		{	 lexicalScanner.getToken("OR", yytext);	}
+"&"		{	 lexicalScanner.getToken("BINARY_AND", yytext);	}
+"|"		{	 lexicalScanner.getToken("BINARY_OR", yytext);	}
 "+"			{	 lexicalScanner.getToken("+", yytext);	}
 "-"			{	 lexicalScanner.getToken("-", yytext);	}
 "*"			{	 lexicalScanner.getToken("*", yytext);	}
@@ -59,9 +63,9 @@ new			{	 lexicalScanner.getToken("NEW", yytext);	}
 ","			{	 lexicalScanner.getToken(",", yytext);	}
 "!"			{	 lexicalScanner.getToken("!", yytext);	}
 "."			{	 lexicalScanner.getToken(".", yytext);	}
-{BOOL}		{	 lexicalScanner.getValue("BOOL", yytext); }
-{INT}		{	 lexicalScanner.getValue("INT", yytext); }
-{ID}		{	 lexicalScanner.getValue("ID", yytext); }
+{BOOL}		{	 lexicalScanner.getValue("BOOLEAN", yytext); }
+{INT}		{	 lexicalScanner.getValue("INTEGER", yytext); }
+{ID}		{	 lexicalScanner.getValue("IDENTIFIER", yytext); }
 {SPACE}		{	 lexicalScanner.getSpace(yytext); }
 {LINE_SEPARATOR} {	lexicalScanner.getNewLine(yytext);	}
 .			{	 lexicalScanner.getErrorToken(yytext); }

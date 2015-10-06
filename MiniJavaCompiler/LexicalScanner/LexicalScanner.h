@@ -1,5 +1,4 @@
 #pragma once
-#include "grammar.tab.hpp"
 
 class CLexicalScanner {
 public:
