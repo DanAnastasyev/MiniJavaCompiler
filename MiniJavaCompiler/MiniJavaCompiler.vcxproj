@@ -29,7 +29,7 @@
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\externals\win_flex_bison\win_bison.exe -o"BuildOutputs\parser.tab.cpp" parser.y -v –d</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling bison</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">BuildOutputs\parser.tab.cpp;BuildOutputs\parser.tab.hpp;BuildOutputs\parser.output</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\MiniJavaCompiler\BuildOutputs\parser.tab.cpp;BuildOutputs\parser.tab.hpp;BuildOutputs\parser.output</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -38,10 +38,17 @@
     <ClInclude Include="Position.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="examples\factorial.java" />
+    <None Include="BuildOutputs\parser.output" />
+    <None Include="example\Factorial.java" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BuildOutputs\parser.output" />
+    <Text Include="example\BinarySearch.java.txt" />
+    <Text Include="example\BinaryTree.java.txt" />
+    <Text Include="example\BubbleSort.java.txt" />
+    <Text Include="example\LinearSearch.java.txt" />
+    <Text Include="example\LinkedList.java.txt" />
+    <Text Include="example\QuickSort.java.txt" />
+    <Text Include="example\TreeVisitor.java.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C1615CCA-B657-4752-8BB7-494CFDA881CC}</ProjectGuid>

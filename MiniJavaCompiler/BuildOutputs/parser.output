@@ -1,9 +1,3 @@
-Terminals unused in grammar
-
-   AND
-   '/'
-
-
 Grammar
 
     0 $accept: Program $end
@@ -51,72 +45,75 @@ Grammar
    28          | IDENTIFIER '=' Expression ';'
    29          | IDENTIFIER '[' Expression ']' '=' Expression ';'
 
-   30 Expression: Expression '<' Expression
-   31           | Expression '+' Expression
-   32           | Expression '-' Expression
-   33           | '-' Expression
-   34           | Expression '*' Expression
-   35           | Expression '.' LENGTH
-   36           | Expression '.' IDENTIFIER '(' ExpressionList ')'
-   37           | INTEGER_VAL
-   38           | BOOLEAN_VAL
-   39           | IDENTIFIER
-   40           | THIS
-   41           | NEW INT '[' Expression ']'
-   42           | NEW IDENTIFIER '(' ')'
-   43           | '!' Expression
-   44           | '(' Expression ')'
+   30 Expression: Expression AND Expression
+   31           | Expression '<' Expression
+   32           | Expression '+' Expression
+   33           | Expression '-' Expression
+   34           | '-' Expression
+   35           | Expression '*' Expression
+   36           | Expression '/' Expression
+   37           | Expression '[' Expression ']'
+   38           | Expression '.' LENGTH
+   39           | Expression '.' IDENTIFIER '(' ExpressionList ')'
+   40           | INTEGER_VAL
+   41           | BOOLEAN_VAL
+   42           | IDENTIFIER
+   43           | THIS
+   44           | NEW INT '[' Expression ']'
+   45           | NEW IDENTIFIER '(' ')'
+   46           | '!' Expression
+   47           | '(' Expression ')'
 
-   45 ExpressionList: /* empty */
-   46               | Expression ExpressionRestList
+   48 ExpressionList: /* empty */
+   49               | Expression ExpressionRestList
 
-   47 ExpressionRestList: /* empty */
-   48                   | ExpressionRest ExpressionRestList
+   50 ExpressionRestList: /* empty */
+   51                   | ExpressionRest ExpressionRestList
 
-   49 ExpressionRest: ',' Expression
+   52 ExpressionRest: ',' Expression
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 43
-'(' (40) 2 12 25 26 27 36 42 44
-')' (41) 2 12 25 26 27 36 42 44
-'*' (42) 34
-'+' (43) 31
-',' (44) 17 49
-'-' (45) 32 33
-'.' (46) 35 36
-'/' (47)
+'!' (33) 46
+'(' (40) 2 12 25 26 27 39 45 47
+')' (41) 2 12 25 26 27 39 45 47
+'*' (42) 35
+'+' (43) 32
+',' (44) 17 52
+'-' (45) 33 34
+'.' (46) 38 39
+'/' (47) 36
 ';' (59) 9 12 27 28 29
-'<' (60) 30
+'<' (60) 31
 '=' (61) 28 29
-'[' (91) 2 18 29 41
-']' (93) 2 18 29 41
+'[' (91) 2 18 29 37 44
+']' (93) 2 18 29 37 44
 '{' (123) 2 5 6 12 24
 '}' (125) 2 5 6 12 24
 error (256)
-INTEGER_VAL (258) 37
-BOOLEAN_VAL (259) 38
+INTEGER_VAL (258) 40
+BOOLEAN_VAL (259) 41
 VOID (260) 2
 STRING (261) 2
-INT (262) 18 20 41
+INT (262) 18 20 44
 BOOL (263) 19
-IDENTIFIER (264) 2 5 6 9 12 14 17 21 28 29 36 39 42
+IDENTIFIER (264) 2 5 6 9 12 14 17 21 28 29 39 42 45
 PRINTLN (265) 27
-THIS (266) 40
-NEW (267) 41 42
+THIS (266) 43
+NEW (267) 44 45
 WHILE (268) 26
 IF (269) 25
 RETURN (270) 12
 EXTENDS (271) 6
-LENGTH (272) 35
+LENGTH (272) 38
 PUBLIC (273) 2 12
 CLASS (274) 2 5 6
 STATIC (275) 2
 MAIN (276) 2
 ELSE (277) 25
-AND (278)
+AND (278) 30
 UMINUS (279)
 
 
@@ -153,14 +150,15 @@ StatementList (54)
 Statement (55)
     on left: 24 25 26 27 28 29, on right: 2 23 25 26
 Expression (56)
-    on left: 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44, on right:
-    12 25 26 27 28 29 30 31 32 33 34 35 36 41 43 44 46 49
+    on left: 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47,
+    on right: 12 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 44 46
+    47 49 52
 ExpressionList (57)
-    on left: 45 46, on right: 36
+    on left: 48 49, on right: 39
 ExpressionRestList (58)
-    on left: 47 48, on right: 46 48
+    on left: 50 51, on right: 49 51
 ExpressionRest (59)
-    on left: 49, on right: 48
+    on left: 52, on right: 51
 
 
 State 0
@@ -887,36 +885,36 @@ State 77
 
 State 78
 
-   37 Expression: INTEGER_VAL .
-
-    $default  reduce using rule 37 (Expression)
-
-
-State 79
-
-   38 Expression: BOOLEAN_VAL .
-
-    $default  reduce using rule 38 (Expression)
-
-
-State 80
-
-   39 Expression: IDENTIFIER .
-
-    $default  reduce using rule 39 (Expression)
-
-
-State 81
-
-   40 Expression: THIS .
+   40 Expression: INTEGER_VAL .
 
     $default  reduce using rule 40 (Expression)
 
 
+State 79
+
+   41 Expression: BOOLEAN_VAL .
+
+    $default  reduce using rule 41 (Expression)
+
+
+State 80
+
+   42 Expression: IDENTIFIER .
+
+    $default  reduce using rule 42 (Expression)
+
+
+State 81
+
+   43 Expression: THIS .
+
+    $default  reduce using rule 43 (Expression)
+
+
 State 82
 
-   41 Expression: NEW . INT '[' Expression ']'
-   42           | NEW . IDENTIFIER '(' ')'
+   44 Expression: NEW . INT '[' Expression ']'
+   45           | NEW . IDENTIFIER '(' ')'
 
     INT         shift, and go to state 94
     IDENTIFIER  shift, and go to state 95
@@ -924,7 +922,7 @@ State 82
 
 State 83
 
-   33 Expression: '-' . Expression
+   34 Expression: '-' . Expression
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -940,7 +938,7 @@ State 83
 
 State 84
 
-   43 Expression: '!' . Expression
+   46 Expression: '!' . Expression
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -956,7 +954,7 @@ State 84
 
 State 85
 
-   44 Expression: '(' . Expression ')'
+   47 Expression: '(' . Expression ')'
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -973,91 +971,121 @@ State 85
 State 86
 
    28 Statement: IDENTIFIER '=' Expression . ';'
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ';'  shift, and go to state 104
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ';'  shift, and go to state 107
 
 
 State 87
 
    29 Statement: IDENTIFIER '[' Expression . ']' '=' Expression ';'
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ']'  shift, and go to state 105
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ']'  shift, and go to state 108
 
 
 State 88
 
    27 Statement: PRINTLN '(' Expression . ')' ';'
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ')'  shift, and go to state 106
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ')'  shift, and go to state 109
 
 
 State 89
 
    26 Statement: WHILE '(' Expression . ')' Statement
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ')'  shift, and go to state 107
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ')'  shift, and go to state 110
 
 
 State 90
 
    25 Statement: IF '(' Expression . ')' Statement ELSE Statement
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ')'  shift, and go to state 108
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ')'  shift, and go to state 111
 
 
 State 91
@@ -1070,19 +1098,25 @@ State 91
 State 92
 
    12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression . ';' '}'
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ';'  shift, and go to state 109
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ';'  shift, and go to state 112
 
 
 State 93
@@ -1094,117 +1128,83 @@ State 93
 
 State 94
 
-   41 Expression: NEW INT . '[' Expression ']'
+   44 Expression: NEW INT . '[' Expression ']'
 
-    '['  shift, and go to state 110
+    '['  shift, and go to state 113
 
 
 State 95
 
-   42 Expression: NEW IDENTIFIER . '(' ')'
+   45 Expression: NEW IDENTIFIER . '(' ')'
 
-    '('  shift, and go to state 111
+    '('  shift, and go to state 114
 
 
 State 96
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   33           | '-' Expression .
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   34           | '-' Expression .
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '.'  shift, and go to state 103
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
 
-    $default  reduce using rule 33 (Expression)
+    $default  reduce using rule 34 (Expression)
 
 
 State 97
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
-   43           | '!' Expression .
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   46           | '!' Expression .
 
-    '.'  shift, and go to state 103
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
 
-    $default  reduce using rule 43 (Expression)
+    $default  reduce using rule 46 (Expression)
 
 
 State 98
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
-   44           | '(' Expression . ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   47           | '(' Expression . ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ')'  shift, and go to state 112
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ')'  shift, and go to state 115
 
 
 State 99
 
-   30 Expression: Expression '<' . Expression
-
-    INTEGER_VAL  shift, and go to state 78
-    BOOLEAN_VAL  shift, and go to state 79
-    IDENTIFIER   shift, and go to state 80
-    THIS         shift, and go to state 81
-    NEW          shift, and go to state 82
-    '-'          shift, and go to state 83
-    '!'          shift, and go to state 84
-    '('          shift, and go to state 85
-
-    Expression  go to state 113
-
-
-State 100
-
-   31 Expression: Expression '+' . Expression
-
-    INTEGER_VAL  shift, and go to state 78
-    BOOLEAN_VAL  shift, and go to state 79
-    IDENTIFIER   shift, and go to state 80
-    THIS         shift, and go to state 81
-    NEW          shift, and go to state 82
-    '-'          shift, and go to state 83
-    '!'          shift, and go to state 84
-    '('          shift, and go to state 85
-
-    Expression  go to state 114
-
-
-State 101
-
-   32 Expression: Expression '-' . Expression
-
-    INTEGER_VAL  shift, and go to state 78
-    BOOLEAN_VAL  shift, and go to state 79
-    IDENTIFIER   shift, and go to state 80
-    THIS         shift, and go to state 81
-    NEW          shift, and go to state 82
-    '-'          shift, and go to state 83
-    '!'          shift, and go to state 84
-    '('          shift, and go to state 85
-
-    Expression  go to state 115
-
-
-State 102
-
-   34 Expression: Expression '*' . Expression
+   30 Expression: Expression AND . Expression
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -1218,72 +1218,98 @@ State 102
     Expression  go to state 116
 
 
+State 100
+
+   31 Expression: Expression '<' . Expression
+
+    INTEGER_VAL  shift, and go to state 78
+    BOOLEAN_VAL  shift, and go to state 79
+    IDENTIFIER   shift, and go to state 80
+    THIS         shift, and go to state 81
+    NEW          shift, and go to state 82
+    '-'          shift, and go to state 83
+    '!'          shift, and go to state 84
+    '('          shift, and go to state 85
+
+    Expression  go to state 117
+
+
+State 101
+
+   32 Expression: Expression '+' . Expression
+
+    INTEGER_VAL  shift, and go to state 78
+    BOOLEAN_VAL  shift, and go to state 79
+    IDENTIFIER   shift, and go to state 80
+    THIS         shift, and go to state 81
+    NEW          shift, and go to state 82
+    '-'          shift, and go to state 83
+    '!'          shift, and go to state 84
+    '('          shift, and go to state 85
+
+    Expression  go to state 118
+
+
+State 102
+
+   33 Expression: Expression '-' . Expression
+
+    INTEGER_VAL  shift, and go to state 78
+    BOOLEAN_VAL  shift, and go to state 79
+    IDENTIFIER   shift, and go to state 80
+    THIS         shift, and go to state 81
+    NEW          shift, and go to state 82
+    '-'          shift, and go to state 83
+    '!'          shift, and go to state 84
+    '('          shift, and go to state 85
+
+    Expression  go to state 119
+
+
 State 103
 
-   35 Expression: Expression '.' . LENGTH
-   36           | Expression '.' . IDENTIFIER '(' ExpressionList ')'
+   35 Expression: Expression '*' . Expression
 
-    IDENTIFIER  shift, and go to state 117
-    LENGTH      shift, and go to state 118
+    INTEGER_VAL  shift, and go to state 78
+    BOOLEAN_VAL  shift, and go to state 79
+    IDENTIFIER   shift, and go to state 80
+    THIS         shift, and go to state 81
+    NEW          shift, and go to state 82
+    '-'          shift, and go to state 83
+    '!'          shift, and go to state 84
+    '('          shift, and go to state 85
+
+    Expression  go to state 120
 
 
 State 104
 
-   28 Statement: IDENTIFIER '=' Expression ';' .
+   36 Expression: Expression '/' . Expression
 
-    $default  reduce using rule 28 (Statement)
+    INTEGER_VAL  shift, and go to state 78
+    BOOLEAN_VAL  shift, and go to state 79
+    IDENTIFIER   shift, and go to state 80
+    THIS         shift, and go to state 81
+    NEW          shift, and go to state 82
+    '-'          shift, and go to state 83
+    '!'          shift, and go to state 84
+    '('          shift, and go to state 85
+
+    Expression  go to state 121
 
 
 State 105
 
-   29 Statement: IDENTIFIER '[' Expression ']' . '=' Expression ';'
+   38 Expression: Expression '.' . LENGTH
+   39           | Expression '.' . IDENTIFIER '(' ExpressionList ')'
 
-    '='  shift, and go to state 119
+    IDENTIFIER  shift, and go to state 122
+    LENGTH      shift, and go to state 123
 
 
 State 106
 
-   27 Statement: PRINTLN '(' Expression ')' . ';'
-
-    ';'  shift, and go to state 120
-
-
-State 107
-
-   26 Statement: WHILE '(' Expression ')' . Statement
-
-    IDENTIFIER  shift, and go to state 67
-    PRINTLN     shift, and go to state 60
-    WHILE       shift, and go to state 61
-    IF          shift, and go to state 62
-    '{'         shift, and go to state 63
-
-    Statement  go to state 121
-
-
-State 108
-
-   25 Statement: IF '(' Expression ')' . Statement ELSE Statement
-
-    IDENTIFIER  shift, and go to state 67
-    PRINTLN     shift, and go to state 60
-    WHILE       shift, and go to state 61
-    IF          shift, and go to state 62
-    '{'         shift, and go to state 63
-
-    Statement  go to state 122
-
-
-State 109
-
-   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' . '}'
-
-    '}'  shift, and go to state 123
-
-
-State 110
-
-   41 Expression: NEW INT '[' . Expression ']'
+   37 Expression: Expression '[' . Expression ']'
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -1297,100 +1323,256 @@ State 110
     Expression  go to state 124
 
 
+State 107
+
+   28 Statement: IDENTIFIER '=' Expression ';' .
+
+    $default  reduce using rule 28 (Statement)
+
+
+State 108
+
+   29 Statement: IDENTIFIER '[' Expression ']' . '=' Expression ';'
+
+    '='  shift, and go to state 125
+
+
+State 109
+
+   27 Statement: PRINTLN '(' Expression ')' . ';'
+
+    ';'  shift, and go to state 126
+
+
+State 110
+
+   26 Statement: WHILE '(' Expression ')' . Statement
+
+    IDENTIFIER  shift, and go to state 67
+    PRINTLN     shift, and go to state 60
+    WHILE       shift, and go to state 61
+    IF          shift, and go to state 62
+    '{'         shift, and go to state 63
+
+    Statement  go to state 127
+
+
 State 111
 
-   42 Expression: NEW IDENTIFIER '(' . ')'
+   25 Statement: IF '(' Expression ')' . Statement ELSE Statement
 
-    ')'  shift, and go to state 125
+    IDENTIFIER  shift, and go to state 67
+    PRINTLN     shift, and go to state 60
+    WHILE       shift, and go to state 61
+    IF          shift, and go to state 62
+    '{'         shift, and go to state 63
+
+    Statement  go to state 128
 
 
 State 112
 
-   44 Expression: '(' Expression ')' .
+   12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' . '}'
 
-    $default  reduce using rule 44 (Expression)
+    '}'  shift, and go to state 129
 
 
 State 113
 
-   30 Expression: Expression . '<' Expression
-   30           | Expression '<' Expression .
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   44 Expression: NEW INT '[' . Expression ']'
 
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
+    INTEGER_VAL  shift, and go to state 78
+    BOOLEAN_VAL  shift, and go to state 79
+    IDENTIFIER   shift, and go to state 80
+    THIS         shift, and go to state 81
+    NEW          shift, and go to state 82
+    '-'          shift, and go to state 83
+    '!'          shift, and go to state 84
+    '('          shift, and go to state 85
 
-    $default  reduce using rule 30 (Expression)
+    Expression  go to state 130
 
 
 State 114
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   31           | Expression '+' Expression .
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   45 Expression: NEW IDENTIFIER '(' . ')'
 
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-
-    $default  reduce using rule 31 (Expression)
+    ')'  shift, and go to state 131
 
 
 State 115
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   32           | Expression '-' Expression .
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   47 Expression: '(' Expression ')' .
 
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-
-    $default  reduce using rule 32 (Expression)
+    $default  reduce using rule 47 (Expression)
 
 
 State 116
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   34           | Expression '*' Expression .
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   30           | Expression AND Expression .
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '.'  shift, and go to state 103
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
 
-    $default  reduce using rule 34 (Expression)
+    $default  reduce using rule 30 (Expression)
 
 
 State 117
 
-   36 Expression: Expression '.' IDENTIFIER . '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   31           | Expression '<' Expression .
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '('  shift, and go to state 126
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+
+    $default  reduce using rule 31 (Expression)
 
 
 State 118
 
-   35 Expression: Expression '.' LENGTH .
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   32           | Expression '+' Expression .
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+
+    $default  reduce using rule 32 (Expression)
+
+
+State 119
+
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   33           | Expression '-' Expression .
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+
+    $default  reduce using rule 33 (Expression)
+
+
+State 120
+
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   35           | Expression '*' Expression .
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
 
     $default  reduce using rule 35 (Expression)
 
 
-State 119
+State 121
+
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   36           | Expression '/' Expression .
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+
+    $default  reduce using rule 36 (Expression)
+
+
+State 122
+
+   39 Expression: Expression '.' IDENTIFIER . '(' ExpressionList ')'
+
+    '('  shift, and go to state 132
+
+
+State 123
+
+   38 Expression: Expression '.' LENGTH .
+
+    $default  reduce using rule 38 (Expression)
+
+
+State 124
+
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   37           | Expression '[' Expression . ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ']'  shift, and go to state 133
+
+
+State 125
 
    29 Statement: IDENTIFIER '[' Expression ']' '=' . Expression ';'
 
@@ -1403,65 +1585,71 @@ State 119
     '!'          shift, and go to state 84
     '('          shift, and go to state 85
 
-    Expression  go to state 127
+    Expression  go to state 134
 
 
-State 120
+State 126
 
    27 Statement: PRINTLN '(' Expression ')' ';' .
 
     $default  reduce using rule 27 (Statement)
 
 
-State 121
+State 127
 
    26 Statement: WHILE '(' Expression ')' Statement .
 
     $default  reduce using rule 26 (Statement)
 
 
-State 122
+State 128
 
    25 Statement: IF '(' Expression ')' Statement . ELSE Statement
 
-    ELSE  shift, and go to state 128
+    ELSE  shift, and go to state 135
 
 
-State 123
+State 129
 
    12 MethodDeclaration: PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}' .
 
     $default  reduce using rule 12 (MethodDeclaration)
 
 
-State 124
+State 130
 
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
-   41           | NEW INT '[' Expression . ']'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   44           | NEW INT '[' Expression . ']'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ']'  shift, and go to state 129
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ']'  shift, and go to state 136
 
 
-State 125
+State 131
 
-   42 Expression: NEW IDENTIFIER '(' ')' .
+   45 Expression: NEW IDENTIFIER '(' ')' .
 
-    $default  reduce using rule 42 (Expression)
+    $default  reduce using rule 45 (Expression)
 
 
-State 126
+State 132
 
-   36 Expression: Expression '.' IDENTIFIER '(' . ExpressionList ')'
+   39 Expression: Expression '.' IDENTIFIER '(' . ExpressionList ')'
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -1472,31 +1660,44 @@ State 126
     '!'          shift, and go to state 84
     '('          shift, and go to state 85
 
-    $default  reduce using rule 45 (ExpressionList)
+    $default  reduce using rule 48 (ExpressionList)
 
-    Expression      go to state 130
-    ExpressionList  go to state 131
+    Expression      go to state 137
+    ExpressionList  go to state 138
 
 
-State 127
+State 133
+
+   37 Expression: Expression '[' Expression ']' .
+
+    $default  reduce using rule 37 (Expression)
+
+
+State 134
 
    29 Statement: IDENTIFIER '[' Expression ']' '=' Expression . ';'
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
 
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ';'  shift, and go to state 132
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ';'  shift, and go to state 139
 
 
-State 128
+State 135
 
    25 Statement: IF '(' Expression ')' Statement ELSE . Statement
 
@@ -1506,63 +1707,69 @@ State 128
     IF          shift, and go to state 62
     '{'         shift, and go to state 63
 
-    Statement  go to state 133
+    Statement  go to state 140
 
 
-State 129
+State 136
 
-   41 Expression: NEW INT '[' Expression ']' .
+   44 Expression: NEW INT '[' Expression ']' .
 
-    $default  reduce using rule 41 (Expression)
-
-
-State 130
-
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
-   46 ExpressionList: Expression . ExpressionRestList
-
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-    ','  shift, and go to state 134
-
-    $default  reduce using rule 47 (ExpressionRestList)
-
-    ExpressionRestList  go to state 135
-    ExpressionRest      go to state 136
+    $default  reduce using rule 44 (Expression)
 
 
-State 131
+State 137
 
-   36 Expression: Expression '.' IDENTIFIER '(' ExpressionList . ')'
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   49 ExpressionList: Expression . ExpressionRestList
 
-    ')'  shift, and go to state 137
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+    ','  shift, and go to state 141
+
+    $default  reduce using rule 50 (ExpressionRestList)
+
+    ExpressionRestList  go to state 142
+    ExpressionRest      go to state 143
 
 
-State 132
+State 138
+
+   39 Expression: Expression '.' IDENTIFIER '(' ExpressionList . ')'
+
+    ')'  shift, and go to state 144
+
+
+State 139
 
    29 Statement: IDENTIFIER '[' Expression ']' '=' Expression ';' .
 
     $default  reduce using rule 29 (Statement)
 
 
-State 133
+State 140
 
    25 Statement: IF '(' Expression ')' Statement ELSE Statement .
 
     $default  reduce using rule 25 (Statement)
 
 
-State 134
+State 141
 
-   49 ExpressionRest: ',' . Expression
+   52 ExpressionRest: ',' . Expression
 
     INTEGER_VAL  shift, and go to state 78
     BOOLEAN_VAL  shift, and go to state 79
@@ -1573,56 +1780,62 @@ State 134
     '!'          shift, and go to state 84
     '('          shift, and go to state 85
 
-    Expression  go to state 138
+    Expression  go to state 145
 
 
-State 135
+State 142
 
-   46 ExpressionList: Expression ExpressionRestList .
+   49 ExpressionList: Expression ExpressionRestList .
 
-    $default  reduce using rule 46 (ExpressionList)
-
-
-State 136
-
-   48 ExpressionRestList: ExpressionRest . ExpressionRestList
-
-    ','  shift, and go to state 134
-
-    $default  reduce using rule 47 (ExpressionRestList)
-
-    ExpressionRestList  go to state 139
-    ExpressionRest      go to state 136
+    $default  reduce using rule 49 (ExpressionList)
 
 
-State 137
+State 143
 
-   36 Expression: Expression '.' IDENTIFIER '(' ExpressionList ')' .
+   51 ExpressionRestList: ExpressionRest . ExpressionRestList
 
-    $default  reduce using rule 36 (Expression)
+    ','  shift, and go to state 141
 
+    $default  reduce using rule 50 (ExpressionRestList)
 
-State 138
-
-   30 Expression: Expression . '<' Expression
-   31           | Expression . '+' Expression
-   32           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '.' LENGTH
-   36           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
-   49 ExpressionRest: ',' Expression .
-
-    '<'  shift, and go to state 99
-    '+'  shift, and go to state 100
-    '-'  shift, and go to state 101
-    '*'  shift, and go to state 102
-    '.'  shift, and go to state 103
-
-    $default  reduce using rule 49 (ExpressionRest)
+    ExpressionRestList  go to state 146
+    ExpressionRest      go to state 143
 
 
-State 139
+State 144
 
-   48 ExpressionRestList: ExpressionRest ExpressionRestList .
+   39 Expression: Expression '.' IDENTIFIER '(' ExpressionList ')' .
 
-    $default  reduce using rule 48 (ExpressionRestList)
+    $default  reduce using rule 39 (Expression)
+
+
+State 145
+
+   30 Expression: Expression . AND Expression
+   31           | Expression . '<' Expression
+   32           | Expression . '+' Expression
+   33           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '[' Expression ']'
+   38           | Expression . '.' LENGTH
+   39           | Expression . '.' IDENTIFIER '(' ExpressionList ')'
+   52 ExpressionRest: ',' Expression .
+
+    AND  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '+'  shift, and go to state 101
+    '-'  shift, and go to state 102
+    '*'  shift, and go to state 103
+    '/'  shift, and go to state 104
+    '.'  shift, and go to state 105
+    '['  shift, and go to state 106
+
+    $default  reduce using rule 52 (ExpressionRest)
+
+
+State 146
+
+   51 ExpressionRestList: ExpressionRest ExpressionRestList .
+
+    $default  reduce using rule 51 (ExpressionRestList)
