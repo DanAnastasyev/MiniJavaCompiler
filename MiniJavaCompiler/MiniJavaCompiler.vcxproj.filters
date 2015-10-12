@@ -13,34 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="LexicalScanner">
-      <UniqueIdentifier>{266f9a0d-db4f-4bd8-98ad-b352df0276fe}</UniqueIdentifier>
+    <Filter Include="Source Files\LexicalScanner">
+      <UniqueIdentifier>{2fc5052b-71c3-4240-a9c0-ae9f89cdd8c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\examples">
+      <UniqueIdentifier>{d30c571a-d5b5-461c-a3bc-0e441ca9d430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BuildOutputs">
+      <UniqueIdentifier>{a9fc8f27-c103-4e2c-ae7b-36a4abc32890}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OutFlexResult.yy.cpp">
+    <CustomBuild Include="lexer.l">
       <Filter>Source Files</Filter>
-    </ClCompile>
+    </CustomBuild>
+    <CustomBuild Include="parser.y">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp">
-      <Filter>LexicalScanner</Filter>
+      <Filter>Source Files\LexicalScanner</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOutputs\lexer.cpp">
+      <Filter>Source Files\BuildOutputs</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildOutputs\parser.tab.cpp">
+      <Filter>Source Files\BuildOutputs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="example\factorial.mj">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Position.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="LexicalScanner\LexicalScanner.h">
-      <Filter>LexicalScanner</Filter>
+      <Filter>Source Files\LexicalScanner</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildOutputs\parser.tab.hpp">
+      <Filter>Source Files\BuildOutputs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="grammar.l">
-      <Filter>LexicalScanner</Filter>
-    </CustomBuild>
+    <Text Include="examples\factorial.java">
+      <Filter>Source Files\examples</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BuildOutputs\parser.output">
+      <Filter>Source Files\BuildOutputs</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -10,8 +10,41 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="lexer.l">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\externals\win_flex_bison\win_flex.exe --wincompat -o"$(ProjectDir)\BuildOutputs\lexer.cpp" lexer.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling flex</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">BuildOutputs\lexer.cpp</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BuildOutputs\lexer.cpp" />
+    <ClCompile Include="BuildOutputs\parser.tab.cpp" />
+    <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="parser.y">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\externals\win_flex_bison\win_bison.exe -o"BuildOutputs\parser.tab.cpp" parser.y -v –d</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling bison</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">BuildOutputs\parser.tab.cpp;BuildOutputs\parser.tab.hpp;BuildOutputs\parser.output</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BuildOutputs\parser.tab.hpp" />
+    <ClInclude Include="LexicalScanner\LexicalScanner.h" />
+    <ClInclude Include="Position.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="examples\factorial.java" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BuildOutputs\parser.output" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A06D7C50-D16B-48F9-A2E9-76EC338BCCDA}</ProjectGuid>
+    <ProjectGuid>{C1615CCA-B657-4752-8BB7-494CFDA881CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MiniJavaCompiler</RootNamespace>
   </PropertyGroup>
@@ -52,7 +85,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\GnuWin32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -76,24 +108,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="OutFlexResult.yy.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="example\factorial.mj" />
-    <CustomBuild Include="grammar.l">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex -oOutFlexResult.yy.cpp %(FullPath)</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FlexResult.yy.cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">flex -oOutFlexResult.yy.cpp %(FullPath)</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">FlexResult.yy.cpp</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="LexicalScanner\LexicalScanner.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
