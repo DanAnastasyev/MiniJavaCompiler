@@ -3,7 +3,7 @@
 class IVisitor;
 
 class IHost {
-	virtual void Accept( IVisitor* ) const = 0;
+	virtual void Accept( IVisitor* visitor ) const = 0;
 };
 
 // Корневой интерфейс программы
@@ -13,92 +13,79 @@ public:
 };
 
 // Главный класс
-class IMainClass {
+class IMainClass : public IHost {
 public:
 	virtual ~IMainClass() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Список классов
-class IClassDeclList {
+class IClassDeclList : public IHost {
 public:
 	virtual ~IClassDeclList() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Описание класса
-class IClassDecl {
+class IClassDecl : public IHost {
 public:
 	virtual ~IClassDecl() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Список объявлений переменных
-class IVarDeclList {
+class IVarDeclList : public IHost {
 public:
 	virtual ~IVarDeclList() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Объявление переменной
-class IVarDecl {
+class IVarDecl : public IHost {
 public:
 	virtual ~IVarDecl() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Список методов класса
-class IMethodDeclList {
+class IMethodDeclList : public IHost {
 public:
 	virtual ~IMethodDeclList() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Метод класса
-class IMethodDecl {
+class IMethodDecl : public IHost {
 public:
 	virtual ~IMethodDecl() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Список параметров
-class IFormalList {
+class IFormalList : public IHost {
 public:
 	virtual ~IFormalList() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Тип
-class IType {
+class IType : public IHost {
 public:
 	virtual ~IType() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Последовательность команд
-class IStatementList {
+class IStatementList : public IHost {
 public:
 	virtual ~IStatementList() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Одна команда (или блок)
-class IStatement {
+class IStatement : public IHost {
 public:
 	virtual ~IStatement() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Последовательность выражений (аргументы функции)
-class IExpList {
+class IExpList : public IHost {
 public:
 	virtual ~IExpList() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };
 
 // Арифметическое выражение
-class IExp {
+class IExp : public IHost {
 public:
 	virtual ~IExp() {}
-	virtual void Accept( IVisitor* ) const = 0;
 };

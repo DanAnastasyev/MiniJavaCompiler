@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
+    <ClInclude Include="grammar.h" />
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="Position.h" />
   </ItemGroup>

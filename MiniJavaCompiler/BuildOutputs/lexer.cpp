@@ -951,17 +951,17 @@ YY_RULE_SETUP
 case 20:
 YY_RULE_SETUP
 #line 54 "lexer.l"
-{	yylval.val = new char; strcpy( yylval.val, yytext ); return BOOLEAN_VAL; }
+{	yylval.val = new char[strlen(yytext)]; strcpy( yylval.val, yytext ); return BOOLEAN_VAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 55 "lexer.l"
-{	yylval.val = new char; strcpy( yylval.val, yytext ); return INTEGER_VAL; }
+{	yylval.val = new char[strlen(yytext)]; strcpy( yylval.val, yytext ); return INTEGER_VAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 56 "lexer.l"
-{	 yylval.val = new char; strcpy( yylval.val, yytext ); return IDENTIFIER; }
+{	 yylval.val = new char[strlen(yytext)]; strcpy( yylval.val, yytext ); return IDENTIFIER; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP

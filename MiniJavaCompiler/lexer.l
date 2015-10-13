@@ -51,9 +51,9 @@ length		{	 return LENGTH;	}
 new			{	 return NEW;	}
 "&&"		{	 return AND;	}
 [-+*/{}()\]\[!;,=.<]	{	return yytext[0];	}
-"true"|"false"		{	yylval.val = new char; strcpy( yylval.val, yytext ); return BOOLEAN_VAL; }
-[0-9]+		{	yylval.val = new char; strcpy( yylval.val, yytext ); return INTEGER_VAL; }
-[a-zA-Z][a-z0-9A-Z_]*	{	 yylval.val = new char; strcpy( yylval.val, yytext ); return IDENTIFIER; }
+"true"|"false"		{	yylval.val = new char[strlen(yytext)]; strcpy( yylval.val, yytext ); return BOOLEAN_VAL; }
+[0-9]+		{	yylval.val = new char[strlen(yytext)]; strcpy( yylval.val, yytext ); return INTEGER_VAL; }
+[a-zA-Z][a-z0-9A-Z_]*	{	 yylval.val = new char[strlen(yytext)]; strcpy( yylval.val, yytext ); return IDENTIFIER; }
 [ \t]		{  }
 "\n"		{  } 
 [/][/].*\n  {  } // comment

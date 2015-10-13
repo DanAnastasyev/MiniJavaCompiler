@@ -55,6 +55,9 @@
     <ClInclude Include="BuildOutputs\parser.tab.hpp">
       <Filter>Source Files\BuildOutputs</Filter>
     </ClInclude>
+    <ClInclude Include="grammar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output">
