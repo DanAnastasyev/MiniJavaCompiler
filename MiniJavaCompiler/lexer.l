@@ -26,8 +26,6 @@
         yylloc.first_column = yylloc.last_column;
         yylloc.last_line = yy_line;
         yylloc.last_column = yy_column;
-		/*std::cout << yytext << " [" << yylloc.first_line << ", " << yylloc.first_column << ", "  
-			<< yylloc.last_line << ", " << yylloc.last_column << "]\n";*/
     }
 
 	#define YY_USER_ACTION onNextToken();

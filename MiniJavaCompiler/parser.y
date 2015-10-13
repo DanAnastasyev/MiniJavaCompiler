@@ -32,9 +32,9 @@
 %left '!'
 %left '.' '[' ']'
 
-%type <val> Program MainClassDeclaration ClassDeclarationList ClassDeclaration VariableDeclarationList VariableDeclaration ExpressionRest StatementList
+%type <val> Program MainClassDeclaration ClassDeclarationList ClassDeclaration VariableDeclarationList VariableDeclaration ExpressionRest 
 	MethodDeclaration MethodDeclarationList FormalList FormalRestList FormalRest Type Statement Expression ExpressionList ExpressionRestList
-	IDENTIFIER INTEGER_VAL BOOLEAN_VAL
+	IDENTIFIER INTEGER_VAL BOOLEAN_VAL StatementList
 
 %%
 

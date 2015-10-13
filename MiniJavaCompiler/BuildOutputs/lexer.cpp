@@ -576,12 +576,10 @@ char *yytext;
         yylloc.first_column = yylloc.last_column;
         yylloc.last_line = yy_line;
         yylloc.last_column = yy_column;
-		/*std::cout << yytext << " [" << yylloc.first_line << ", " << yylloc.first_column << ", "  
-			<< yylloc.last_line << ", " << yylloc.last_column << "]\n";*/
     }
 
 	#define YY_USER_ACTION onNextToken();
-#line 585 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 583 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 
 #define INITIAL 0
 
@@ -760,9 +758,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 36 "lexer.l"
+#line 34 "lexer.l"
 
-#line 766 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 764 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -857,142 +855,142 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 37 "lexer.l"
+#line 35 "lexer.l"
 {	return IF;	}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 38 "lexer.l"
+#line 36 "lexer.l"
 {	return ELSE;	}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 39 "lexer.l"
+#line 37 "lexer.l"
 {	 return WHILE;	}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 40 "lexer.l"
+#line 38 "lexer.l"
 {	 return RETURN;	}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 41 "lexer.l"
+#line 39 "lexer.l"
 {	 return EXTENDS; }	
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 42 "lexer.l"
+#line 40 "lexer.l"
 {	 return PUBLIC;	}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 43 "lexer.l"
+#line 41 "lexer.l"
 {	 return CLASS;	}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 44 "lexer.l"
+#line 42 "lexer.l"
 {	 return STATIC;	}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 45 "lexer.l"
+#line 43 "lexer.l"
 {	 return VOID;	}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 46 "lexer.l"
+#line 44 "lexer.l"
 {	 return MAIN;	}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 47 "lexer.l"
+#line 45 "lexer.l"
 {    return INT;	}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 48 "lexer.l"
+#line 46 "lexer.l"
 {    return BOOL;	}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 49 "lexer.l"
+#line 47 "lexer.l"
 {	 return STRING;	}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 50 "lexer.l"
+#line 48 "lexer.l"
 {	 return PRINTLN;	}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 51 "lexer.l"
+#line 49 "lexer.l"
 {	 return THIS;	}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 52 "lexer.l"
+#line 50 "lexer.l"
 {	 return LENGTH;	}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 53 "lexer.l"
+#line 51 "lexer.l"
 {	 return NEW;	}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 54 "lexer.l"
+#line 52 "lexer.l"
 {	 return AND;	}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 53 "lexer.l"
 {	return yytext[0];	}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 56 "lexer.l"
+#line 54 "lexer.l"
 {	yylval.val = new char; strcpy( yylval.val, yytext ); return BOOLEAN_VAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 57 "lexer.l"
+#line 55 "lexer.l"
 {	yylval.val = new char; strcpy( yylval.val, yytext ); return INTEGER_VAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 58 "lexer.l"
+#line 56 "lexer.l"
 {	 yylval.val = new char; strcpy( yylval.val, yytext ); return IDENTIFIER; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 59 "lexer.l"
+#line 57 "lexer.l"
 {  }
 	YY_BREAK
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 58 "lexer.l"
 {  } 
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 61 "lexer.l"
+#line 59 "lexer.l"
 {  } // comment
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 62 "lexer.l"
+#line 60 "lexer.l"
 { yyerror("Unknown symbol\n"); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 64 "lexer.l"
+#line 62 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 996 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 994 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1998,6 +1996,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 63 "lexer.l"
+#line 61 "lexer.l"
 
 
