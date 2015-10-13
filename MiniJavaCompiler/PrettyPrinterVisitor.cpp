@@ -1,15 +1,17 @@
 #include <iostream>
 
 #include "Visitor.h"
+#include "Header.h"
 
 class CPrettyPrinterVisitor : public IVisitor {
-	void Visit( const IProgram* program )
+	void Visit( CProgram* program )
 	{
-		std::cout << "Program" << std::endl;
+		program->GetMainClass()->Accept( this );
+		//program->GetClassDeclList()->Accept( this );
 	}
 
-	void Visit( const IMainClass* program )
+	void Visit( CMainClass* program )
 	{
-		std::cout << "Main Class" << std::endl;
+		
 	} 
 };

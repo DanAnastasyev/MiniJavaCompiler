@@ -7,29 +7,49 @@
 
 class CProgram : public IProgram {
 public:
-	CProgram(std::shared_ptr<IMainClass> mainClass, std::shared_ptr<IClassDeclList> classList, CPosition& position)
-		: mainClass( mainClass )
-		, classList( classList )
-		, position( position )
+	CProgram( CMainClass* mainClass, CClassDeclList* classList, CPosition& position)
+		: mainClass( std::shared_ptr<CMainClass>( mainClass ) ),
+		classList( std::shared_ptr<CClassDeclList>( classList ) ), 
+		position( position )
 	{}
+
+	std::shared_ptr<CMainClass> GetMainClass()
+	{
+		return mainClass;
+	}
+
+	std::shared_ptr<CClassDeclList> GetClassDeclList()
+	{
+		return classList;
+	}
+
+	void Accept( IVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
 private:
-	std::shared_ptr<IMainClass> mainClass;
-	std::shared_ptr<IClassDeclList> classList;
+	std::shared_ptr<CMainClass> mainClass;
+	std::shared_ptr<CClassDeclList> classList;
 	CPosition position;
 };
 
 class CMainClass : public IMainClass {
 public:
-	CMainClass(const std::string& id, const std::string& argv, std::shared_ptr<IStatementList> statements, CPosition& position)
+	CMainClass(const std::string& id, const std::string& argv, std::shared_ptr<CStatementList> statements, CPosition& position)
 		: id( id )
 		, argv( argv )
 		, statementList( statementList )
 		, position( position )
 	{}
+
+	void Accept( IVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
 private:
 	std::string id;
 	std::string argv;
-	std::shared_ptr<IStatementList> statementList;
+	std::shared_ptr<CStatementList> statementList;
 	CPosition position;
 }; 
 
