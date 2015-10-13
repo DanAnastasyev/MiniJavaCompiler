@@ -4,6 +4,10 @@
 
 #include "grammar.h"
 #include "Position.h"
+#include "Visitor.h"
+
+class CMainClass;
+class CClassDeclList;
 
 class CProgram : public IProgram {
 public:

@@ -1,10 +1,14 @@
 #pragma once
-#include "grammar.h"
+
+#include "Header.h"
+
+class CProgram;
+class CMainClass;
 
 class IVisitor {
 public:
-	void Visit( const IProgram* program );
-	void Visit( const IMainClass* program );
+	void Visit( const CProgram* program );
+	void Visit( const CMainClass* program );
 	//void Visit( const IClassDeclList* program );
 	//void Visit( const IClassDecl* program );
 	//void Visit( const IVarDeclList* program );

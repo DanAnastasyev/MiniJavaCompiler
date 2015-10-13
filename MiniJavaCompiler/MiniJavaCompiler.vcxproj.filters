@@ -22,6 +22,9 @@
     <Filter Include="Source Files\BuildOutputs">
       <UniqueIdentifier>{a9fc8f27-c103-4e2c-ae7b-36a4abc32890}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Visitors">
+      <UniqueIdentifier>{08146386-6d30-4676-a77c-248e961c6671}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -44,6 +47,9 @@
     <ClCompile Include="BuildOutputs\parser.tab.cpp">
       <Filter>Source Files\BuildOutputs</Filter>
     </ClCompile>
+    <ClCompile Include="PrettyPrinterVisitor.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -56,6 +62,12 @@
       <Filter>Source Files\BuildOutputs</Filter>
     </ClInclude>
     <ClInclude Include="grammar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>Source Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="Header.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
