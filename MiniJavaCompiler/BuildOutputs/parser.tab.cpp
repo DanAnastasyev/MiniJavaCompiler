@@ -141,7 +141,17 @@ extern int yydebug;
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+/* Line 387 of yacc.c  */
+#line 16 "parser.y"
+
+	char* val;
+
+
+/* Line 387 of yacc.c  */
+#line 154 "BuildOutputs\\parser.tab.cpp"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -181,7 +191,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 185 "BuildOutputs\\parser.tab.cpp"
+#line 195 "BuildOutputs\\parser.tab.cpp"
 
 #ifdef short
 # undef short
@@ -497,12 +507,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    38,    38,    44,    50,    54,    60,    64,    70,    74,
-      80,    86,    90,    96,   102,   106,   113,   117,   123,   129,
-     133,   137,   141,   147,   151,   157,   161,   165,   169,   173,
-     177,   183,   187,   191,   195,   199,   203,   207,   211,   215,
-     219,   223,   228,   233,   238,   242,   246,   250,   254,   260,
-     264,   270,   274,   280
+       0,    42,    42,    48,    54,    58,    64,    68,    74,    78,
+      84,    90,    94,   100,   106,   110,   117,   121,   127,   133,
+     137,   141,   145,   151,   155,   161,   165,   169,   173,   177,
+     181,   187,   191,   195,   199,   203,   207,   211,   215,   219,
+     223,   227,   231,   235,   239,   243,   247,   251,   255,   261,
+     265,   271,   275,   281
 };
 #endif
 
@@ -1620,478 +1630,475 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 38 "parser.y"
+#line 42 "parser.y"
     {
-		debugRule((yyloc), "Program");
-		(yyval) = NULL;
+		debugRule((yyloc), "Program -> MainClassDeclaration ClassDeclarationList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 44 "parser.y"
+#line 48 "parser.y"
     {
-		debugRule((yyloc), "MainClassDeclaration");
-		(yyval) = NULL;
+		debugRule((yyloc), "MainClassDeclaration -> CLASS IDENTIFIER { PUBLIC STATIC VOID MAIN ( STRING [ ] IDENTIFIER ) { Statement } }");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 50 "parser.y"
+#line 54 "parser.y"
     {
-		debugRule((yyloc), "ClassDeclarationList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "ClassDeclarationList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 54 "parser.y"
+#line 58 "parser.y"
     {
-		debugRule((yyloc), "ClassDeclarationList");
-		(yyval) = NULL;
+		debugRule((yyloc), "ClassDeclarationList -> ClassDeclaration ClassDeclarationList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 60 "parser.y"
+#line 64 "parser.y"
     {
-		debugRule((yyloc), "ClassDeclaration");
-		(yyval) = NULL;
+		debugRule((yyloc), "ClassDeclaration -> CLASS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 64 "parser.y"
+#line 68 "parser.y"
     {
-		debugRule((yyloc), "ClassDeclaration extends");
-		(yyval) = NULL;
+		debugRule((yyloc), "ClassDeclaration -> CLASS IDENTIFIER EXTENDS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 70 "parser.y"
+#line 74 "parser.y"
     {
-		debugRule((yyloc), "VariableDeclarationList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "VariableDeclarationList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 74 "parser.y"
+#line 78 "parser.y"
     {
-		debugRule((yyloc), "VariableDeclarationList");
-		(yyval) = NULL;
+		debugRule((yyloc), "VariableDeclarationList -> VariableDeclarationList VariableDeclaration");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 80 "parser.y"
+#line 84 "parser.y"
     {
-		debugRule((yyloc), "VariableDeclaration");
-		(yyval) = NULL;
+		debugRule((yyloc), "VariableDeclaration -> Type IDENTIFIER ;");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 86 "parser.y"
+#line 90 "parser.y"
     {
-		debugRule((yyloc), "MethodDeclarationList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "MethodDeclarationList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 90 "parser.y"
+#line 94 "parser.y"
     {
-		debugRule((yyloc), "MethodDeclarationList");
-		(yyval) = NULL;
+		debugRule((yyloc), "MethodDeclarationList -> MethodDeclaration MethodDeclarationList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 96 "parser.y"
+#line 100 "parser.y"
     {
-		debugRule((yyloc), "MethodDeclaration");
-		(yyval) = NULL;
+		debugRule((yyloc), "MethodDeclaration -> PUBLIC Type IDENTIFIER ( FormalList ) { VariableDeclarationList StatementList RETURN Expression ; }");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 102 "parser.y"
+#line 106 "parser.y"
     {
-		debugRule((yyloc), "FormalList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "FormalList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 106 "parser.y"
+#line 110 "parser.y"
     {
-		debugRule((yyloc), "FormalList");
-		(yyval) = NULL;
+		debugRule((yyloc), "FormalList -> Type IDENTIFIER FormalRestList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 113 "parser.y"
+#line 117 "parser.y"
     {
-		debugRule((yyloc), "FormalRestList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "FormalRestList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 117 "parser.y"
+#line 121 "parser.y"
     {
-		debugRule((yyloc), "FormalRestList");
-		(yyval) = NULL;
+		debugRule((yyloc), "FormalRestList -> FormalRest FormalRestList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 123 "parser.y"
+#line 127 "parser.y"
     {
-		debugRule((yyloc), "FormalRest");
-		(yyval) = NULL;
+		debugRule((yyloc), "FormalRest -> , Type IDENTIFIER");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 129 "parser.y"
+#line 133 "parser.y"
     {
-		debugRule((yyloc), "Type INT[]");
-		(yyval) = NULL;
+		debugRule((yyloc), "Type -> INT[]");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 133 "parser.y"
+#line 137 "parser.y"
     {
-		debugRule((yyloc), "Type BOOL");
-		(yyval) = NULL;
+		debugRule((yyloc), "Type -> BOOL");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 137 "parser.y"
+#line 141 "parser.y"
     {
-		debugRule((yyloc), "Type INT");
-		(yyval) = NULL;
+		debugRule((yyloc), "Type -> INT");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 141 "parser.y"
+#line 145 "parser.y"
     {
-		debugRule((yyloc), "Type CLASS");
-		(yyval) = NULL;
+		debugRule((yyloc), "Type -> CLASS");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 147 "parser.y"
+#line 151 "parser.y"
     {
-		debugRule((yyloc), "StatementList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "StatementList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 151 "parser.y"
+#line 155 "parser.y"
     {
-		debugRule((yyloc), "StatementList");
-		(yyval) = NULL;
+		debugRule((yyloc), "StatementList -> Statement StatementList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 157 "parser.y"
+#line 161 "parser.y"
     {
-		debugRule((yyloc), "Statement {}");
-		(yyval) = NULL;
+		debugRule((yyloc), "Statement -> { StatementList }");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 161 "parser.y"
+#line 165 "parser.y"
     {
-		debugRule((yyloc), "Statement IF");
-		(yyval) = NULL;
+		debugRule((yyloc), "Statement -> IF ( Expression ) Statement ELSE Statement");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 165 "parser.y"
+#line 169 "parser.y"
     {
-		debugRule((yyloc), "Statement WHILE");
-		(yyval) = NULL;
+		debugRule((yyloc), "Statement -> WHILE ( Expression ) Statement");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 169 "parser.y"
+#line 173 "parser.y"
     {
-		debugRule((yyloc), "Statement PRINTLN");
-		(yyval) = NULL;
+		debugRule((yyloc), "Statement -> PRINTLN ( Expression ) ;");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 173 "parser.y"
+#line 177 "parser.y"
     {
-		debugRule((yyloc), "Statement ASSIGN");
-		(yyval) = NULL;
+		debugRule((yyloc), "Statement -> IDENTIFIER = Expression ;");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 177 "parser.y"
+#line 181 "parser.y"
     {
-		debugRule((yyloc), "Statement ASSIGN[]");
-		(yyval) = NULL;
+		debugRule((yyloc), "Statement -> IDENTIFIER [ Expression ] = Expression ;");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 183 "parser.y"
+#line 187 "parser.y"
     {
-		debugRule((yyloc), "Expression AND");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression AND Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 187 "parser.y"
+#line 191 "parser.y"
     {
-		debugRule((yyloc), "Expression <");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression < Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 191 "parser.y"
+#line 195 "parser.y"
     {
-		debugRule((yyloc), "Expression +");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression + Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 195 "parser.y"
+#line 199 "parser.y"
     {
-		debugRule((yyloc), "Expression -");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression - Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 199 "parser.y"
+#line 203 "parser.y"
     {
-		debugRule((yyloc), "Expression UNARY -");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> -Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 203 "parser.y"
+#line 207 "parser.y"
     {
-		debugRule((yyloc), "Expression *");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression * Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 207 "parser.y"
+#line 211 "parser.y"
     {
-		debugRule((yyloc), "Expression /");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression / Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 211 "parser.y"
+#line 215 "parser.y"
     {
-		debugRule((yyloc), "Expression[Expression]");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression[Expression]");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 215 "parser.y"
+#line 219 "parser.y"
     {
-		debugRule((yyloc), "Expression.length");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression.LENGTH");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 219 "parser.y"
+#line 223 "parser.y"
     {
-		debugRule((yyloc), "Expression.IDENTIFIER(ExpressionList)");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> Expression.IDENTIFIER(ExpressionList)");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 223 "parser.y"
+#line 227 "parser.y"
     {
-		//std::cout << $1 << std::endl;
-		debugRule((yyloc), "Expression INTEGER_VALUE");
-		(yyval) = NULL;
+		debugRule((yyloc), (std::string("Expression -> INTEGER_VALUE(") + std::string((yyvsp[(1) - (1)].val)) + std::string(")")).c_str() );
+		(yyval.val) = NULL;
 	}
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 228 "parser.y"
+#line 231 "parser.y"
     {
-		//std::cout << $1 << std::endl;
-		debugRule((yyloc), "Expression BOOLEAN_VALUE");
-		(yyval) = NULL;
+		debugRule((yyloc), (std::string("Expression -> BOOLEAN_VALUE(") + std::string((yyvsp[(1) - (1)].val)) + std::string(")")).c_str() );
+		(yyval.val) = NULL;
 	}
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 233 "parser.y"
+#line 235 "parser.y"
     {
-		//std::cout << $1 << std::endl;
-		debugRule((yyloc), "Expression IDENTIFIER");
-		(yyval) = NULL;
+		debugRule((yyloc), (std::string("Expression -> IDENTIFIER(") + std::string((yyvsp[(1) - (1)].val)) + std::string(")")).c_str() );
+		(yyval.val) = NULL;
 	}
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 238 "parser.y"
+#line 239 "parser.y"
     {
-		debugRule((yyloc), "Expression THIS");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> THIS");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 242 "parser.y"
+#line 243 "parser.y"
     {
-		debugRule((yyloc), "Expression new int[]");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> new int[]");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 246 "parser.y"
+#line 247 "parser.y"
     {
-		debugRule((yyloc), "Expression new class()");
-		(yyval) = NULL;	
+		debugRule((yyloc), "Expression -> new IDENTIFIER()");
+		(yyval.val) = NULL;	
 	}
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 250 "parser.y"
+#line 251 "parser.y"
     {
-		debugRule((yyloc), "Expression !");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> !Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 254 "parser.y"
+#line 255 "parser.y"
     {
-		debugRule((yyloc), "(Expression)");
-		(yyval) = NULL;
+		debugRule((yyloc), "Expression -> (Expression)");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 260 "parser.y"
+#line 261 "parser.y"
     {
-		debugRule((yyloc), "ExpressionList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "ExpressionList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 264 "parser.y"
+#line 265 "parser.y"
     {
-		debugRule((yyloc), "ExpressionList");
-		(yyval) = NULL;
+		debugRule((yyloc), "ExpressionList -> Expression ExpressionRestList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 270 "parser.y"
+#line 271 "parser.y"
     {
-		debugRule((yyloc), "ExpressionRestList empty");
-		(yyval) = NULL;
+		debugRule((yyloc), "ExpressionRestList -> empty");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 274 "parser.y"
+#line 275 "parser.y"
     {
-		debugRule((yyloc), "ExpressionRestList");
-		(yyval) = NULL;
+		debugRule((yyloc), "ExpressionRestList -> Expression ExpressionRestList");
+		(yyval.val) = NULL;
 	}
     break;
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 280 "parser.y"
+#line 281 "parser.y"
     {
-		debugRule((yyloc), "ExpressionRest");
-		(yyval) = NULL;
+		debugRule((yyloc), "ExpressionRest -> , Expression");
+		(yyval.val) = NULL;
 	}
     break;
 
 
 /* Line 1792 of yacc.c  */
-#line 2095 "BuildOutputs\\parser.tab.cpp"
+#line 2102 "BuildOutputs\\parser.tab.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2330,7 +2337,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 285 "parser.y"
+#line 286 "parser.y"
 
 
 void yyerror(const char *s) 

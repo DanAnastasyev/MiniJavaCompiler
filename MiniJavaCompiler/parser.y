@@ -13,9 +13,9 @@
 	}
 %}
 
-/*%union {
+%union {
 	char* val;
-}*/
+}
 
 %token INTEGER_VAL BOOLEAN_VAL VOID STRING INT BOOL
 %token IDENTIFIER PRINTLN THIS NEW
@@ -32,253 +32,254 @@
 %left '!'
 %left '.' '[' ']'
 
+%type <val> Program MainClassDeclaration ClassDeclarationList ClassDeclaration VariableDeclarationList VariableDeclaration ExpressionRest StatementList
+	MethodDeclaration MethodDeclarationList FormalList FormalRestList FormalRest Type Statement Expression ExpressionList ExpressionRestList
+	IDENTIFIER INTEGER_VAL BOOLEAN_VAL
+
 %%
 
 Program:
 	MainClassDeclaration ClassDeclarationList {
-		debugRule(@$, "Program");
+		debugRule(@$, "Program -> MainClassDeclaration ClassDeclarationList");
 		$$ = NULL;
 	}
 
 MainClassDeclaration:
 	CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}' {
-		debugRule(@$, "MainClassDeclaration");
+		debugRule(@$, "MainClassDeclaration -> CLASS IDENTIFIER { PUBLIC STATIC VOID MAIN ( STRING [ ] IDENTIFIER ) { Statement } }");
 		$$ = NULL;
 	}
 
 ClassDeclarationList:
 	/* empty */ {
-		debugRule(@$, "ClassDeclarationList empty");
+		debugRule(@$, "ClassDeclarationList -> empty");
 		$$ = NULL;
 	}
 	| ClassDeclaration ClassDeclarationList {
-		debugRule(@$, "ClassDeclarationList");
+		debugRule(@$, "ClassDeclarationList -> ClassDeclaration ClassDeclarationList");
 		$$ = NULL;
 	}
 
 ClassDeclaration:
 	CLASS IDENTIFIER '{'  VariableDeclarationList MethodDeclarationList '}' {
-		debugRule(@$, "ClassDeclaration");
+		debugRule(@$, "ClassDeclaration -> CLASS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
 		$$ = NULL;
 	}
 	| CLASS IDENTIFIER EXTENDS IDENTIFIER '{'  VariableDeclarationList MethodDeclarationList '}' {
-		debugRule(@$, "ClassDeclaration extends");
+		debugRule(@$, "ClassDeclaration -> CLASS IDENTIFIER EXTENDS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
 		$$ = NULL;
 	}
 
 VariableDeclarationList:
 	/* empty */ {
-		debugRule(@$, "VariableDeclarationList empty");
+		debugRule(@$, "VariableDeclarationList -> empty");
 		$$ = NULL;
 	}
 	| VariableDeclarationList VariableDeclaration {
-		debugRule(@$, "VariableDeclarationList");
+		debugRule(@$, "VariableDeclarationList -> VariableDeclarationList VariableDeclaration");
 		$$ = NULL;
 	}
 
 VariableDeclaration:
 	Type IDENTIFIER ';' {
-		debugRule(@$, "VariableDeclaration");
+		debugRule(@$, "VariableDeclaration -> Type IDENTIFIER ;");
 		$$ = NULL;
 	}
 
 MethodDeclarationList:
 	/* empty */ {
-		debugRule(@$, "MethodDeclarationList empty");
+		debugRule(@$, "MethodDeclarationList -> empty");
 		$$ = NULL;
 	}
 	| MethodDeclaration MethodDeclarationList {
-		debugRule(@$, "MethodDeclarationList");
+		debugRule(@$, "MethodDeclarationList -> MethodDeclaration MethodDeclarationList");
 		$$ = NULL;
 	}
 
 MethodDeclaration:
 	PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}' {
-		debugRule(@$, "MethodDeclaration");
+		debugRule(@$, "MethodDeclaration -> PUBLIC Type IDENTIFIER ( FormalList ) { VariableDeclarationList StatementList RETURN Expression ; }");
 		$$ = NULL;
 	}
 
 FormalList:
 	/* empty */ {
-		debugRule(@$, "FormalList empty");
+		debugRule(@$, "FormalList -> empty");
 		$$ = NULL;
 	}
 	| Type IDENTIFIER FormalRestList {
-		debugRule(@$, "FormalList");
+		debugRule(@$, "FormalList -> Type IDENTIFIER FormalRestList");
 		$$ = NULL;
 	}
 
 
 FormalRestList:
 	/* empty */ {
-		debugRule(@$, "FormalRestList empty");
+		debugRule(@$, "FormalRestList -> empty");
 		$$ = NULL;
 	}
 	| FormalRest FormalRestList {
-		debugRule(@$, "FormalRestList");
+		debugRule(@$, "FormalRestList -> FormalRest FormalRestList");
 		$$ = NULL;
 	}
 
 FormalRest:
 	',' Type IDENTIFIER {
-		debugRule(@$, "FormalRest");
+		debugRule(@$, "FormalRest -> , Type IDENTIFIER");
 		$$ = NULL;
 	}
 
 Type:
 	INT '[' ']' {
-		debugRule(@$, "Type INT[]");
+		debugRule(@$, "Type -> INT[]");
 		$$ = NULL;
 	}
 	| BOOL {
-		debugRule(@$, "Type BOOL");
+		debugRule(@$, "Type -> BOOL");
 		$$ = NULL;
 	}
 	| INT {
-		debugRule(@$, "Type INT");
+		debugRule(@$, "Type -> INT");
 		$$ = NULL;
 	}
 	| IDENTIFIER {
-		debugRule(@$, "Type CLASS");
+		debugRule(@$, "Type -> CLASS");
 		$$ = NULL;
 	}
 
 StatementList:
 	/* empty */ {
-		debugRule(@$, "StatementList empty");
+		debugRule(@$, "StatementList -> empty");
 		$$ = NULL;
 	}
 	| Statement StatementList {
-		debugRule(@$, "StatementList");
+		debugRule(@$, "StatementList -> Statement StatementList");
 		$$ = NULL;
 	}
 
 Statement:
 	'{' StatementList '}' {
-		debugRule(@$, "Statement {}");
+		debugRule(@$, "Statement -> { StatementList }");
 		$$ = NULL;
 	}
 	| IF '(' Expression ')' Statement ELSE Statement {
-		debugRule(@$, "Statement IF");
+		debugRule(@$, "Statement -> IF ( Expression ) Statement ELSE Statement");
 		$$ = NULL;
 	}
 	| WHILE '(' Expression ')' Statement {
-		debugRule(@$, "Statement WHILE");
+		debugRule(@$, "Statement -> WHILE ( Expression ) Statement");
 		$$ = NULL;
 	}
 	| PRINTLN '(' Expression ')' ';' {
-		debugRule(@$, "Statement PRINTLN");
+		debugRule(@$, "Statement -> PRINTLN ( Expression ) ;");
 		$$ = NULL;
 	}
 	| IDENTIFIER '=' Expression ';' {
-		debugRule(@$, "Statement ASSIGN");
+		debugRule(@$, "Statement -> IDENTIFIER = Expression ;");
 		$$ = NULL;
 	}
 	| IDENTIFIER '[' Expression ']' '=' Expression ';' {
-		debugRule(@$, "Statement ASSIGN[]");
+		debugRule(@$, "Statement -> IDENTIFIER [ Expression ] = Expression ;");
 		$$ = NULL;
 	}
 
 Expression:
 	Expression AND Expression {
-		debugRule(@$, "Expression AND");
+		debugRule(@$, "Expression -> Expression AND Expression");
 		$$ = NULL;
 	}
 	| Expression '<' Expression {
-		debugRule(@$, "Expression <");
+		debugRule(@$, "Expression -> Expression < Expression");
 		$$ = NULL;
 	}
 	| Expression '+' Expression {
-		debugRule(@$, "Expression +");
+		debugRule(@$, "Expression -> Expression + Expression");
 		$$ = NULL;
 	} 
 	| Expression '-' Expression {
-		debugRule(@$, "Expression -");
+		debugRule(@$, "Expression -> Expression - Expression");
 		$$ = NULL;
 	}
 	| '-' Expression %prec UMINUS {
-		debugRule(@$, "Expression UNARY -");
+		debugRule(@$, "Expression -> -Expression");
 		$$ = NULL;
 	}
 	| Expression '*' Expression {
-		debugRule(@$, "Expression *");
+		debugRule(@$, "Expression -> Expression * Expression");
 		$$ = NULL;
 	}
 	| Expression '/' Expression {
-		debugRule(@$, "Expression /");
+		debugRule(@$, "Expression -> Expression / Expression");
 		$$ = NULL;
 	}
 	| Expression '[' Expression ']' {
-		debugRule(@$, "Expression[Expression]");
+		debugRule(@$, "Expression -> Expression[Expression]");
 		$$ = NULL;
 	}
 	| Expression '.' LENGTH {
-		debugRule(@$, "Expression.length");
+		debugRule(@$, "Expression -> Expression.LENGTH");
 		$$ = NULL;
 	}
 	| Expression '.' IDENTIFIER '(' ExpressionList ')' {
-		debugRule(@$, "Expression.IDENTIFIER(ExpressionList)");
+		debugRule(@$, "Expression -> Expression.IDENTIFIER(ExpressionList)");
 		$$ = NULL;
 	}
 	| INTEGER_VAL {
-		//std::cout << $1 << std::endl;
-		debugRule(@$, "Expression INTEGER_VALUE");
+		debugRule(@$, (std::string("Expression -> INTEGER_VALUE(") + std::string($1) + std::string(")")).c_str() );
 		$$ = NULL;
 	}
 	| BOOLEAN_VAL {
-		//std::cout << $1 << std::endl;
-		debugRule(@$, "Expression BOOLEAN_VALUE");
+		debugRule(@$, (std::string("Expression -> BOOLEAN_VALUE(") + std::string($1) + std::string(")")).c_str() );
 		$$ = NULL;
 	}
 	| IDENTIFIER {
-		//std::cout << $1 << std::endl;
-		debugRule(@$, "Expression IDENTIFIER");
+		debugRule(@$, (std::string("Expression -> IDENTIFIER(") + std::string($1) + std::string(")")).c_str() );
 		$$ = NULL;
 	}
 	| THIS {
-		debugRule(@$, "Expression THIS");
+		debugRule(@$, "Expression -> THIS");
 		$$ = NULL;
 	}
 	| NEW INT '[' Expression ']' {
-		debugRule(@$, "Expression new int[]");
+		debugRule(@$, "Expression -> new int[]");
 		$$ = NULL;
 	}
 	| NEW IDENTIFIER '(' ')' {
-		debugRule(@$, "Expression new class()");
+		debugRule(@$, "Expression -> new IDENTIFIER()");
 		$$ = NULL;	
 	}
 	| '!' Expression  {
-		debugRule(@$, "Expression !");
+		debugRule(@$, "Expression -> !Expression");
 		$$ = NULL;
 	}
 	| '(' Expression ')' {
-		debugRule(@$, "(Expression)");
+		debugRule(@$, "Expression -> (Expression)");
 		$$ = NULL;
 	}
 
 ExpressionList:
 	/* empty */ {
-		debugRule(@$, "ExpressionList empty");
+		debugRule(@$, "ExpressionList -> empty");
 		$$ = NULL;
 	}
 	| Expression ExpressionRestList {
-		debugRule(@$, "ExpressionList");
+		debugRule(@$, "ExpressionList -> Expression ExpressionRestList");
 		$$ = NULL;
 	}
 
 ExpressionRestList:
 	/* empty */ {
-		debugRule(@$, "ExpressionRestList empty");
+		debugRule(@$, "ExpressionRestList -> empty");
 		$$ = NULL;
 	}
 	| ExpressionRest ExpressionRestList {
-		debugRule(@$, "ExpressionRestList");
+		debugRule(@$, "ExpressionRestList -> Expression ExpressionRestList");
 		$$ = NULL;
 	}
 
 ExpressionRest:
 	',' Expression {
-		debugRule(@$, "ExpressionRest");
+		debugRule(@$, "ExpressionRest -> , Expression");
 		$$ = NULL;
 	}
 

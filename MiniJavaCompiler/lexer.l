@@ -53,10 +53,10 @@ length		{	 return LENGTH;	}
 new			{	 return NEW;	}
 "&&"		{	 return AND;	}
 [-+*/{}()\]\[!;,=.<]	{	return yytext[0];	}
-"true"|"false"		{	/*strcpy( yylval->val, yytext );*/ return BOOLEAN_VAL; }
-[0-9]+		{	/*strcpy( yylval->val, yytext );*/ return INTEGER_VAL; }
-[a-zA-Z][a-z0-9A-Z_]*	{	/* strcpy( yylval->val, yytext );*/ return IDENTIFIER; }
-" " | "\t"	{  }
+"true"|"false"		{	yylval.val = new char; strcpy( yylval.val, yytext ); return BOOLEAN_VAL; }
+[0-9]+		{	yylval.val = new char; strcpy( yylval.val, yytext ); return INTEGER_VAL; }
+[a-zA-Z][a-z0-9A-Z_]*	{	 yylval.val = new char; strcpy( yylval.val, yytext ); return IDENTIFIER; }
+[ \t]		{  }
 "\n"		{  } 
 [/][/].*\n  {  } // comment
 .			{ yyerror("Unknown symbol\n"); }
