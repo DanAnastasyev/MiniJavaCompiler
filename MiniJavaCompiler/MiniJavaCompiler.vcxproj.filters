@@ -67,7 +67,7 @@
     <ClInclude Include="Visitor.h">
       <Filter>Source Files\Visitors</Filter>
     </ClInclude>
-    <ClInclude Include="Header.h">
+    <ClInclude Include="RuleClasses.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
