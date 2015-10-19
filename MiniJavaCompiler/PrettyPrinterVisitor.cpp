@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Visitor.h"
-#include "Header.h"
+#include "RuleClasses.h"
 
 class CPrettyPrinterVisitor : public IVisitor {
 	void Visit( CProgram* program )
