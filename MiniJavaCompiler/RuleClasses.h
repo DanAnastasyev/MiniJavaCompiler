@@ -147,12 +147,12 @@ public:
 	{
 	}
 
-	std::string GetName()
+	std::string GetName() const
 	{
 		return className;
 	}
 
-	std::string GetBaseClassName()
+	std::string GetBaseClassName() const
 	{
 		return baseClassName;
 	}
@@ -182,9 +182,25 @@ private:
 
 class CStatementList : public IStatementList { // not implemented
 public:
-	CStatementList()
+	CStatementList( const IStatement* _stmt, const IStatementList* _stmtList, const CPosition& pos ) :
+		stmt( _stmt ),
+		stmtList( _stmtList ),
+		position( pos )
 	{}
+
+	IStatement* GetStatement()
+	{
+		return stmt.get();
+	}
+
+	IStatementList* GetStatementList()
+	{
+		return stmtList.get();
+	}
 private:
+	std::shared_ptr<IStatement> stmt;
+	std::shared_ptr<IStatementList> stmtList;
+	CPosition position;
 };
 
 class CVarDecl : public IVarDecl {
@@ -200,7 +216,7 @@ public:
 		return type.get();
 	}
 
-	std::string GetName()
+	std::string GetName() const
 	{
 		return identifier;
 	}
@@ -232,7 +248,7 @@ public:
 		position( _position )
 	{}
 
-	std::string GetName()
+	std::string GetName() const 
 	{
 		return methodName;
 	}
@@ -451,7 +467,7 @@ private:
 
 class CStandardType : public IType {
 public:
-	enum StandardType { INT = 0, INT_ARRAY, BOOl };
+	enum StandardType { INT = 0, INT_ARRAY, BOOL };
 
 	CStandardType( StandardType _type, const CPosition& _position ) :
 		type( _type ),
@@ -492,5 +508,318 @@ public:
 
 private:
 	std::string typeName;
+	CPosition position;
+};
+
+class CBinOpExpression : public IExp {
+public:
+	enum BinOp { AND, LESS, PLUS, MINUS, TIMES, DIVIDE };
+
+	CBinOpExpression( const IExp* _leftExp, BinOp _binOp, const IExp* _rightExp, const CPosition& pos ) :
+		leftExp( _leftExp ),
+		rightExp( _rightExp ),
+		position( pos ),
+		binOp( _binOp )
+	{}
+
+	IExp* GetLeftExp() 
+	{
+		return leftExp.get();
+	}
+	
+	IExp* GetRightExp()
+	{
+		return rightExp.get();
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> leftExp;
+	std::shared_ptr<IExp> rightExp;
+	CPosition position;
+	BinOp binOp;
+};
+
+class CIndexExpression : public IExp {
+public:
+	CIndexExpression( const IExp* _exp, const IExp* _indexExp, const CPosition& pos ) :
+		exp( _exp ),
+		indexExp( _indexExp ),
+		position( pos )
+	{}
+
+	IExp* GetExp()
+	{
+		return exp.get();
+	}
+
+	IExp* GetIndexExp()
+	{
+		return indexExp.get( );
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	std::shared_ptr<IExp> indexExp;
+	CPosition position;
+};
+
+class CLenghtExpression : public IExp {
+public:
+	CLenghtExpression( const IExp* _exp, const CPosition& pos ) :
+		exp( _exp ),
+		position( pos )
+	{}
+
+	IExp* GetExp()
+	{
+		return exp.get();
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	CPosition position;
+};
+
+class CMethodExpression : public IExp {
+public:
+	CMethodExpression( const IExp* _exp, const std::string& _identifier, const IExpList* _expList, const CPosition& pos ) :
+		exp( _exp ),
+		identifier( _identifier ),
+		expList( _expList ),
+		position( pos )
+	{}
+
+	IExp* GetExp()
+	{
+		return exp.get();
+	}
+
+	IExpList* GetIndexExp()
+	{
+		return expList.get( );
+	}
+
+	std::string GetIdentifier() const
+	{
+		return identifier;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	std::shared_ptr<IExpList> expList;
+	std::string identifier;
+	CPosition position;
+};
+
+class CIntLiteralExpression : public IExp {
+public:
+	CIntLiteralExpression( int _val, const CPosition& pos ) :
+		val( _val ), 
+		position( pos )
+	{}
+
+	int GetValue() const
+	{
+		return val;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	int val;
+	CPosition position;
+};
+
+class CBoolLiteralExpression : public IExp {
+public:
+	CBoolLiteralExpression( bool _val, const CPosition& pos ) :
+		val( _val ), 
+		position( pos )
+	{}
+
+	bool GetValue() const
+	{
+		return val;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	bool val;
+	CPosition position;
+};
+
+class CIdentifierExpression : public IExp {
+public:
+	CIdentifierExpression( const std::string& id, const CPosition& pos ) :
+		identifier( id ), 
+		position( pos )
+	{}
+
+	std::string GetIdentifier() const
+	{
+		return identifier;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::string identifier;
+	CPosition position;
+};
+
+class CThisExpression : public IExp {
+public:
+	CThisExpression( const CPosition& pos ) :
+		position( pos )
+	{}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	CPosition position;
+};
+
+class CNewIntArrayExpression : public IExp {
+public:
+	CNewIntArrayExpression( const IExp* _exp, const CPosition& pos ) :
+		exp( _exp ), 
+		position( pos )
+	{}
+
+	IExp* GetExp() const
+	{
+		return exp.get();
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	CPosition position;
+};
+
+class CNewExpression : public IExp {
+public:
+	CNewExpression( const std::string& id, const CPosition& pos ) :
+		identifier( id ), 
+		position( pos )
+	{}
+
+	std::string GetIdentifier() const
+	{
+		return identifier;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::string identifier;
+	CPosition position;
+};
+
+class CUnaryOpExpression : public IExp {
+public:
+	enum UnaryOp { MINUS, NOT };
+
+	CUnaryOpExpression( UnaryOp _op, const IExp* _exp, const CPosition& pos ) :
+		exp( _exp ),
+		position( pos ),
+		op( _op )
+	{}
+
+	IExp* GetLeftExp()
+	{
+		return exp.get();
+	}
+
+	UnaryOp GetOperation() const
+	{
+		return op;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	CPosition position;
+	UnaryOp op;
+};
+
+class CBracesExpression : public IExp {
+	CBracesExpression( const IExp* _exp, const CPosition& pos ) :
+	exp( _exp ),
+		position( pos )
+	{}
+
+	std::shared_ptr<IExp> GetExp() const
+	{
+		return exp;
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	CPosition position;
+};
+
+class CExpressionList : public IExpList {
+public:
+	CExpressionList( const IExp* _exp, const IExpList* _expList, const CPosition& pos ) :
+		exp( _exp ),
+		expList( _expList ),
+		position( pos )
+	{}
+	
+	IExp* GetExp()
+	{
+		return exp.get();
+	}
+
+	IExpList* GetExpList()
+	{
+		return expList.get();
+	}
+
+	void Accept( IVisitor*  visitor ) const override
+	{
+		visitor->Visit( this );
+	}
+private:
+	std::shared_ptr<IExp> exp;
+	std::shared_ptr<IExpList> expList;
 	CPosition position;
 };
