@@ -1,5 +1,18 @@
 #pragma once
 
+class CExpressionList;
+class CBracesExpression;
+class CUnaryOpExpression;
+class CNewExpression;
+class CNewIntArrayExpression;
+class CThisExpression;
+class CIdentifierExpression;
+class CBoolLiteralExpression;
+class CIntLiteralExpression;
+class CMethodExpression;
+class CLenghtExpression;
+class CIndexExpression;
+class CBinOpExpression;
 class CArrayAssignStatement;
 class CAssignStatement;
 class CStatementListStatement;
@@ -43,7 +56,6 @@ public:
 	void Visit( const CThisExpression* expr );
 	void Visit( const CNewIntArrayExpression* expr );
 	void Visit( const CNewExpression* expr );
-	void Visit( const CIntLiteralExpression* expr );
 	void Visit( const CUnaryOpExpression* expr );
 	void Visit( const CBracesExpression* expr );
 	void Visit( const CExpressionList* exprList );

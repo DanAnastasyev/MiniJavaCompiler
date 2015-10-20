@@ -182,7 +182,7 @@ private:
 
 class CStatementList : public IStatementList { // not implemented
 public:
-	CStatementList( const IStatement* _stmt, const IStatementList* _stmtList, const CPosition& pos ) :
+	CStatementList( IStatement* _stmt, IStatementList* _stmtList, const CPosition& pos ) :
 		stmt( _stmt ),
 		stmtList( _stmtList ),
 		position( pos )
@@ -515,7 +515,7 @@ class CBinOpExpression : public IExp {
 public:
 	enum BinOp { AND, LESS, PLUS, MINUS, TIMES, DIVIDE };
 
-	CBinOpExpression( const IExp* _leftExp, BinOp _binOp, const IExp* _rightExp, const CPosition& pos ) :
+	CBinOpExpression( IExp* _leftExp, BinOp _binOp, IExp* _rightExp, const CPosition& pos ) :
 		leftExp( _leftExp ),
 		rightExp( _rightExp ),
 		position( pos ),
@@ -545,7 +545,7 @@ private:
 
 class CIndexExpression : public IExp {
 public:
-	CIndexExpression( const IExp* _exp, const IExp* _indexExp, const CPosition& pos ) :
+	CIndexExpression( IExp* _exp, IExp* _indexExp, const CPosition& pos ) :
 		exp( _exp ),
 		indexExp( _indexExp ),
 		position( pos )
@@ -573,7 +573,7 @@ private:
 
 class CLenghtExpression : public IExp {
 public:
-	CLenghtExpression( const IExp* _exp, const CPosition& pos ) :
+	CLenghtExpression( IExp* _exp, const CPosition& pos ) :
 		exp( _exp ),
 		position( pos )
 	{}
@@ -594,7 +594,7 @@ private:
 
 class CMethodExpression : public IExp {
 public:
-	CMethodExpression( const IExp* _exp, const std::string& _identifier, const IExpList* _expList, const CPosition& pos ) :
+	CMethodExpression( IExp* _exp, const std::string& _identifier, IExpList* _expList, const CPosition& pos ) :
 		exp( _exp ),
 		identifier( _identifier ),
 		expList( _expList ),
@@ -706,7 +706,7 @@ private:
 
 class CNewIntArrayExpression : public IExp {
 public:
-	CNewIntArrayExpression( const IExp* _exp, const CPosition& pos ) :
+	CNewIntArrayExpression( IExp* _exp, const CPosition& pos ) :
 		exp( _exp ), 
 		position( pos )
 	{}
@@ -750,7 +750,7 @@ class CUnaryOpExpression : public IExp {
 public:
 	enum UnaryOp { MINUS, NOT };
 
-	CUnaryOpExpression( UnaryOp _op, const IExp* _exp, const CPosition& pos ) :
+	CUnaryOpExpression( UnaryOp _op, IExp* _exp, const CPosition& pos ) :
 		exp( _exp ),
 		position( pos ),
 		op( _op )
@@ -777,7 +777,7 @@ private:
 };
 
 class CBracesExpression : public IExp {
-	CBracesExpression( const IExp* _exp, const CPosition& pos ) :
+	CBracesExpression( IExp* _exp, const CPosition& pos ) :
 	exp( _exp ),
 		position( pos )
 	{}
@@ -798,7 +798,7 @@ private:
 
 class CExpressionList : public IExpList {
 public:
-	CExpressionList( const IExp* _exp, const IExpList* _expList, const CPosition& pos ) :
+	CExpressionList( IExp* _exp, IExpList* _expList, const CPosition& pos ) :
 		exp( _exp ),
 		expList( _expList ),
 		position( pos )
