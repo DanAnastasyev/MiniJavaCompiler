@@ -12,18 +12,18 @@ class CClassDecl;
 
 class CProgram : public IProgram {
 public:
-	CProgram( CMainClass* _mainClass, CClassDeclList* _classList, CPosition& position)
+	CProgram( IMainClass* _mainClass, IClassDeclList* _classList, CPosition& position)
 		: mainClass( _mainClass ),
 		classList( _classList ), 
 		position( position )
 	{}
 
-	CMainClass* GetMainClass()
+	IMainClass* GetMainClass()
 	{
 		return mainClass.get();
 	}
 
-	CClassDeclList* GetClassDeclList()
+	IClassDeclList* GetClassDeclList()
 	{
 		return classList.get();
 	}
@@ -31,9 +31,10 @@ public:
 	void Accept( IVisitor* visitor ) const override {
 		visitor->Visit( this );
 	}
+
 private:
-	std::shared_ptr<CMainClass> mainClass;
-	std::shared_ptr<CClassDeclList> classList;
+	std::shared_ptr<IMainClass> mainClass;
+	std::shared_ptr<IClassDeclList> classList;
 	CPosition position;
 };
 
@@ -42,7 +43,7 @@ public:
 	CMainClass(
 		const std::string& _identifier,
 		const std::string& _argv,
-		IStatementList* _statementList,
+		IStatement* _statementList,
 		const CPosition& _position)
 		: identifier( _identifier )
 		, argv( _argv )
@@ -50,7 +51,7 @@ public:
 		, position( _position )
 	{}
 
-	IStatementList* GetStatementList()
+	IStatement* GetStatementList()
 	{
 		return statementList.get();
 	}
@@ -61,13 +62,13 @@ public:
 private:
 	std::string identifier;
 	std::string argv;
-	std::shared_ptr<IStatementList> statementList;
+	std::shared_ptr<IStatement> statementList;
 	CPosition position;
 }; 
 
 class CClassDeclList : public IClassDeclList {
 public:
-	CClassDeclList( CClassDecl* _declaration, CClassDeclList* _list, const CPosition& _positon ) :
+	CClassDeclList( IClassDecl* _declaration, IClassDeclList* _list, const CPosition& _positon ) :
 		declaration( _declaration ),
 		list( _list ),
 		position( _positon )
@@ -182,24 +183,24 @@ private:
 
 class CStatementList : public IStatementList { // not implemented
 public:
-	CStatementList( IStatement* _stmt, IStatementList* _stmtList, const CPosition& pos ) :
+	CStatementList( const IStatement* _stmt, const IStatementList* _stmtList, const CPosition& pos ) :
 		stmt( _stmt ),
 		stmtList( _stmtList ),
 		position( pos )
 	{}
 
-	IStatement* GetStatement()
+	const IStatement* GetStatement() const
 	{
 		return stmt.get();
 	}
 
-	IStatementList* GetStatementList()
+	const IStatementList* GetStatementList() const
 	{
 		return stmtList.get();
 	}
 private:
-	std::shared_ptr<IStatement> stmt;
-	std::shared_ptr<IStatementList> stmtList;
+	const std::shared_ptr<IStatement> stmt;
+	const std::shared_ptr<IStatementList> stmtList;
 	CPosition position;
 };
 
@@ -234,12 +235,14 @@ private:
 class CMethodDecl : public IMethodDecl {
 public:
 	CMethodDecl(
+		const IType* _type,
 		const std::string& _methodName,
-		IFormalList* _formalList,
-		IVarDeclList* _varList,
-		CStatementList* _statementList,
-		IExp* _returnExpr,
+		const IFormalList* _formalList,
+		const IVarDeclList* _varList,
+		const CStatementList* _statementList,
+		const IExp* _returnExpr,
 		const CPosition& _position ) :
+		type( _type ),
 		methodName( _methodName ),
 		formalList( _formalList ),
 		varList( _varList ),
@@ -279,11 +282,12 @@ public:
 	}
 
 private:
-	std::string methodName;
-	std::shared_ptr<IFormalList> formalList;
-	std::shared_ptr<IVarDeclList> varList;
-	std::shared_ptr<IStatementList> statementList;
-	std::shared_ptr<IExp> returnExpr;
+	const std::shared_ptr<IType> type;
+	const std::string methodName;
+	const std::shared_ptr<IFormalList> formalList;
+	const std::shared_ptr<IVarDeclList> varList;
+	const std::shared_ptr<IStatementList> statementList;
+	const std::shared_ptr<IExp> returnExpr;
 	CPosition position;
 };
 
@@ -822,4 +826,4 @@ private:
 	std::shared_ptr<IExp> exp;
 	std::shared_ptr<IExpList> expList;
 	CPosition position;
-};
+};	

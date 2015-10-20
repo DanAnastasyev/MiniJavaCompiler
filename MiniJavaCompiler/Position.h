@@ -1,14 +1,24 @@
 #pragma once
 
-#include <utility> 
+#include <utility>
+
+#include "BuildOutputs/parser.tab.hpp"
 
 struct CPosition {
 public:
-	CPosition( int _beginLine, int _beginColumn, int _endLine, int _endColumn )
-		: beginLine( _beginLine )
-		, beginColumn( _beginColumn )
-		, endLine( _endLine )
-		, endColumn( _endColumn )
+	CPosition( int _beginLine, int _beginColumn, int _endLine, int _endColumn ) :
+		beginLine( _beginLine ),
+		beginColumn( _beginColumn ),
+		endLine( _endLine ),
+		endColumn( _endColumn )
+	{
+	}
+
+	CPosition( YYLTYPE yylloc ) :
+		beginLine( yylloc.first_line ),
+		beginColumn( yylloc.first_column ),
+		endLine( yylloc.last_line ),
+		endColumn( yylloc.last_column )
 	{
 	}
 

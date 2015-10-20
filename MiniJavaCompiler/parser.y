@@ -41,146 +41,146 @@
 Program:
 	MainClassDeclaration ClassDeclarationList {
 		debugRule(@$, "Program -> MainClassDeclaration ClassDeclarationList");
-		$$ = NULL;
+		$$ = new CProgram( $1, $2, CPosition( yylloc ) );
 	}
 
 MainClassDeclaration:
 	CLASS IDENTIFIER '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' IDENTIFIER ')' '{' Statement '}' '}' {
 		debugRule(@$, "MainClassDeclaration -> CLASS IDENTIFIER { PUBLIC STATIC VOID MAIN ( STRING [ ] IDENTIFIER ) { Statement } }");
-		$$ = NULL;
+		$$ = new CMainClass( $2, $12, $15, CPosition( yylloc ) );
 	}
 
 ClassDeclarationList:
 	/* empty */ {
 		debugRule(@$, "ClassDeclarationList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| ClassDeclaration ClassDeclarationList {
 		debugRule(@$, "ClassDeclarationList -> ClassDeclaration ClassDeclarationList");
-		$$ = NULL;
+		$$ = new CClassDeclList( $1, $2, CPosition( yylloc ) );
 	}
 
 ClassDeclaration:
 	CLASS IDENTIFIER '{'  VariableDeclarationList MethodDeclarationList '}' {
 		debugRule(@$, "ClassDeclaration -> CLASS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
-		$$ = NULL;
+		$$ = new CClassDecl( $4, $5, $2, CPosition( yylloc ) );
 	}
 	| CLASS IDENTIFIER EXTENDS IDENTIFIER '{'  VariableDeclarationList MethodDeclarationList '}' {
 		debugRule(@$, "ClassDeclaration -> CLASS IDENTIFIER EXTENDS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
-		$$ = NULL;
+		$$ = new CClassDeclDerived( $6, $7, $2, $4, CPosition( yylloc ) );
 	}
 
 VariableDeclarationList:
 	/* empty */ {
 		debugRule(@$, "VariableDeclarationList -> empty");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 	| VariableDeclarationList VariableDeclaration {
 		debugRule(@$, "VariableDeclarationList -> VariableDeclarationList VariableDeclaration");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 
 VariableDeclaration:
 	Type IDENTIFIER ';' {
 		debugRule(@$, "VariableDeclaration -> Type IDENTIFIER ;");
-		$$ = NULL;
+		$$ = new CVarDecl( $1, $2, CPosition( yylloc ) );
 	}
 
 MethodDeclarationList:
 	/* empty */ {
 		debugRule(@$, "MethodDeclarationList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| MethodDeclaration MethodDeclarationList {
 		debugRule(@$, "MethodDeclarationList -> MethodDeclaration MethodDeclarationList");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 
 MethodDeclaration:
 	PUBLIC Type IDENTIFIER '(' FormalList ')' '{' VariableDeclarationList StatementList RETURN Expression ';' '}' {
 		debugRule(@$, "MethodDeclaration -> PUBLIC Type IDENTIFIER ( FormalList ) { VariableDeclarationList StatementList RETURN Expression ; }");
-		$$ = NULL;
+		$$ = new CMethodDecl( $2, $3, $5, $8, $9, $11, CPosition( yylloc ) );
 	}
 
 FormalList:
 	/* empty */ {
 		debugRule(@$, "FormalList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| Type IDENTIFIER FormalRestList {
 		debugRule(@$, "FormalList -> Type IDENTIFIER FormalRestList");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 
 
 FormalRestList:
 	/* empty */ {
 		debugRule(@$, "FormalRestList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| FormalRest FormalRestList {
 		debugRule(@$, "FormalRestList -> FormalRest FormalRestList");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 
 FormalRest:
 	',' Type IDENTIFIER {
 		debugRule(@$, "FormalRest -> , Type IDENTIFIER");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 
 Type:
 	INT '[' ']' {
 		debugRule(@$, "Type -> INT[]");
-		$$ = NULL;
+		$$ = new CStandardType( CStandardType::StandardType::INT_ARRAY, CPosition( yylloc ) );
 	}
 	| BOOL {
 		debugRule(@$, "Type -> BOOL");
-		$$ = NULL;
+		$$ = new CStandardType( CStandardType::StandardType::BOOL, CPosition( yylloc ) );
 	}
 	| INT {
 		debugRule(@$, "Type -> INT");
-		$$ = NULL;
+		$$ = new CStandardType( CStandardType::StandardType::INT, CPosition( yylloc ) );
 	}
 	| IDENTIFIER {
 		debugRule(@$, "Type -> CLASS");
-		$$ = NULL;
+		$$ = new CUserType( $1, CPosition( yylloc ) );
 	}
 
 StatementList:
 	/* empty */ {
 		debugRule(@$, "StatementList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| Statement StatementList {
 		debugRule(@$, "StatementList -> Statement StatementList");
-		$$ = NULL;
+		$$ = new CStatementList( $1, $2, CPosition( yylloc ) );
 	}
 
 Statement:
 	'{' StatementList '}' {
 		debugRule(@$, "Statement -> { StatementList }");
-		$$ = NULL;
+		$$ = new CStatementListStatement( $1 );
 	}
 	| IF '(' Expression ')' Statement ELSE Statement {
 		debugRule(@$, "Statement -> IF ( Expression ) Statement ELSE Statement");
-		$$ = NULL;
+		$$ = new CIfStatement( $3, $5, $7, CPosition( yylloc ) );
 	}
 	| WHILE '(' Expression ')' Statement {
 		debugRule(@$, "Statement -> WHILE ( Expression ) Statement");
-		$$ = NULL;
+		$$ = new CWhileStatement( $3, $5, CPosition( yylloc ) );
 	}
 	| PRINTLN '(' Expression ')' ';' {
 		debugRule(@$, "Statement -> PRINTLN ( Expression ) ;");
-		$$ = NULL;
+		$$ = new CPrintStatement( $3, CPosition( yylloc ) );
 	}
 	| IDENTIFIER '=' Expression ';' {
 		debugRule(@$, "Statement -> IDENTIFIER = Expression ;");
-		$$ = NULL;
+		$$ = new CAssignStatement( $1, $3, CPosition( yylloc ) );
 	}
 	| IDENTIFIER '[' Expression ']' '=' Expression ';' {
 		debugRule(@$, "Statement -> IDENTIFIER [ Expression ] = Expression ;");
-		$$ = NULL;
+		$$ = new CArrayAssignStatement( $1, $3, $6, CPosition( yylloc ) );
 	}
 
 Expression:
