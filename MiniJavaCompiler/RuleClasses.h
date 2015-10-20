@@ -5,6 +5,7 @@
 #include "grammar.h"
 #include "Position.h"
 #include "Visitor.h"
+#include <vector>
 
 class CMainClass;
 class CClassDeclList;
@@ -18,12 +19,12 @@ public:
 		position( position )
 	{}
 
-	IMainClass* GetMainClass()
+	const IMainClass* GetMainClass() const
 	{
 		return mainClass.get();
 	}
 
-	IClassDeclList* GetClassDeclList()
+	const IClassDeclList* GetClassDeclList() const
 	{
 		return classList.get();
 	}
@@ -42,18 +43,28 @@ class CMainClass : public IMainClass {
 public:
 	CMainClass(
 		const std::string& _identifier,
-		const std::string& _argv,
+		const std::string& _arsId,
 		IStatement* _statementList,
 		const CPosition& _position)
-		: identifier( _identifier )
-		, argv( _argv )
-		, statementList( _statementList )
-		, position( _position )
+		: identifier( _identifier ), 
+		argsIdentifier( _arsId ),
+		statementList( _statementList ), 
+		position( _position )
 	{}
 
-	IStatement* GetStatementList()
+	const IStatementList* GetStatementList( ) const
 	{
 		return statementList.get();
+	}
+
+	std::string GetClassName() const
+	{
+		return identifier;
+	}
+
+	std::string GetMainArgsIdentifier() const
+	{
+		return argsIdentifier;
 	}
 
 	void Accept( IVisitor* visitor ) const override {
@@ -61,7 +72,7 @@ public:
 	}
 private:
 	std::string identifier;
-	std::string argv;
+	std::string argsIdentifier;
 	std::shared_ptr<IStatement> statementList;
 	CPosition position;
 }; 
@@ -74,12 +85,12 @@ public:
 		position( _positon )
 	{}
 
-	IClassDeclList* GetClassDeclList()
+	const IClassDeclList* GetClassDeclList( ) const
 	{
 		return list.get();
 	}
 
-	IClassDecl* GetClassDecl()
+	const IClassDecl* GetClassDecl() const
 	{
 		return declaration.get();
 	}
@@ -106,17 +117,17 @@ public:
 		methodList( _methodList )
 	{}
 
-	std::string GetName()
+	std::string GetName() const
 	{
 		return className;
 	}
 
-	IVarDeclList* GetVarDeclList()
+	const IVarDeclList* GetVarDeclList() const 
 	{
 		return varList.get();
 	}
 
-	IMethodDeclList* GetMethodDeclList()
+	const IMethodDeclList* GetMethodDeclList() const
 	{
 		return methodList.get();
 	}
@@ -158,12 +169,12 @@ public:
 		return baseClassName;
 	}
 
-	IVarDeclList* GetVarDeclList()
+	const IVarDeclList* GetVarDeclList( ) const
 	{
 		return varList.get();
 	}
 
-	IMethodDeclList* GetMethodDeclList()
+	const IMethodDeclList* GetMethodDeclList( ) const
 	{
 		return methodList.get();
 	}
@@ -189,12 +200,12 @@ public:
 		position( pos )
 	{}
 
-	const IStatement* GetStatement() const
+	const IStatement* GetStatement( ) const
 	{
 		return stmt.get();
 	}
 
-	const IStatementList* GetStatementList() const
+	const IStatementList* GetStatementList( ) const
 	{
 		return stmtList.get();
 	}
@@ -212,7 +223,7 @@ public:
 		position( _position )
 	{}
 
-	IType* GetType()
+	const IType* GetType( ) const
 	{
 		return type.get();
 	}
@@ -230,6 +241,29 @@ private:
 	CPosition position;
 	std::shared_ptr<IType> type;
 	std::string identifier;
+};
+
+class CVarDeclList : public IClassDeclList {
+public:
+	CVarDeclList( IVarDeclList* _varDeclList, IVarDecl* _varDecl, const CPosition& pos ) :
+		varDeclList(_varDeclList),
+		varDecl( _varDecl ),
+		position( pos )
+	{}
+
+	const IVarDeclList* GetVarDeclList() const
+	{
+		return varDeclList.get();
+	}
+
+	const IVarDecl* GetVarDecl() const
+	{
+		return varDecl.get();
+	}
+private:
+	std::shared_ptr<IVarDeclList> varDeclList;
+	std::shared_ptr<IVarDecl> varDecl;
+	CPosition position;
 };
 
 class CMethodDecl : public IMethodDecl {
@@ -256,22 +290,22 @@ public:
 		return methodName;
 	}
 
-	IFormalList* GetFormalList()
+	const IFormalList* GetFormalList( ) const
 	{
 		return formalList.get();
 	}
 
-	IVarDeclList* GetVarList()
+	const IVarDeclList* GetVarList( ) const
 	{
 		return varList.get();
 	}
 
-	IStatementList* GetStatementList()
+	const IStatementList* GetStatementList( ) const
 	{
 		return statementList.get();
 	}
 
-	IExp* GetReturnExpression()
+	const IExp* GetReturnExpression( ) const
 	{
 		return returnExpr.get();
 	}
@@ -291,14 +325,37 @@ private:
 	CPosition position;
 };
 
+class CMethodDeclList : public IMethodDeclList {
+public:
+	CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList, const CPosition& pos ) :
+		methodDeclList( _methodDeclList ),
+		methodDecl( _methodDecl ),
+		position( pos )
+	{}
+
+	const IVarDeclList* GetMethodDeclList( ) const
+	{
+		return methodDeclList.get();
+	}
+
+	const IVarDecl* GetMethodDecl( ) const
+	{
+		return methodDecl.get( );
+	}
+private:
+	std::shared_ptr<IVarDeclList> methodDeclList;
+	std::shared_ptr<IVarDecl> methodDecl;
+	CPosition position;
+};
+
 class CStatementListStatement : public IStatement {
 public:
-	CStatementListStatement( CStatementList* _statementList, const CPosition& _position ) :
+	CStatementListStatement( IStatementList* _statementList, const CPosition& _position ) :
 		statementList( _statementList ),
 		position( _position )
 	{}
 
-	CStatementList* GetStatementList()
+	const IStatementList* GetStatementList( ) const
 	{
 		return statementList.get();
 	}
@@ -309,7 +366,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<CStatementList> statementList;
+	std::shared_ptr<IStatementList> statementList;
 	CPosition position;
 };
 
@@ -326,17 +383,17 @@ public:
 		position( _position )
 	{}
 
-	IExp* GetCondition()
+	const IExp* GetCondition( ) const
 	{
 		return condition.get();
 	}
 
-	IStatement* GetIfTrueStatement()
+	const IStatement* GetIfTrueStatement( ) const
 	{
 		return statementIfTrue.get();
 	}
 
-	IStatement* GetIfFalseStatement()
+	const IStatement* GetIfFalseStatement( ) const
 	{
 		return statementIfFalse.get();
 	}
@@ -361,12 +418,12 @@ public:
 		position( _position )
 	{}
 
-	IExp* GetCondition()
+	const IExp* GetCondition( ) const
 	{
 		return condition.get();
 	}
 
-	IStatement* GetBodyCycle()
+	const IStatement* GetBodyCycle( ) const
 	{
 		return cycleBody.get();
 	}
@@ -389,7 +446,7 @@ public:
 		position( _position )
 	{}
 
-	IExp* GetExpression()
+	const IExp* GetExpression( ) const
 	{
 		return expression.get();
 	}
@@ -417,7 +474,7 @@ public:
 		return left;
 	}
 
-	IExp* GetRightPart()
+	const IExp* GetRightPart( ) const
 	{
 		return right.get();
 	}
@@ -447,12 +504,12 @@ public:
 		return arrayId;
 	}
 
-	IExp* GetElementNumber()
+	const IExp* GetElementNumber( ) const
 	{
 		return elementNumber.get();
 	}
 
-	IExp* GetRightPart()
+	const IExp* GetRightPart( ) const
 	{
 		return rightPart.get();
 	}
@@ -526,12 +583,12 @@ public:
 		binOp( _binOp )
 	{}
 
-	IExp* GetLeftExp() 
+	const IExp* GetLeftExp( ) const
 	{
 		return leftExp.get();
 	}
 	
-	IExp* GetRightExp()
+	const IExp* GetRightExp( ) const
 	{
 		return rightExp.get();
 	}
@@ -555,12 +612,12 @@ public:
 		position( pos )
 	{}
 
-	IExp* GetExp()
+	const IExp* GetExp( ) const
 	{
 		return exp.get();
 	}
 
-	IExp* GetIndexExp()
+	const IExp* GetIndexExp( ) const
 	{
 		return indexExp.get( );
 	}
@@ -582,7 +639,7 @@ public:
 		position( pos )
 	{}
 
-	IExp* GetExp()
+	const IExp* GetExp( ) const
 	{
 		return exp.get();
 	}
@@ -605,12 +662,12 @@ public:
 		position( pos )
 	{}
 
-	IExp* GetExp()
+	const IExp* GetExp( ) const
 	{
 		return exp.get();
 	}
 
-	IExpList* GetIndexExp()
+	const IExpList* GetIndexExp( ) const
 	{
 		return expList.get( );
 	}
@@ -715,7 +772,7 @@ public:
 		position( pos )
 	{}
 
-	IExp* GetExp() const
+	const IExp* GetExp( ) const
 	{
 		return exp.get();
 	}
@@ -760,7 +817,7 @@ public:
 		op( _op )
 	{}
 
-	IExp* GetLeftExp()
+	const IExp* GetLeftExp( ) const
 	{
 		return exp.get();
 	}
@@ -808,12 +865,12 @@ public:
 		position( pos )
 	{}
 	
-	IExp* GetExp()
+	const IExp* GetExp( ) const
 	{
 		return exp.get();
 	}
 
-	IExpList* GetExpList()
+	const IExpList* GetExpList( ) const
 	{
 		return expList.get();
 	}

@@ -3,6 +3,7 @@
 class IVisitor;
 
 class IHost {
+public:
 	virtual void Accept( IVisitor* visitor ) const = 0;
 };
 
