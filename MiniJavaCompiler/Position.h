@@ -5,10 +5,10 @@
 struct CPosition {
 public:
 	CPosition( int _beginLine, int _beginColumn, int _endLine, int _endColumn )
-		: beginLine( _beginLine )
-		, beginColumn( _beginColumn )
-		, endLine( _endLine )
-		, endColumn( _endColumn )
+		: beginLine( _beginLine ), 
+		beginColumn( _beginColumn ), 
+		endLine( _endLine ), 
+		endColumn( _endColumn )
 	{
 	}
 
