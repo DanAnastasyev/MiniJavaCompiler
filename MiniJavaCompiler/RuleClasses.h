@@ -354,6 +354,61 @@ private:
 	CPosition position;
 };
 
+class CFormalList : public IFormalList {
+public:
+	CFormalList( IType* _type, const std::string& _identifier, IFormalList* _formalList, const CPosition& pos ) :
+		type( _type ),
+		identifier( _identifier ),
+		formalList( _formalList ),
+		position( pos )
+	{}
+
+	const IFormalList* GetFormalRest() const
+	{
+		return formalList.get();
+	}
+
+	const IType* GetType() const
+	{
+		return type.get();
+	}
+
+	const std::string GetIdentifier() const
+	{
+		return identifier;
+	}
+private:
+	std::shared_ptr<IType> type;
+	std::string identifier;
+
+	std::shared_ptr<IFormalList> formalList;
+
+	CPosition position;
+};
+
+class CFormalRestList : public IFormalList {
+public:
+	CFormalRestList( IFormalList* _formalRest, IFormalList* _formalRestList, const CPosition& pos ) :
+		formalRest( _formalRest ),
+		formalRestList( _formalRestList ),
+		position( pos )
+	{}
+
+	const IFormalList* GetFormalRest() const
+	{
+		return formalRest.get( );
+	}
+
+	const IFormalList* GetFormalRestList() const
+	{
+		return formalRestList.get();
+	}
+private:
+	std::shared_ptr<IFormalList> formalRest;
+	std::shared_ptr<IFormalList> formalRestList;
+	CPosition position;
+};
+
 class CStatementListStatement : public IStatement {
 public:
 	CStatementListStatement( const IStatementList* _statementList, const CPosition& _position ) :
