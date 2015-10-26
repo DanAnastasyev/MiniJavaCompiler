@@ -507,12 +507,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    42,    42,    48,    54,    58,    64,    68,    74,    78,
-      84,    90,    94,   100,   106,   110,   117,   121,   127,   133,
-     137,   141,   145,   151,   155,   161,   165,   169,   173,   177,
-     181,   187,   191,   195,   199,   203,   207,   211,   215,   219,
-     223,   227,   231,   235,   239,   243,   247,   251,   255,   261,
-     265,   271,   275,   281
+       0,    53,    53,    59,    65,    69,    75,    79,    85,    89,
+      95,   101,   105,   111,   117,   121,   128,   132,   138,   144,
+     148,   152,   156,   162,   166,   172,   176,   180,   184,   188,
+     192,   198,   202,   206,   210,   214,   218,   222,   226,   230,
+     234,   238,   242,   246,   250,   254,   258,   262,   266,   272,
+     276,   282,   286,   292
 };
 #endif
 
@@ -1630,469 +1630,469 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 42 "parser.y"
+#line 53 "parser.y"
     {
 		debugRule((yyloc), "Program -> MainClassDeclaration ClassDeclarationList");
-		(yyval.val) = NULL;
+		(yyval.IProgram*) = new CProgram( (yyvsp[(1) - (2)].IMainClass*), (yyvsp[(2) - (2)].IClassDeclList*), CPosition( yylloc ) );
 	}
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 48 "parser.y"
+#line 59 "parser.y"
     {
 		debugRule((yyloc), "MainClassDeclaration -> CLASS IDENTIFIER { PUBLIC STATIC VOID MAIN ( STRING [ ] IDENTIFIER ) { Statement } }");
-		(yyval.val) = NULL;
+		(yyval.IMainClass*) = new CMainClass( (yyvsp[(2) - (17)].IExp*), (yyvsp[(12) - (17)].IExp*), (yyvsp[(15) - (17)].IStatement*), CPosition( yylloc ) );
 	}
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 54 "parser.y"
+#line 65 "parser.y"
     {
 		debugRule((yyloc), "ClassDeclarationList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IClassDeclList*) = nullptr;
 	}
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 58 "parser.y"
+#line 69 "parser.y"
     {
 		debugRule((yyloc), "ClassDeclarationList -> ClassDeclaration ClassDeclarationList");
-		(yyval.val) = NULL;
+		(yyval.IClassDeclList*) = new CClassDeclList( (yyvsp[(1) - (2)].IClassDecl*), (yyvsp[(2) - (2)].IClassDeclList*), CPosition( yylloc ) );
 	}
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 64 "parser.y"
+#line 75 "parser.y"
     {
 		debugRule((yyloc), "ClassDeclaration -> CLASS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
-		(yyval.val) = NULL;
+		(yyval.IClassDecl*) = new CClassDecl( (yyvsp[(4) - (6)].IVarDeclList*), (yyvsp[(5) - (6)].IMethodDeclList*), (yyvsp[(2) - (6)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 68 "parser.y"
+#line 79 "parser.y"
     {
 		debugRule((yyloc), "ClassDeclaration -> CLASS IDENTIFIER EXTENDS IDENTIFIER {  VariableDeclarationList MethodDeclarationList }");
-		(yyval.val) = NULL;
+		(yyval.IClassDecl*) = new CClassDeclDerived( (yyvsp[(6) - (8)].IVarDeclList*), (yyvsp[(7) - (8)].IMethodDeclList*), (yyvsp[(2) - (8)].IExp*), (yyvsp[(4) - (8)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 74 "parser.y"
+#line 85 "parser.y"
     {
 		debugRule((yyloc), "VariableDeclarationList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IVarDeclList*) = nullptr;
 	}
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 78 "parser.y"
+#line 89 "parser.y"
     {
 		debugRule((yyloc), "VariableDeclarationList -> VariableDeclarationList VariableDeclaration");
-		(yyval.val) = NULL;
+		(yyval.IVarDeclList*) = new CVarDeclList( (yyvsp[(1) - (2)].IVarDeclList*), (yyvsp[(2) - (2)].IVarDecl*), CPosition( yylloc ) );
 	}
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 84 "parser.y"
+#line 95 "parser.y"
     {
 		debugRule((yyloc), "VariableDeclaration -> Type IDENTIFIER ;");
-		(yyval.val) = NULL;
+		(yyval.IVarDecl*) = new CVarDecl( (yyvsp[(1) - (3)].IType*), (yyvsp[(2) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 90 "parser.y"
+#line 101 "parser.y"
     {
 		debugRule((yyloc), "MethodDeclarationList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IMethodDeclList*) = nullptr;
 	}
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 94 "parser.y"
+#line 105 "parser.y"
     {
 		debugRule((yyloc), "MethodDeclarationList -> MethodDeclaration MethodDeclarationList");
-		(yyval.val) = NULL;
+		(yyval.IMethodDeclList*) = new CMethodDeclList( (yyvsp[(1) - (2)].IMethodDecl*), (yyvsp[(2) - (2)].IMethodDeclList*), CPosition( yylloc ) );
 	}
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 100 "parser.y"
+#line 111 "parser.y"
     {
 		debugRule((yyloc), "MethodDeclaration -> PUBLIC Type IDENTIFIER ( FormalList ) { VariableDeclarationList StatementList RETURN Expression ; }");
-		(yyval.val) = NULL;
+		(yyval.IMethodDecl*) = new CMethodDecl( (yyvsp[(2) - (13)].IType*), (yyvsp[(3) - (13)].IExp*), (yyvsp[(5) - (13)].IFormalList*), (yyvsp[(8) - (13)].IVarDeclList*), (yyvsp[(9) - (13)].IStatementList*), (yyvsp[(11) - (13)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 106 "parser.y"
+#line 117 "parser.y"
     {
 		debugRule((yyloc), "FormalList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IFormalList*) = nullptr;
 	}
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 110 "parser.y"
+#line 121 "parser.y"
     {
 		debugRule((yyloc), "FormalList -> Type IDENTIFIER FormalRestList");
-		(yyval.val) = NULL;
+		(yyval.IFormalList*) = NULL; // NOT IMPLEMENTED
 	}
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 117 "parser.y"
+#line 128 "parser.y"
     {
 		debugRule((yyloc), "FormalRestList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IFormalList*) = nullptr;
 	}
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 121 "parser.y"
+#line 132 "parser.y"
     {
 		debugRule((yyloc), "FormalRestList -> FormalRest FormalRestList");
-		(yyval.val) = NULL;
+		(yyval.IFormalList*) = NULL; // NOT IMPLEMENTED
 	}
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 127 "parser.y"
+#line 138 "parser.y"
     {
 		debugRule((yyloc), "FormalRest -> , Type IDENTIFIER");
-		(yyval.val) = NULL;
+		(yyval.IFormalList*) = NULL; // NOT IMPLEMENTED
 	}
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 133 "parser.y"
+#line 144 "parser.y"
     {
 		debugRule((yyloc), "Type -> INT[]");
-		(yyval.val) = NULL;
+		(yyval.IType*) = new CStandardType( CStandardType::StandardType::INT_ARRAY, CPosition( yylloc ) );
 	}
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 137 "parser.y"
+#line 148 "parser.y"
     {
 		debugRule((yyloc), "Type -> BOOL");
-		(yyval.val) = NULL;
+		(yyval.IType*) = new CStandardType( CStandardType::StandardType::BOOL, CPosition( yylloc ) );
 	}
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 141 "parser.y"
+#line 152 "parser.y"
     {
 		debugRule((yyloc), "Type -> INT");
-		(yyval.val) = NULL;
+		(yyval.IType*) = new CStandardType( CStandardType::StandardType::INT, CPosition( yylloc ) );
 	}
     break;
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 145 "parser.y"
+#line 156 "parser.y"
     {
 		debugRule((yyloc), "Type -> CLASS");
-		(yyval.val) = NULL;
+		(yyval.IType*) = new CUserType( (yyvsp[(1) - (1)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 151 "parser.y"
+#line 162 "parser.y"
     {
 		debugRule((yyloc), "StatementList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IStatementList*) = nullptr;
 	}
     break;
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 155 "parser.y"
+#line 166 "parser.y"
     {
 		debugRule((yyloc), "StatementList -> Statement StatementList");
-		(yyval.val) = NULL;
+		(yyval.IStatementList*) = new CStatementList( (yyvsp[(1) - (2)].IStatement*), (yyvsp[(2) - (2)].IStatementList*), CPosition( yylloc ) );
 	}
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 161 "parser.y"
+#line 172 "parser.y"
     {
 		debugRule((yyloc), "Statement -> { StatementList }");
-		(yyval.val) = NULL;
+		(yyval.IStatement*) = new CStatementListStatement( (yyvsp[(2) - (3)].IStatementList*), CPosition( yylloc ) );
 	}
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 165 "parser.y"
+#line 176 "parser.y"
     {
 		debugRule((yyloc), "Statement -> IF ( Expression ) Statement ELSE Statement");
-		(yyval.val) = NULL;
+		(yyval.IStatement*) = new CIfStatement( (yyvsp[(3) - (7)].IExp*), (yyvsp[(5) - (7)].IStatement*), (yyvsp[(7) - (7)].IStatement*), CPosition( yylloc ) );
 	}
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 169 "parser.y"
+#line 180 "parser.y"
     {
 		debugRule((yyloc), "Statement -> WHILE ( Expression ) Statement");
-		(yyval.val) = NULL;
+		(yyval.IStatement*) = new CWhileStatement( (yyvsp[(3) - (5)].IExp*), (yyvsp[(5) - (5)].IStatement*), CPosition( yylloc ) );
 	}
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 173 "parser.y"
+#line 184 "parser.y"
     {
 		debugRule((yyloc), "Statement -> PRINTLN ( Expression ) ;");
-		(yyval.val) = NULL;
+		(yyval.IStatement*) = new CPrintStatement( (yyvsp[(3) - (5)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 177 "parser.y"
+#line 188 "parser.y"
     {
 		debugRule((yyloc), "Statement -> IDENTIFIER = Expression ;");
-		(yyval.val) = NULL;
+		(yyval.IStatement*) = new CAssignStatement( (yyvsp[(1) - (4)].IExp*), (yyvsp[(3) - (4)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 181 "parser.y"
+#line 192 "parser.y"
     {
 		debugRule((yyloc), "Statement -> IDENTIFIER [ Expression ] = Expression ;");
-		(yyval.val) = NULL;
+		(yyval.IStatement*) = new CArrayAssignStatement( (yyvsp[(1) - (7)].IExp*), (yyvsp[(3) - (7)].IExp*), (yyvsp[(6) - (7)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 187 "parser.y"
+#line 198 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression AND Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CBinOpExpression( (yyvsp[(1) - (3)].IExp*), AND, (yyvsp[(3) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 191 "parser.y"
+#line 202 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression < Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CBinOpExpression( (yyvsp[(1) - (3)].IExp*), LESS, (yyvsp[(3) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 195 "parser.y"
+#line 206 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression + Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CBinOpExpression( (yyvsp[(1) - (3)].IExp*), PLUS, (yyvsp[(3) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 199 "parser.y"
+#line 210 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression - Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CBinOpExpression( (yyvsp[(1) - (3)].IExp*), MINUS, (yyvsp[(3) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 203 "parser.y"
+#line 214 "parser.y"
     {
 		debugRule((yyloc), "Expression -> -Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CUnaryOpExpression( MINUS, (yyvsp[(2) - (2)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 207 "parser.y"
+#line 218 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression * Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CBinOpExpression( (yyvsp[(1) - (3)].IExp*), TIMES, (yyvsp[(3) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 211 "parser.y"
+#line 222 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression / Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CBinOpExpression( (yyvsp[(1) - (3)].IExp*), DIVIDE, (yyvsp[(3) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 215 "parser.y"
+#line 226 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression[Expression]");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CIndexExpression( (yyvsp[(1) - (4)].IExp*), (yyvsp[(3) - (4)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 219 "parser.y"
+#line 230 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression.LENGTH");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CLenghtExpression( (yyvsp[(1) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 223 "parser.y"
+#line 234 "parser.y"
     {
 		debugRule((yyloc), "Expression -> Expression.IDENTIFIER(ExpressionList)");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CMethodExpression( (yyvsp[(1) - (6)].IExp*), (yyvsp[(3) - (6)].IExp*), (yyvsp[(5) - (6)].IExpList*), CPosition( yylloc ) );
 	}
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 227 "parser.y"
+#line 238 "parser.y"
     {
-		debugRule((yyloc), (std::string("Expression -> INTEGER_VALUE(") + std::string((yyvsp[(1) - (1)].val)) + std::string(")")).c_str() );
-		(yyval.val) = NULL;
+		debugRule((yyloc), (std::string("Expression -> INTEGER_VALUE(") + std::string((yyvsp[(1) - (1)].IExp*)) + std::string(")")).c_str() );
+		(yyval.IExp*) = new CIntLiteralExpression( (yyvsp[(1) - (1)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 231 "parser.y"
+#line 242 "parser.y"
     {
-		debugRule((yyloc), (std::string("Expression -> BOOLEAN_VALUE(") + std::string((yyvsp[(1) - (1)].val)) + std::string(")")).c_str() );
-		(yyval.val) = NULL;
+		debugRule((yyloc), (std::string("Expression -> BOOLEAN_VALUE(") + std::string((yyvsp[(1) - (1)].IExp*)) + std::string(")")).c_str() );
+		(yyval.IExp*) = new CBoolLiteralExpression( (yyvsp[(1) - (1)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 235 "parser.y"
+#line 246 "parser.y"
     {
-		debugRule((yyloc), (std::string("Expression -> IDENTIFIER(") + std::string((yyvsp[(1) - (1)].val)) + std::string(")")).c_str() );
-		(yyval.val) = NULL;
+		debugRule((yyloc), (std::string("Expression -> IDENTIFIER(") + std::string((yyvsp[(1) - (1)].IExp*)) + std::string(")")).c_str() );
+		(yyval.IExp*) = new CIdentifierExpression( (yyvsp[(1) - (1)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 239 "parser.y"
+#line 250 "parser.y"
     {
 		debugRule((yyloc), "Expression -> THIS");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CThisExpression( CPosition( yylloc ) );
 	}
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 243 "parser.y"
+#line 254 "parser.y"
     {
 		debugRule((yyloc), "Expression -> new int[]");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CIdentifierExpression( (yyvsp[(4) - (5)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 247 "parser.y"
+#line 258 "parser.y"
     {
 		debugRule((yyloc), "Expression -> new IDENTIFIER()");
-		(yyval.val) = NULL;	
+		(yyval.IExp*) = new CNewExpression( (yyvsp[(2) - (4)].IExp*), CPosition( yylloc ) );	
 	}
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 251 "parser.y"
+#line 262 "parser.y"
     {
 		debugRule((yyloc), "Expression -> !Expression");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = new CUnaryOpExpression( NOT, (yyvsp[(2) - (2)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 255 "parser.y"
+#line 266 "parser.y"
     {
 		debugRule((yyloc), "Expression -> (Expression)");
-		(yyval.val) = NULL;
+		(yyval.IExp*) = CBracesExpression( (yyvsp[(2) - (3)].IExp*), CPosition( yylloc ) );
 	}
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 261 "parser.y"
+#line 272 "parser.y"
     {
 		debugRule((yyloc), "ExpressionList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IExpList*) = nullptr;
 	}
     break;
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 265 "parser.y"
+#line 276 "parser.y"
     {
 		debugRule((yyloc), "ExpressionList -> Expression ExpressionRestList");
-		(yyval.val) = NULL;
+		(yyval.IExpList*) = new CExpressionList( (yyvsp[(1) - (2)].IExp*), (yyvsp[(2) - (2)].IExpList*), CPosition( yylloc ) );
 	}
     break;
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 271 "parser.y"
+#line 282 "parser.y"
     {
 		debugRule((yyloc), "ExpressionRestList -> empty");
-		(yyval.val) = NULL;
+		(yyval.IExpList*) = nullptr;
 	}
     break;
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 275 "parser.y"
+#line 286 "parser.y"
     {
 		debugRule((yyloc), "ExpressionRestList -> Expression ExpressionRestList");
-		(yyval.val) = NULL;
+		(yyval.IExpList*) = new CExpressionList( (yyvsp[(1) - (2)].IExpList*), (yyvsp[(2) - (2)].IExpList*), CPosition( yylloc ) );
 	}
     break;
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 281 "parser.y"
+#line 292 "parser.y"
     {
 		debugRule((yyloc), "ExpressionRest -> , Expression");
-		(yyval.val) = NULL;
+		(yyval.IExpList*) = NULL; // NOT IMPLEMENTED
 	}
     break;
 
@@ -2337,7 +2337,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 286 "parser.y"
+#line 297 "parser.y"
 
 
 void yyerror(const char *s) 

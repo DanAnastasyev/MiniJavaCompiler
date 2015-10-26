@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "grammar.h"
 #include "Position.h"
 #include "Visitor.h"
-#include <vector>
 
 class CMainClass;
 class CClassDeclList;
@@ -13,8 +13,8 @@ class CClassDecl;
 
 class CProgram : public IProgram {
 public:
-	CProgram( IMainClass* _mainClass, IClassDeclList* _classList, CPosition& position)
-		: mainClass( _mainClass ),
+	CProgram( const IMainClass* _mainClass, const IClassDeclList* _classList, CPosition& position) :
+		mainClass( _mainClass ),
 		classList( _classList ), 
 		position( position )
 	{}
@@ -34,8 +34,8 @@ public:
 	}
 
 private:
-	std::shared_ptr<IMainClass> mainClass;
-	std::shared_ptr<IClassDeclList> classList;
+	const std::shared_ptr<IMainClass> mainClass;
+	const std::shared_ptr<IClassDeclList> classList;
 	CPosition position;
 };
 
@@ -44,15 +44,15 @@ public:
 	CMainClass(
 		const std::string& _identifier,
 		const std::string& _arsId,
-		IStatement* _statementList,
-		const CPosition& _position)
-		: identifier( _identifier ), 
+		const IStatement* _statementList,
+		const CPosition& _position) :
+		identifier( _identifier ), 
 		argsIdentifier( _arsId ),
 		statementList( _statementList ), 
 		position( _position )
 	{}
 
-	const IStatementList* GetStatementList( ) const
+	const IStatement* GetStatementList( ) const
 	{
 		return statementList.get();
 	}
@@ -70,16 +70,17 @@ public:
 	void Accept( IVisitor* visitor ) const override {
 		visitor->Visit( this );
 	}
+
 private:
-	std::string identifier;
-	std::string argsIdentifier;
-	std::shared_ptr<IStatement> statementList;
+	const std::string identifier;
+	const std::string argsIdentifier;
+	const std::shared_ptr<IStatement> statementList;
 	CPosition position;
 }; 
 
 class CClassDeclList : public IClassDeclList {
 public:
-	CClassDeclList( IClassDecl* _declaration, IClassDeclList* _list, const CPosition& _positon ) :
+	CClassDeclList( const IClassDecl* _declaration, const IClassDeclList* _list, const CPosition& _positon ) :
 		declaration( _declaration ),
 		list( _list ),
 		position( _positon )
@@ -99,16 +100,16 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IClassDeclList> list;
-	std::shared_ptr<IClassDecl> declaration;
+	const std::shared_ptr<IClassDeclList> list;
+	const std::shared_ptr<IClassDecl> declaration;
 	CPosition position;
 };
 
 class CClassDecl : public IClassDecl {
 public:
 	CClassDecl(
-		IVarDeclList* _varList,
-		IMethodDeclList* _methodList,
+		const IVarDeclList* _varList,
+		const IMethodDeclList* _methodList,
 		const std::string& _className,
 		const CPosition& _position ) :
 		position( _position ),
@@ -138,16 +139,16 @@ public:
 
 private:
 	CPosition position;
-	std::string className;
-	std::shared_ptr<IVarDeclList> varList;
-	std::shared_ptr<IMethodDeclList> methodList;
+	const std::string className;
+	const std::shared_ptr<IVarDeclList> varList;
+	const std::shared_ptr<IMethodDeclList> methodList;
 };
 
 class CClassDeclDerived : IClassDecl {
 public:
 	CClassDeclDerived(
-		IVarDeclList* _varList,
-		IMethodDeclList* _methodList,
+		const IVarDeclList* _varList,
+		const IMethodDeclList* _methodList,
 		const std::string& _className,
 		const std::string& _baseClassName,
 		const CPosition& _position ) :
@@ -186,10 +187,10 @@ public:
 
 private:
 	CPosition position;
-	std::string className;
-	std::string baseClassName;
-	std::shared_ptr<IVarDeclList> varList;
-	std::shared_ptr<IMethodDeclList> methodList;
+	const std::string className;
+	const std::string baseClassName;
+	const std::shared_ptr<IVarDeclList> varList;
+	const std::shared_ptr<IMethodDeclList> methodList;
 };
 
 class CStatementList : public IStatementList { // not implemented
@@ -217,7 +218,7 @@ private:
 
 class CVarDecl : public IVarDecl {
 public:
-	CVarDecl( IType* _type, const std::string& _identifier, const CPosition& _position ) :
+	CVarDecl( const IType* _type, const std::string& _identifier, const CPosition& _position ) :
 		type( _type ),
 		identifier( _identifier ),
 		position( _position )
@@ -239,13 +240,13 @@ public:
 
 private:
 	CPosition position;
-	std::shared_ptr<IType> type;
-	std::string identifier;
+	const std::shared_ptr<IType> type;
+	const std::string identifier;
 };
 
-class CVarDeclList : public IClassDeclList {
+class CVarDeclList : public IVarDeclList {
 public:
-	CVarDeclList( IVarDeclList* _varDeclList, IVarDecl* _varDecl, const CPosition& pos ) :
+	CVarDeclList( const IVarDeclList* _varDeclList, const IVarDecl* _varDecl, const CPosition& pos ) :
 		varDeclList(_varDeclList),
 		varDecl( _varDecl ),
 		position( pos )
@@ -261,8 +262,8 @@ public:
 		return varDecl.get();
 	}
 private:
-	std::shared_ptr<IVarDeclList> varDeclList;
-	std::shared_ptr<IVarDecl> varDecl;
+	const std::shared_ptr<IVarDeclList> varDeclList;
+	const std::shared_ptr<IVarDecl> varDecl;
 	CPosition position;
 };
 
@@ -327,35 +328,40 @@ private:
 
 class CMethodDeclList : public IMethodDeclList {
 public:
-	CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList, const CPosition& pos ) :
+	CMethodDeclList( const IMethodDecl* _methodDecl, const IMethodDeclList* _methodDeclList, const CPosition& pos ) :
 		methodDeclList( _methodDeclList ),
 		methodDecl( _methodDecl ),
 		position( pos )
 	{}
 
-	const IVarDeclList* GetMethodDeclList( ) const
+	const IVarDeclList* GetMethodDeclList() const
 	{
 		return methodDeclList.get();
 	}
 
-	const IVarDecl* GetMethodDecl( ) const
+	const IVarDecl* GetMethodDecl() const
 	{
 		return methodDecl.get( );
 	}
+
+	void Accept( IVisitor* visitor ) const override
+	{
+//		visitor->Visit( this );
+	}
 private:
-	std::shared_ptr<IVarDeclList> methodDeclList;
-	std::shared_ptr<IVarDecl> methodDecl;
+	const std::shared_ptr<IVarDeclList> methodDeclList;
+	const std::shared_ptr<IVarDecl> methodDecl;
 	CPosition position;
 };
 
 class CStatementListStatement : public IStatement {
 public:
-	CStatementListStatement( IStatementList* _statementList, const CPosition& _position ) :
+	CStatementListStatement( const IStatementList* _statementList, const CPosition& _position ) :
 		statementList( _statementList ),
 		position( _position )
 	{}
 
-	const IStatementList* GetStatementList( ) const
+	const IStatementList* GetStatementList() const
 	{
 		return statementList.get();
 	}
@@ -366,16 +372,16 @@ public:
 	}
 
 private:
-	std::shared_ptr<IStatementList> statementList;
+	const std::shared_ptr<IStatementList> statementList;
 	CPosition position;
 };
 
 class CIfStatement : public IStatement {
 public:
 	CIfStatement(
-		IExp* _condition,
-		IStatement* _statementIfTrue,
-		IStatement* _statementIfFalse,
+		const IExp* _condition,
+		const IStatement* _statementIfTrue,
+		const IStatement* _statementIfFalse,
 		const CPosition _position ) :
 		condition( _condition ),
 		statementIfTrue( _statementIfTrue ),
@@ -404,15 +410,15 @@ public:
 	}
 
 private:
-	std::shared_ptr<IExp> condition;
-	std::shared_ptr<IStatement> statementIfTrue;
-	std::shared_ptr<IStatement> statementIfFalse;
+	const std::shared_ptr<IExp> condition;
+	const std::shared_ptr<IStatement> statementIfTrue;
+	const std::shared_ptr<IStatement> statementIfFalse;
 	CPosition position;
 };
 
 class CWhileStatement : IStatement {
 public:
-	CWhileStatement( IExp* _condition, IStatement* _cycleBody, const CPosition& _position ) :
+	CWhileStatement( const IExp* _condition, const IStatement* _cycleBody, const CPosition& _position ) :
 		condition( _condition ),
 		cycleBody( _cycleBody ),
 		position( _position )
@@ -434,14 +440,14 @@ public:
 	}
 
 private:
-	std::shared_ptr<IExp> condition;
-	std::shared_ptr<IStatement> cycleBody;
+	const std::shared_ptr<IExp> condition;
+	const std::shared_ptr<IStatement> cycleBody;
 	CPosition position;
 };
 
 class CPrintStatement : public IStatement {
 public:
-	CPrintStatement( IExp* _expression, const CPosition& _position ) :
+	CPrintStatement( const IExp* _expression, const CPosition& _position ) :
 		expression( _expression ),
 		position( _position )
 	{}
@@ -457,13 +463,13 @@ public:
 	}
 
 private:
-	std::shared_ptr<IExp> expression;
+	const std::shared_ptr<IExp> expression;
 	CPosition position;
 };
 
 class CAssignStatement : public IStatement {
 public:
-	CAssignStatement( const std::string& _left, IExp* _right, const CPosition& _position ) :
+	CAssignStatement( const std::string& _left, const IExp* _right, const CPosition& _position ) :
 		left( _left ),
 		right( _right ),
 		position( _position )
@@ -485,14 +491,14 @@ public:
 	}
 
 private:
-	std::string left;
-	std::shared_ptr<IExp> right;
+	const std::string left;
+	const std::shared_ptr<IExp> right;
 	CPosition position;
 };
 
 class CArrayAssignStatement : public IStatement {
 public:
-	CArrayAssignStatement( const std::string& _arrayId, IExp* _elementNumber, IExp* _rightPart, const CPosition& _position) :
+	CArrayAssignStatement( const std::string& _arrayId, const IExp* _elementNumber, const IExp* _rightPart, const CPosition& _position) :
 		arrayId( _arrayId ),
 		elementNumber( _elementNumber ),
 		rightPart( _rightPart ),
@@ -520,9 +526,9 @@ public:
 	}
 
 private:
-	std::string arrayId;
-	std::shared_ptr<IExp> elementNumber;
-	std::shared_ptr<IExp> rightPart;
+	const std::string arrayId;
+	const std::shared_ptr<IExp> elementNumber;
+	const std::shared_ptr<IExp> rightPart;
 	CPosition position;
 };
 
@@ -568,7 +574,7 @@ public:
 	}
 
 private:
-	std::string typeName;
+	const std::string typeName;
 	CPosition position;
 };
 
@@ -576,7 +582,7 @@ class CBinOpExpression : public IExp {
 public:
 	enum BinOp { AND, LESS, PLUS, MINUS, TIMES, DIVIDE };
 
-	CBinOpExpression( IExp* _leftExp, BinOp _binOp, IExp* _rightExp, const CPosition& pos ) :
+	CBinOpExpression( const IExp* _leftExp, BinOp _binOp, const IExp* _rightExp, const CPosition& pos ) :
 		leftExp( _leftExp ),
 		rightExp( _rightExp ),
 		position( pos ),
@@ -598,15 +604,15 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> leftExp;
-	std::shared_ptr<IExp> rightExp;
+	const std::shared_ptr<IExp> leftExp;
+	const std::shared_ptr<IExp> rightExp;
 	CPosition position;
 	BinOp binOp;
 };
 
 class CIndexExpression : public IExp {
 public:
-	CIndexExpression( IExp* _exp, IExp* _indexExp, const CPosition& pos ) :
+	CIndexExpression( const IExp* _exp, const IExp* _indexExp, const CPosition& pos ) :
 		exp( _exp ),
 		indexExp( _indexExp ),
 		position( pos )
@@ -627,14 +633,14 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
-	std::shared_ptr<IExp> indexExp;
+	const std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExp> indexExp;
 	CPosition position;
 };
 
 class CLenghtExpression : public IExp {
 public:
-	CLenghtExpression( IExp* _exp, const CPosition& pos ) :
+	CLenghtExpression( const IExp* _exp, const CPosition& pos ) :
 		exp( _exp ),
 		position( pos )
 	{}
@@ -649,13 +655,13 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExp> exp;
 	CPosition position;
 };
 
 class CMethodExpression : public IExp {
 public:
-	CMethodExpression( IExp* _exp, const std::string& _identifier, IExpList* _expList, const CPosition& pos ) :
+	CMethodExpression( const IExp* _exp, const std::string& _identifier, const IExpList* _expList, const CPosition& pos ) :
 		exp( _exp ),
 		identifier( _identifier ),
 		expList( _expList ),
@@ -682,9 +688,9 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
-	std::shared_ptr<IExpList> expList;
-	std::string identifier;
+	const std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExpList> expList;
+	const std::string identifier;
 	CPosition position;
 };
 
@@ -747,7 +753,7 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::string identifier;
+	const std::string identifier;
 	CPosition position;
 };
 
@@ -767,7 +773,7 @@ private:
 
 class CNewIntArrayExpression : public IExp {
 public:
-	CNewIntArrayExpression( IExp* _exp, const CPosition& pos ) :
+	CNewIntArrayExpression( const IExp* _exp, const CPosition& pos ) :
 		exp( _exp ), 
 		position( pos )
 	{}
@@ -782,7 +788,7 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExp> exp;
 	CPosition position;
 };
 
@@ -803,7 +809,7 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::string identifier;
+	const std::string identifier;
 	CPosition position;
 };
 
@@ -811,7 +817,7 @@ class CUnaryOpExpression : public IExp {
 public:
 	enum UnaryOp { MINUS, NOT };
 
-	CUnaryOpExpression( UnaryOp _op, IExp* _exp, const CPosition& pos ) :
+	CUnaryOpExpression( UnaryOp _op, const IExp* _exp, const CPosition& pos ) :
 		exp( _exp ),
 		position( pos ),
 		op( _op )
@@ -832,20 +838,20 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExp> exp;
 	CPosition position;
 	UnaryOp op;
 };
 
 class CBracesExpression : public IExp {
-	CBracesExpression( IExp* _exp, const CPosition& pos ) :
+	CBracesExpression( const IExp* _exp, const CPosition& pos ) :
 	exp( _exp ),
 		position( pos )
 	{}
 
-	std::shared_ptr<IExp> GetExp() const
+	const IExp* GetExp() const
 	{
-		return exp;
+		return exp.get();
 	}
 
 	void Accept( IVisitor*  visitor ) const override
@@ -853,13 +859,13 @@ class CBracesExpression : public IExp {
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExp> exp;
 	CPosition position;
 };
 
 class CExpressionList : public IExpList {
 public:
-	CExpressionList( IExp* _exp, IExpList* _expList, const CPosition& pos ) :
+	CExpressionList( const IExp* _exp, const IExpList* _expList, const CPosition& pos ) :
 		exp( _exp ),
 		expList( _expList ),
 		position( pos )
@@ -880,7 +886,7 @@ public:
 		visitor->Visit( this );
 	}
 private:
-	std::shared_ptr<IExp> exp;
-	std::shared_ptr<IExpList> expList;
+	const std::shared_ptr<IExp> exp;
+	const std::shared_ptr<IExpList> expList;
 	CPosition position;
 };	

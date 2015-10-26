@@ -32,9 +32,20 @@
 %left '!'
 %left '.' '[' ']'
 
-%type <val> Program MainClassDeclaration ClassDeclarationList ClassDeclaration VariableDeclarationList VariableDeclaration ExpressionRest 
-	MethodDeclaration MethodDeclarationList FormalList FormalRestList FormalRest Type Statement Expression ExpressionList ExpressionRestList
-	IDENTIFIER INTEGER_VAL BOOLEAN_VAL StatementList
+%type <IProgram*> Program
+%type <IMainClass*> MainClassDeclaration
+%type <IClassDeclList*> ClassDeclarationList
+%type <IClassDecl*> ClassDeclaration
+%type <IVarDeclList*> VariableDeclarationList
+%type <IVarDecl*> VariableDeclaration
+%type <IMethodDecl*> MethodDeclaration
+%type <IMethodDeclList*> MethodDeclarationList
+%type <IFormalList*> FormalList FormalRestList FormalRest
+%type <IStatement*> Statement
+%type <IType*> Type
+%type <IExp*> Expression IDENTIFIER INTEGER_VAL BOOLEAN_VAL
+%type <IExpList*> ExpressionList ExpressionRestList ExpressionRest
+%type <IStatementList*> StatementList
 
 %%
 
@@ -73,11 +84,11 @@ ClassDeclaration:
 VariableDeclarationList:
 	/* empty */ {
 		debugRule(@$, "VariableDeclarationList -> empty");
-		$$ = NULL; // NOT IMPLEMENTED
+		$$ = nullptr;
 	}
 	| VariableDeclarationList VariableDeclaration {
 		debugRule(@$, "VariableDeclarationList -> VariableDeclarationList VariableDeclaration");
-		$$ = NULL; // NOT IMPLEMENTED
+		$$ = new CVarDeclList( $1, $2, CPosition( yylloc ) );
 	}
 
 VariableDeclaration:
@@ -93,7 +104,7 @@ MethodDeclarationList:
 	}
 	| MethodDeclaration MethodDeclarationList {
 		debugRule(@$, "MethodDeclarationList -> MethodDeclaration MethodDeclarationList");
-		$$ = NULL; // NOT IMPLEMENTED
+		$$ = new CMethodDeclList( $1, $2, CPosition( yylloc ) );
 	}
 
 MethodDeclaration:
@@ -160,7 +171,7 @@ StatementList:
 Statement:
 	'{' StatementList '}' {
 		debugRule(@$, "Statement -> { StatementList }");
-		$$ = new CStatementListStatement( $1 );
+		$$ = new CStatementListStatement( $2, CPosition( yylloc ) );
 	}
 	| IF '(' Expression ')' Statement ELSE Statement {
 		debugRule(@$, "Statement -> IF ( Expression ) Statement ELSE Statement");
@@ -186,101 +197,101 @@ Statement:
 Expression:
 	Expression AND Expression {
 		debugRule(@$, "Expression -> Expression AND Expression");
-		$$ = NULL;
+		$$ = new CBinOpExpression( $1, AND, $3, CPosition( yylloc ) );
 	}
 	| Expression '<' Expression {
 		debugRule(@$, "Expression -> Expression < Expression");
-		$$ = NULL;
+		$$ = new CBinOpExpression( $1, LESS, $3, CPosition( yylloc ) );
 	}
 	| Expression '+' Expression {
 		debugRule(@$, "Expression -> Expression + Expression");
-		$$ = NULL;
+		$$ = new CBinOpExpression( $1, PLUS, $3, CPosition( yylloc ) );
 	} 
 	| Expression '-' Expression {
 		debugRule(@$, "Expression -> Expression - Expression");
-		$$ = NULL;
+		$$ = new CBinOpExpression( $1, MINUS, $3, CPosition( yylloc ) );
 	}
 	| '-' Expression %prec UMINUS {
 		debugRule(@$, "Expression -> -Expression");
-		$$ = NULL;
+		$$ = new CUnaryOpExpression( MINUS, $2, CPosition( yylloc ) );
 	}
 	| Expression '*' Expression {
 		debugRule(@$, "Expression -> Expression * Expression");
-		$$ = NULL;
+		$$ = new CBinOpExpression( $1, TIMES, $3, CPosition( yylloc ) );
 	}
 	| Expression '/' Expression {
 		debugRule(@$, "Expression -> Expression / Expression");
-		$$ = NULL;
+		$$ = new CBinOpExpression( $1, DIVIDE, $3, CPosition( yylloc ) );
 	}
 	| Expression '[' Expression ']' {
 		debugRule(@$, "Expression -> Expression[Expression]");
-		$$ = NULL;
+		$$ = new CIndexExpression( $1, $3, CPosition( yylloc ) );
 	}
 	| Expression '.' LENGTH {
 		debugRule(@$, "Expression -> Expression.LENGTH");
-		$$ = NULL;
+		$$ = new CLenghtExpression( $1, CPosition( yylloc ) );
 	}
 	| Expression '.' IDENTIFIER '(' ExpressionList ')' {
 		debugRule(@$, "Expression -> Expression.IDENTIFIER(ExpressionList)");
-		$$ = NULL;
+		$$ = new CMethodExpression( $1, $3, $5, CPosition( yylloc ) );
 	}
 	| INTEGER_VAL {
 		debugRule(@$, (std::string("Expression -> INTEGER_VALUE(") + std::string($1) + std::string(")")).c_str() );
-		$$ = NULL;
+		$$ = new CIntLiteralExpression( $1, CPosition( yylloc ) );
 	}
 	| BOOLEAN_VAL {
 		debugRule(@$, (std::string("Expression -> BOOLEAN_VALUE(") + std::string($1) + std::string(")")).c_str() );
-		$$ = NULL;
+		$$ = new CBoolLiteralExpression( $1, CPosition( yylloc ) );
 	}
 	| IDENTIFIER {
 		debugRule(@$, (std::string("Expression -> IDENTIFIER(") + std::string($1) + std::string(")")).c_str() );
-		$$ = NULL;
+		$$ = new CIdentifierExpression( $1, CPosition( yylloc ) );
 	}
 	| THIS {
 		debugRule(@$, "Expression -> THIS");
-		$$ = NULL;
+		$$ = new CThisExpression( CPosition( yylloc ) );
 	}
 	| NEW INT '[' Expression ']' {
 		debugRule(@$, "Expression -> new int[]");
-		$$ = NULL;
+		$$ = new CIdentifierExpression( $4, CPosition( yylloc ) );
 	}
 	| NEW IDENTIFIER '(' ')' {
 		debugRule(@$, "Expression -> new IDENTIFIER()");
-		$$ = NULL;	
+		$$ = new CNewExpression( $2, CPosition( yylloc ) );	
 	}
 	| '!' Expression  {
 		debugRule(@$, "Expression -> !Expression");
-		$$ = NULL;
+		$$ = new CUnaryOpExpression( NOT, $2, CPosition( yylloc ) );
 	}
 	| '(' Expression ')' {
 		debugRule(@$, "Expression -> (Expression)");
-		$$ = NULL;
+		$$ = CBracesExpression( $2, CPosition( yylloc ) );
 	}
 
 ExpressionList:
 	/* empty */ {
 		debugRule(@$, "ExpressionList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| Expression ExpressionRestList {
 		debugRule(@$, "ExpressionList -> Expression ExpressionRestList");
-		$$ = NULL;
+		$$ = new CExpressionList( $1, $2, CPosition( yylloc ) );
 	}
 
 ExpressionRestList:
 	/* empty */ {
 		debugRule(@$, "ExpressionRestList -> empty");
-		$$ = NULL;
+		$$ = nullptr;
 	}
 	| ExpressionRest ExpressionRestList {
 		debugRule(@$, "ExpressionRestList -> Expression ExpressionRestList");
-		$$ = NULL;
+		$$ = new CExpressionList( $1, $2, CPosition( yylloc ) );
 	}
 
 ExpressionRest:
 	',' Expression {
 		debugRule(@$, "ExpressionRest -> , Expression");
-		$$ = NULL;
+		$$ = NULL; // NOT IMPLEMENTED
 	}
 
 %%
