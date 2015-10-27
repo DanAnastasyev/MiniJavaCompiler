@@ -23,6 +23,15 @@
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RuleClasses\Class.cpp" />
+    <ClCompile Include="RuleClasses\Expression.cpp" />
+    <ClCompile Include="RuleClasses\Formal.cpp" />
+    <ClCompile Include="RuleClasses\MainClass.cpp" />
+    <ClCompile Include="RuleClasses\Method.cpp" />
+    <ClCompile Include="RuleClasses\Program.cpp" />
+    <ClCompile Include="RuleClasses\Statement.cpp" />
+    <ClCompile Include="RuleClasses\Type.cpp" />
+    <ClCompile Include="RuleClasses\Var.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser.y">

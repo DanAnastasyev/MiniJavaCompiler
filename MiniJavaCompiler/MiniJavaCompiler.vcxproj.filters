@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Visitors">
       <UniqueIdentifier>{08146386-6d30-4676-a77c-248e961c6671}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RuleClasses">
+      <UniqueIdentifier>{4b7b8475-d5ed-478c-9ef3-63eac3bb1ce6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -46,6 +49,33 @@
     </ClCompile>
     <ClCompile Include="BuildOutputs\parser.tab.cpp">
       <Filter>Source Files\BuildOutputs</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Expression.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Statement.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Type.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Formal.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Method.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Var.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Class.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\MainClass.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleClasses\Program.cpp">
+      <Filter>Source Files\RuleClasses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
