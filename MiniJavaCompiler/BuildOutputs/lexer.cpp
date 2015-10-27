@@ -557,7 +557,7 @@ char *yytext;
 	#include <iostream>
 	#include <cstring>
 	#define YY_DECL extern "C" int yylex()
-	void yyerror(const char*);
+	void yyerror(std::shared_ptr<IProgram>&, const char*);
 	int yy_line = 1;
     int yy_column = 1;
 	void onNextToken() 
@@ -983,7 +983,7 @@ YY_RULE_SETUP
 case 26:
 YY_RULE_SETUP
 #line 60 "lexer.l"
-{ yyerror("Unknown symbol\n"); }
+{ /*yyerror("Unknown symbol\n");*/ }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP

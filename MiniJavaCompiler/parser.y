@@ -1,23 +1,26 @@
 %locations
 %{
 	#include <iostream>
-	#include "parser.tab.hpp"
 	#include "RuleClasses.h"
+	#include "PrettyPrinterVisitor.h"
+
 	extern "C" int yylex();
-	void yyerror(const char *);
+	void yyerror(std::shared_ptr<IProgram>& root, const char *);
 	int yydebug = 1;
 
-	void debugRule( YYLTYPE yylloc, const char* rule ) 
-	{
+//	void debugRule( YYLTYPE yylloc, const char* rule ) 
+//	{
 		//std::cout << "(" << yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.first_line << ", " << yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.first_column << "; "
 		//<< yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.last_line << ", " << yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.last_column << ")  " << rule << std::endl;
-	}
+//	}
 %}
 
 %code requires {
 	#include "RuleClasses.h"
 	#include "PrettyPrinterVisitor.h"
 }
+
+%parse-param { std::shared_ptr<IProgram>& root }
 
 %union {
 	char* val;
@@ -68,16 +71,14 @@
 %type <expressionVal> Expression ExpressionRest
 %type <expressionListVal> ExpressionList ExpressionRestList
 %type <statementListVal> StatementList
-%type <intVal> INTEGER_VAL
-%type <boolVal> BOOLEAN_VAL
-%type <val> IDENTIFIER
+%type <val> IDENTIFIER INTEGER_VAL BOOLEAN_VAL INT BOOL
 
 %%
 
 Program:
 	MainClassDeclaration ClassDeclarationList {
 		//debugRule(@$, "Program -> MainClassDeclaration ClassDeclarationList");
-		$$ = new CProgram( $1, $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		root = std::make_shared<CProgram>( $1, $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
 MainClassDeclaration:
@@ -145,7 +146,7 @@ FormalList:
 	}
 	| Type IDENTIFIER FormalRestList {
 		//debugRule(@$, "FormalList -> Type IDENTIFIER FormalRestList");
-		$$ = NULL; // NOT IMPLEMENTED
+		$$ = new CFormalList( $1, $2, $3, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
 
@@ -156,13 +157,13 @@ FormalRestList:
 	}
 	| FormalRest FormalRestList {
 		//debugRule(@$, "FormalRestList -> FormalRest FormalRestList");
-		$$ = NULL; // NOT IMPLEMENTED
+		$$ = new CFormalRestList( $1, $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
 FormalRest:
 	',' Type IDENTIFIER {
 		//debugRule(@$, "FormalRest -> , Type IDENTIFIER");
-		$$ = NULL; // NOT IMPLEMENTED
+		$$ = new CFormalList( $2, $3, nullptr, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
 Type:
@@ -321,7 +322,7 @@ ExpressionRest:
 
 %%
 
-void yyerror(const char *s) 
+void yyerror(std::shared_ptr<IProgram>& root, const char *s) 
 {
 	//std::cout << "(" << yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.first_line << ", " << yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.first_column << "; "
 	//	<< yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.last_line << ", " << yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column.last_column << ")  ";

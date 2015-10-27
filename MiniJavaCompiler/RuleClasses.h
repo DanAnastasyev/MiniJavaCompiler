@@ -210,6 +210,11 @@ public:
 
 	std::string GetIdentifier() const;
 
+
+	void Accept( IVisitor* visitor ) const override
+	{
+		visitor->Visit( this );
+	}
 private:
 	std::shared_ptr<IType> type;
 	std::string identifier;
@@ -227,6 +232,11 @@ public:
 
 	const IFormalList* GetFormalRestList() const;
 
+
+	void Accept( IVisitor* visitor ) const override
+	{
+		visitor->Visit( this );
+	}
 private:
 	std::shared_ptr<IFormalList> formalRest;
 	std::shared_ptr<IFormalList> formalRestList;
@@ -427,27 +437,27 @@ private:
 
 class CIntLiteralExpression : public IExp {
 public:
-	CIntLiteralExpression( int _val, const CPosition& pos );
+	CIntLiteralExpression( const std::string& _val, const CPosition& pos );
 
-	int GetValue() const;
+	std::string GetValue( ) const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
-	int val;
+	std::string val;
 	CPosition position;
 };
 
 class CBoolLiteralExpression : public IExp {
 public:
-	CBoolLiteralExpression( bool _val, const CPosition& pos );
+	CBoolLiteralExpression( const std::string& _val, const CPosition& pos );
 
-	bool GetValue() const;
+	std::string GetValue( ) const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
-	bool val;
+	std::string val;
 	CPosition position;
 };
 

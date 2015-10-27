@@ -94,13 +94,13 @@ void CMethodExpression::Accept( IVisitor* visitor ) const
 	visitor->Visit( this );
 }
 
-CIntLiteralExpression::CIntLiteralExpression( int _val, const CPosition& pos ) :
+CIntLiteralExpression::CIntLiteralExpression( const std::string& _val, const CPosition& pos ) :
 val( _val ),
 position( pos )
 {
 }
 
-int CIntLiteralExpression::GetValue() const
+std::string CIntLiteralExpression::GetValue() const
 {
 	return val;
 }
@@ -110,13 +110,13 @@ void CIntLiteralExpression::Accept( IVisitor* visitor ) const
 	visitor->Visit( this );
 }
 
-CBoolLiteralExpression::CBoolLiteralExpression( bool _val, const CPosition& pos ) :
+CBoolLiteralExpression::CBoolLiteralExpression( const std::string& _val, const CPosition& pos ) :
 val( _val ),
 position( pos )
 {
 }
 
-bool CBoolLiteralExpression::GetValue() const
+std::string CBoolLiteralExpression::GetValue() const
 {
 	return val;
 }

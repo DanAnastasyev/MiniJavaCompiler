@@ -1,11 +1,10 @@
 #pragma once
 #include <iostream>
-
-#include "Visitor.h"
 #include "RuleClasses.h"
 
 class CPrettyPrinterVisitor : public IVisitor {
-	void Visit( CProgram* program )
+public:
+	void Visit( const CProgram* program )
 	{
 		if( program->GetMainClass() != nullptr ) {
 			program->GetMainClass()->Accept( this );
@@ -15,7 +14,7 @@ class CPrettyPrinterVisitor : public IVisitor {
 		}
 	}
 
-	void Visit( CMainClass* program )
+	void Visit( const CMainClass* program )
 	{
 		std::cout << "class ";
 		std::cout << program->GetClassName();
@@ -64,28 +63,56 @@ class CPrettyPrinterVisitor : public IVisitor {
 	}
 	void Visit( const CVarDecl* program )
 	{
-		std::cout << program->GetType() << " ";
+		program->GetType()->Accept( this );
 		std::cout << program->GetName() << ";";
 	}
 
 	void Visit( const CVarDeclList* program )
 	{
-		program->GetVarDeclList()->Accept( this );
-		program->GetVarDecl()->Accept( this );
+		if( program->GetVarDeclList() != nullptr ) {
+			program->GetVarDeclList()->Accept( this );
+		}
+		if( program->GetVarDecl() != nullptr ) {
+			program->GetVarDecl()->Accept( this );
+		}
 	}
 
 	void Visit( const CMethodDecl* program )
 	{
 		std::cout << "public ";
-		program->GetType()->Accept( this );
+		if( program->GetType() != nullptr ) {
+			program->GetType()->Accept( this );
+		}
+		std::cout << program->GetName() << "( ";
+		if( program->GetFormalList() != nullptr ) {
+			program->GetFormalList()->Accept( this );
+		}
+		std::cout << " )\n{\n";
+		if( program->GetVarList() != nullptr ) {
+			program->GetVarList()->Accept( this );
+		}
+		if( program->GetStatementList() != nullptr ) {
+			program->GetStatementList()->Accept( this );
+		}
+		std::cout << "return ";
+		if( program->GetReturnExpression() != nullptr ) {
+			program->GetReturnExpression()->Accept( this );
+		}
+		std::cout << ";\n}";
 	}
 
 	void Visit( const CStandardType* program )
 	{
 		switch( program->GetType() ) {
-			case CStandardType::StandardType::INT: std::cout << "int\n";
-			case CStandardType::StandardType::INT_ARRAY: std::cout << "int[]\n";
-			case CStandardType::StandardType::BOOL: std::cout << "bool\n";
+			case CStandardType::StandardType::INT: 
+				std::cout << "int\n";
+				break;
+			case CStandardType::StandardType::INT_ARRAY: 
+				std::cout << "int[]\n";
+				break;
+			case CStandardType::StandardType::BOOL: 
+				std::cout << "bool\n";
+				break;
 		}
 	}
 
@@ -96,81 +123,127 @@ class CPrettyPrinterVisitor : public IVisitor {
 
 	void Visit( const CStatementListStatement* statement )
 	{
-		statement->GetStatementList()->Accept( this );
+		if( statement->GetStatementList() != nullptr ) {
+			statement->GetStatementList()->Accept( this );
+		}
 	}
 
 	void Visit( const CArrayAssignStatement* statement ) 
 	{
 		std::cout << statement->GetArrayName() << "[";
-		statement->GetElementNumber()->Accept( this );
+		if( statement->GetElementNumber() != nullptr ) {
+			statement->GetElementNumber()->Accept( this );
+		}
 		std::cout << "] = ";
-		statement->GetRightPart()->Accept( this );
+		if( statement->GetRightPart() != nullptr ) {
+			statement->GetRightPart()->Accept( this );
+		}
 	}
 
 	void Visit( const CAssignStatement* statement ) 
 	{
 		std::cout << statement->GetLeftPart() << " = ";
-		statement->GetRightPart()->Accept( this );
+		if( statement->GetRightPart() != nullptr ) {
+			statement->GetRightPart()->Accept( this );
+		}
 	}
 	
 	void Visit( const CIfStatement* statement ) 
 	{
 		std::cout << "if( ";
-		statement->GetCondition()->Accept( this );
+		if( statement->GetCondition() != nullptr ) {
+			statement->GetCondition()->Accept( this );
+		}
 		std::cout << " )" << std::endl;
-		statement->GetIfTrueStatement()->Accept( this );
-		std::cout << std::endl << "else" << std::endl;
-		statement->GetIfFalseStatement()->Accept( this );
+		if( statement->GetIfTrueStatement() != nullptr ) {
+			statement->GetIfTrueStatement()->Accept( this );
+		}
+		if( statement->GetIfFalseStatement() != nullptr ) {
+			std::cout << std::endl << "else" << std::endl;
+			statement->GetIfFalseStatement()->Accept( this );
+		}
 	}
 
 	void Visit( const CWhileStatement* statement ) 
 	{
 		std::cout << "while( ";
-		statement->GetCondition()->Accept( this );
+		if( statement->GetCondition() != nullptr ) {
+			statement->GetCondition()->Accept( this );
+		}
 		std::cout << " )" << std::endl;
-		statement->GetBodyCycle()->Accept( this );
+		if( statement->GetBodyCycle() != nullptr ) {
+			statement->GetBodyCycle()->Accept( this );
+		}
 	}
 
 	void Visit( const CPrintStatement* statement ) 
 	{
-		std::cout << "println( ";
-		statement->GetExpression()->Accept( this );
+		std::cout << "System.out.println( ";
+		if( statement->GetExpression() != nullptr ) {
+			statement->GetExpression()->Accept( this );
+		}
 		std::cout << " );";
 	}
 
 	void Visit( const CBinOpExpression* expr ) 
 	{
-		expr->GetLeftExp()->Accept( this );
-		switch( expr->GetBinOp( ) ) {
-			case CBinOpExpression::BinOp::AND: std::cout << "&&";
-			case CBinOpExpression::BinOp::LESS: std::cout << "<";
-			case CBinOpExpression::BinOp::PLUS: std::cout << "+";
-			case CBinOpExpression::BinOp::MINUS: std::cout << "-";
-			case CBinOpExpression::BinOp::TIMES: std::cout << "*";
-			case CBinOpExpression::BinOp::DIVIDE: std::cout << "/";
+		if( expr->GetLeftExp() != nullptr ) {
+			expr->GetLeftExp()->Accept( this );
 		}
-		expr->GetRightExp()->Accept( this );
+		switch( expr->GetBinOp( ) ) {
+			case CBinOpExpression::BinOp::AND: 
+				std::cout << "&&";
+				break;
+			case CBinOpExpression::BinOp::LESS: 
+				std::cout << "<";
+				break;
+			case CBinOpExpression::BinOp::PLUS: 
+				std::cout << "+";
+				break;
+			case CBinOpExpression::BinOp::MINUS: 
+				std::cout << "-";
+				break;
+			case CBinOpExpression::BinOp::TIMES: 
+				std::cout << "*";
+				break;
+			case CBinOpExpression::BinOp::DIVIDE: 
+				std::cout << "/";
+				break;
+		}
+		if( expr->GetRightExp() != nullptr ) {
+			expr->GetRightExp()->Accept( this );
+		}
 	}
 
 	void Visit( const CIndexExpression* expr ) 
 	{
-		expr->GetExp()->Accept( this );
-		std::cout << "[";
-		expr->GetIndexExp()->Accept( this );
-		std::cout << "]";
+		if( expr->GetExp() != nullptr ) {
+			expr->GetExp()->Accept( this );
+		}
+		if( expr->GetIndexExp() != nullptr ) {
+			std::cout << "[";
+			expr->GetIndexExp()->Accept( this );
+			std::cout << "]";
+		}
 	}
 
 	void Visit( const CLenghtExpression* expr )
 	{
-		expr->GetExp()->Accept( this );
-		std::cout << ".length";
+		if( expr->GetExp() != nullptr ) {
+			expr->GetExp()->Accept( this );
+			std::cout << ".length";
+		}
 	}
 
 	void Visit( const CMethodExpression* expr ) 
 	{
-		expr->GetExp()->Accept( this );
+		if( expr->GetExp() != nullptr ) {
+			expr->GetExp()->Accept( this );
+		}
 		std::cout << "." << expr->GetIdentifier() << "(";
-		expr->GetIndexExp()->Accept( this );
+		if( expr->GetIndexExp() != nullptr ) {
+			expr->GetIndexExp()->Accept( this );
+		}
 		std::cout << ")";
 	}
 
@@ -196,9 +269,11 @@ class CPrettyPrinterVisitor : public IVisitor {
 
 	void Visit( const CNewIntArrayExpression* expr )
 	{
-		std::cout << "new int [";
-		expr->GetExp()->Accept( this );
-		std::cout << "]";
+		if( expr->GetExp() != nullptr ) {
+			std::cout << "new int [";
+			expr->GetExp()->Accept( this );
+			std::cout << "]";
+		}
 	}
 
 	void Visit( const CNewExpression* expr ) 
@@ -209,38 +284,81 @@ class CPrettyPrinterVisitor : public IVisitor {
 	void Visit( const CUnaryOpExpression* expr ) 
 	{
 		switch( expr->GetOperation() ) {
-			case CUnaryOpExpression::UnaryOp::MINUS: std::cout << "-";
-			case CUnaryOpExpression::UnaryOp::NOT: std::cout << "!";
+			case CUnaryOpExpression::UnaryOp::MINUS: 
+				std::cout << "-";
+				break;
+			case CUnaryOpExpression::UnaryOp::NOT: 
+				std::cout << "!";
+				break;
 		}
-		expr->GetLeftExp()->Accept( this );
+		if( expr->GetLeftExp() != nullptr ) {
+			expr->GetLeftExp()->Accept( this );
+		}
 	}
 
 	void Visit( const CBracesExpression* expr )
 	{
-		std::cout << "( ";
-		expr->GetExp()->Accept( this );
-		std::cout << " )";
+		if( expr->GetExp() != nullptr ) {
+			std::cout << "( ";
+			expr->GetExp()->Accept( this );
+			std::cout << " )";
+		}
 	}
 
 	void Visit( const CExpressionList* exprList ) 
 	{
-		exprList->GetExp()->Accept( this );
-		exprList->GetExpList()->Accept( this );
+		if( exprList->GetExp() != nullptr ) {
+			exprList->GetExp()->Accept( this );
+		}
+		if( exprList->GetExpList() != nullptr ) {
+			exprList->GetExpList()->Accept( this );
+		}
 	}
 
 	void Visit( const CStatementList* stmtList ) 
 	{
-		stmtList->GetStatement()->Accept( this );
-		stmtList->GetStatementList()->Accept( this );
+		if( stmtList->GetStatement() != nullptr ) {
+			stmtList->GetStatement()->Accept( this );
+		}
+		if( stmtList->GetStatementList() != nullptr ) {
+			stmtList->GetStatementList()->Accept( this );
+		}
 	}
 	
 	void Visit( const CExpressionRest* expr ) 
 	{
-		expr->GetExp()->Accept( this );
+		if( expr->GetExp() != nullptr ) {
+			expr->GetExp()->Accept( this );
+		}
 	}
 
 	void Visit( const CMethodDeclList* methodList ) 
 	{
-	
+		if( methodList->GetMethodDecl() != nullptr ) {
+			methodList->GetMethodDecl()->Accept( this );
+		}
+		if( methodList->GetMethodDeclList() != nullptr ) {
+			methodList->GetMethodDeclList()->Accept( this );
+		}
+	}
+
+	void Visit( const CFormalList* list )
+	{
+		if( list->GetType() != nullptr ) {
+			list->GetType()->Accept( this );
+		}
+		std::cout << " " + list->GetIdentifier() << " ";
+		if( list->GetFormalRest() != nullptr ) {
+			list->GetFormalRest()->Accept( this );
+		}
+	}
+	void Visit( const CFormalRestList* list ) 
+	{
+		if( list->GetFormalRest() != nullptr ) {
+			list->GetFormalRest()->Accept( this );
+		}
+		if( list->GetFormalRestList( ) != nullptr ) {
+			list->GetFormalRestList()->Accept( this );
+		}
 	}
 };

@@ -9,8 +9,7 @@ public:
 		beginColumn( _beginColumn ),
 		endLine( _endLine ),
 		endColumn( _endColumn )
-	{
-	}
+	{}
 
 	std::pair< int, int > GetBeginPos() const
 	{

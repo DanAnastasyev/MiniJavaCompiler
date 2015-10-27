@@ -41,7 +41,7 @@ extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
 /* Line 2058 of yacc.c  */
-#line 17 "parser.y"
+#line 18 "parser.y"
 
 	#include "RuleClasses.h"
 	#include "PrettyPrinterVisitor.h"
@@ -86,7 +86,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 22 "parser.y"
+#line 25 "parser.y"
 
 	char* val;
 	int intVal;
@@ -138,7 +138,7 @@ int yyparse ();
 #endif
 #else /* ! YYPARSE_PARAM */
 #if defined __STDC__ || defined __cplusplus
-int yyparse (void);
+int yyparse (std::shared_ptr<IProgram>& root);
 #else
 int yyparse ();
 #endif
