@@ -23,11 +23,15 @@ class CStandardType;
 class CUserType;
 class CMethodDecl;
 class CVarDecl;
+class CVarDeclList;
 class CClassDeclDerived;
 class CClassDecl;
 class CClassDeclList;
 class CProgram;
 class CMainClass;
+class CStatementList;
+class CMethodDeclList;
+class CExpressionRest;
 
 class IVisitor {
 public:
@@ -37,6 +41,7 @@ public:
 	void Visit( const CClassDecl* program );
 	void Visit( const CClassDeclDerived* program );
 	void Visit( const CVarDecl* program );
+	void Visit( const CVarDeclList* program );
 	void Visit( const CMethodDecl* program );
 	void Visit( const CStandardType* program );
 	void Visit( const CUserType* program );
@@ -59,4 +64,7 @@ public:
 	void Visit( const CUnaryOpExpression* expr );
 	void Visit( const CBracesExpression* expr );
 	void Visit( const CExpressionList* exprList );
+	void Visit( const CStatementList* stmtList ); 
+	void Visit( const CExpressionRest* expr );
+	void Visit( const CMethodDeclList* methodList );
 };

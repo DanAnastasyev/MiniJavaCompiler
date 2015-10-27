@@ -39,6 +39,16 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+/* Line 2058 of yacc.c  */
+#line 17 "parser.y"
+
+	#include "RuleClasses.h"
+	#include "PrettyPrinterVisitor.h"
+
+
+/* Line 2058 of yacc.c  */
+#line 52 "BuildOutputs\\parser.tab.hpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -76,13 +86,29 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 16 "parser.y"
+#line 22 "parser.y"
 
 	char* val;
+	int intVal;
+	bool boolVal;
+	IProgram* programVal;
+	IMainClass* mainClassDeclarationVal;
+	IClassDeclList* classDeclarationListVal;
+	IClassDecl* classDeclarationVal;
+	IVarDeclList* variableDeclarationListVal;
+	IVarDecl* variableDeclarationVal;
+	IMethodDecl* methodDeclarationVal;
+	IMethodDeclList* methodDeclarationListVal;
+	IFormalList* formalListVal;
+	IStatement* statementVal;
+	IType* typeVal;
+	IExp* expressionVal;
+	IExpList* expressionListVal;
+	IStatementList* statementListVal;
 
 
 /* Line 2058 of yacc.c  */
-#line 86 "BuildOutputs\\parser.tab.hpp"
+#line 112 "BuildOutputs\\parser.tab.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

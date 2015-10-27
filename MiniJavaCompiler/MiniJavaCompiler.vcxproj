@@ -23,7 +23,6 @@
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PrettyPrinterVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser.y">
@@ -36,6 +35,7 @@
   <ItemGroup>
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
     <ClInclude Include="grammar.h" />
+    <ClInclude Include="PrettyPrinterVisitor.h" />
     <ClInclude Include="RuleClasses.h" />
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="Position.h" />

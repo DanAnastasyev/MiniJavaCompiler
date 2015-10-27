@@ -47,9 +47,6 @@
     <ClCompile Include="BuildOutputs\parser.tab.cpp">
       <Filter>Source Files\BuildOutputs</Filter>
     </ClCompile>
-    <ClCompile Include="PrettyPrinterVisitor.cpp">
-      <Filter>Source Files\Visitors</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -69,6 +66,9 @@
     </ClInclude>
     <ClInclude Include="RuleClasses.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrettyPrinterVisitor.h">
+      <Filter>Source Files\Visitors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
