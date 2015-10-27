@@ -71,7 +71,7 @@
 %type <expressionVal> Expression ExpressionRest
 %type <expressionListVal> ExpressionList ExpressionRestList
 %type <statementListVal> StatementList
-%type <val> IDENTIFIER INTEGER_VAL BOOLEAN_VAL INT BOOL
+%type <val> IDENTIFIER INTEGER_VAL BOOLEAN_VAL
 
 %%
 
