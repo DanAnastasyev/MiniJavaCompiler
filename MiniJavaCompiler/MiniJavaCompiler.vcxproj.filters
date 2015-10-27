@@ -28,6 +28,9 @@
     <Filter Include="Source Files\RuleClasses">
       <UniqueIdentifier>{4b7b8475-d5ed-478c-9ef3-63eac3bb1ce6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SymbolsTable">
+      <UniqueIdentifier>{4ea6a3de-1a88-4d37-a8cd-b56fed82280c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -77,6 +80,9 @@
     <ClCompile Include="RuleClasses\Program.cpp">
       <Filter>Source Files\RuleClasses</Filter>
     </ClCompile>
+    <ClCompile Include="Visitors\PrettyPrinterVisitor.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -91,14 +97,17 @@
     <ClInclude Include="grammar.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Visitor.h">
+    <ClInclude Include="SymbolsTable\SymbolsTable.h">
+      <Filter>Source Files\SymbolsTable</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitors\PrettyPrinterVisitor.h">
       <Filter>Source Files\Visitors</Filter>
     </ClInclude>
-    <ClInclude Include="RuleClasses.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PrettyPrinterVisitor.h">
+    <ClInclude Include="Visitors\Visitor.h">
       <Filter>Source Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="RuleClasses\RuleClasses.h">
+      <Filter>Source Files\RuleClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "RuleClasses.h"
+#include "RuleClasses/RuleClasses.h"
 
 class CPrettyPrinterVisitor : public IVisitor {
 public:

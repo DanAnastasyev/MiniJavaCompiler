@@ -43,8 +43,8 @@ extern int yydebug;
 /* Line 2058 of yacc.c  */
 #line 18 "parser.y"
 
-	#include "RuleClasses.h"
-	#include "PrettyPrinterVisitor.h"
+	#include "RuleClasses/RuleClasses.h"
+	#include "Visitors/PrettyPrinterVisitor.h"
 
 
 /* Line 2058 of yacc.c  */

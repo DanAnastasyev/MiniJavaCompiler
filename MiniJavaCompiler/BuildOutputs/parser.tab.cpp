@@ -66,8 +66,8 @@
 #line 2 "parser.y"
 
 	#include <iostream>
-	#include "RuleClasses.h"
-	#include "PrettyPrinterVisitor.h"
+	#include "RuleClasses/RuleClasses.h"
+	#include "Visitors/PrettyPrinterVisitor.h"
 
 	extern "C" int yylex();
 	void yyerror(std::shared_ptr<IProgram>& root, const char *);
@@ -113,8 +113,8 @@ extern int yydebug;
 /* Line 387 of yacc.c  */
 #line 18 "parser.y"
 
-	#include "RuleClasses.h"
-	#include "PrettyPrinterVisitor.h"
+	#include "RuleClasses/RuleClasses.h"
+	#include "Visitors/PrettyPrinterVisitor.h"
 
 
 /* Line 387 of yacc.c  */

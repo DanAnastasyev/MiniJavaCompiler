@@ -5,7 +5,7 @@
 
 #include "grammar.h"
 #include "Position.h"
-#include "Visitor.h"
+#include "Visitors/Visitor.h"
 
 class CProgram : public IProgram {
 public:

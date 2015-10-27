@@ -1,8 +1,8 @@
 %locations
 %{
 	#include <iostream>
-	#include "RuleClasses.h"
-	#include "PrettyPrinterVisitor.h"
+	#include "RuleClasses/RuleClasses.h"
+	#include "Visitors/PrettyPrinterVisitor.h"
 
 	extern "C" int yylex();
 	void yyerror(std::shared_ptr<IProgram>& root, const char *);
@@ -16,8 +16,8 @@
 %}
 
 %code requires {
-	#include "RuleClasses.h"
-	#include "PrettyPrinterVisitor.h"
+	#include "RuleClasses/RuleClasses.h"
+	#include "Visitors/PrettyPrinterVisitor.h"
 }
 
 %parse-param { std::shared_ptr<IProgram>& root }

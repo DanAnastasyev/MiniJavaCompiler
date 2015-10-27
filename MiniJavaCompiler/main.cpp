@@ -1,5 +1,5 @@
 #include <iostream>
-#include "PrettyPrinterVisitor.h"
+#include "Visitors/PrettyPrinterVisitor.h"
 extern int yyparse( std::shared_ptr<IProgram>& );
 
 int main( int argc, char **argv )
