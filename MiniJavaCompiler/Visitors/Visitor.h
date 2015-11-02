@@ -71,4 +71,6 @@ public:
 	virtual void Visit( const CMethodDeclList* methodList ) = 0;
 	virtual void Visit( const CFormalList* list ) = 0;
 	virtual void Visit( const CFormalRestList* list ) = 0;
+
+	virtual ~IVisitor() {}
 };
