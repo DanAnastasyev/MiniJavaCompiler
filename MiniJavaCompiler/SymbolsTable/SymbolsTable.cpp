@@ -23,7 +23,7 @@ namespace SymbolsTable {
 		return nullptr;
 	}
 
-	bool CClassInfo::AddVar( const std::string& varName, const CStandardType::StandardType type )
+	bool CClassInfo::AddVar( const std::string& varName, IType* type )
 	{
 		for( auto curVar : vars ) {
 			if( curVar->GetName() == varName ) {
@@ -34,29 +34,7 @@ namespace SymbolsTable {
 		return true;
 	}
 
-	bool CClassInfo::AddVar( const std::string& varName, CUserType* type )
-	{
-		for( auto curVar : vars ) {
-			if( curVar->GetName() == varName ) {
-				return false;
-			}
-		}
-		vars.push_back( std::make_shared<CVarInfo>( varName, type ) );
-		return true;
-	}
-
-	bool CClassInfo::AddMethod( const std::string& methodName, const CStandardType::StandardType type )
-	{
-		for( auto curMethod : methods ) {
-			if( curMethod->GetName() == methodName ) {
-				return false;
-			}
-		}
-		methods.push_back( std::make_shared<CMethodInfo>( methodName, type ) );
-		return true;
-	}
-
-	bool CClassInfo::AddMethod( const std::string& methodName, CUserType* type )
+	bool CClassInfo::AddMethod( const std::string& methodName, IType* type )
 	{
 		for( auto curMethod : methods ) {
 			if( curMethod->GetName() == methodName ) {
@@ -102,7 +80,7 @@ namespace SymbolsTable {
 		return vars;
 	}
 
-	bool CMethodInfo::AddParamVar( const std::string& varName, CUserType* type )
+	bool CMethodInfo::AddParamVar( const std::string& varName, IType* type )
 	{
 		for( auto curVar : params ) {
 			if( curVar->GetName() == varName ) {
@@ -113,32 +91,10 @@ namespace SymbolsTable {
 		return true;
 	}
 
-	bool CMethodInfo::AddParamVar( const std::string& varName, const CStandardType::StandardType type )
-	{
-		for( auto curVar : params ) {
-			if( curVar->GetName() == varName ) {
-				return false;
-			}
-		}
-		params.push_back( std::make_shared<CVarInfo>( varName, type ) );
-		return true;
-	}
-
-	bool CMethodInfo::AddLocalVar( const std::string& varName, CUserType* type )
+	bool CMethodInfo::AddLocalVar( const std::string& varName, IType* type )
 	{
 		for( auto curVar : locals ) {
 			if( curVar->GetName( ) == varName ) {
-				return false;
-			}
-		}
-		locals.push_back( std::make_shared<CVarInfo>( varName, type ) );
-		return true;
-	}
-
-	bool CMethodInfo::AddLocalVar( const std::string& varName, const CStandardType::StandardType type )
-	{
-		for( auto curVar : locals ) {
-			if( curVar->GetName() == varName ) {
 				return false;
 			}
 		}
@@ -175,4 +131,10 @@ namespace SymbolsTable {
 	{
 		return varName;
 	}
+
+	IType* CVarInfo::GetType() const
+	{
+		return type;
+	}
+
 }

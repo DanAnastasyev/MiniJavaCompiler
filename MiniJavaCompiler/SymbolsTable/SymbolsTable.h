@@ -6,25 +6,21 @@
 namespace SymbolsTable {
 	class CVarInfo {
 	public:
-		CVarInfo( const std::string& name, const CStandardType::StandardType type ) : varName( name ), standartType( type ) {}
-		CVarInfo( const std::string& name, CUserType* type ) : varName( name ), userType( type ) {}
+		CVarInfo( const std::string& name, IType* _type ) : varName( name ), type( _type ) {}
 
 		std::string GetName() const;
+		IType* GetType() const;
 	private:
 		std::string varName;
-		CStandardType::StandardType standartType;
-		std::shared_ptr<CUserType> userType;
+		IType* type;
 	};
 
 	class CMethodInfo {
 	public:
-		CMethodInfo( const std::string& name, const CStandardType::StandardType type ) : methodName( name ), returnType( new CVarInfo( "", type ) ) {}
-		CMethodInfo( const std::string& name, CUserType* type ) : methodName( name ), returnType( new CVarInfo( "", type ) ) {}
+		CMethodInfo( const std::string& name, IType* type ) : methodName( name ), returnType( new CVarInfo( "", type ) ) {}
 
-		bool AddParamVar( const std::string& varName, const CStandardType::StandardType type );
-		bool AddParamVar( const std::string& varName, CUserType* type );
-		bool AddLocalVar( const std::string& varName, const CStandardType::StandardType type );
-		bool AddLocalVar( const std::string& varName, CUserType* type );
+		bool AddParamVar( const std::string& varName, IType* type );
+		bool AddLocalVar( const std::string& varName, IType* type );
 
 		std::string GetName() const;
 		CVarInfo* GetVar( const std::string& varName ) const;
@@ -40,10 +36,8 @@ namespace SymbolsTable {
 	public:
 		CClassInfo( const std::string& name ) : className( name ) {}
 
-		bool AddVar( const std::string& varName, const CStandardType::StandardType type );
-		bool AddVar( const std::string& varName, CUserType* type );
-		bool AddMethod( const std::string& methodName, const CStandardType::StandardType type );
-		bool AddMethod( const std::string& methodName, CUserType* type );
+		bool AddVar( const std::string& varName, IType* type );
+		bool AddMethod( const std::string& methodName, IType* type );
 
 		std::string GetName() const;
 		CMethodInfo* GetMethod( const std::string& methodName ) const;
