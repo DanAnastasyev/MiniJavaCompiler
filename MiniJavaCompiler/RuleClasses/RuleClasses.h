@@ -6,6 +6,7 @@
 #include "grammar.h"
 #include "Position.h"
 #include "Visitors/Visitor.h"
+#include "SymbolsTable\Symbol.h"
 
 class CProgram : public IProgram {
 public:
@@ -29,15 +30,15 @@ public:
 
 	const IStatement* GetStatement() const;
 
-	std::string GetClassName() const;
+	const CSymbol* GetClassName() const;
 
-	std::string GetMainArgsIdentifier() const;
+	const CSymbol* GetMainArgsIdentifier() const;
 
 	void Accept( IVisitor* visitor ) const override;
 
 private:
-	const std::string identifier;
-	const std::string argsIdentifier;
+	const CSymbol* identifier;
+	const CSymbol* argsIdentifier;
 	const std::shared_ptr<IStatement> statement;
 	CPosition position;
 }; 
@@ -61,7 +62,7 @@ class CClassDecl : public IClassDecl {
 public:
 	CClassDecl( IVarDeclList* _varList, IMethodDeclList* _methodList, const std::string& _className, const CPosition& _position );
 
-	std::string GetName() const;
+	const CSymbol* GetName() const;
 
 	const IVarDeclList* GetVarDeclList() const;
 
@@ -71,7 +72,7 @@ public:
 
 private:
 	CPosition position;
-	const std::string className;
+	const CSymbol* className;
 	const std::shared_ptr<IVarDeclList> varList;
 	const std::shared_ptr<IMethodDeclList> methodList;
 };
@@ -85,9 +86,9 @@ public:
 		const std::string& _baseClassName,
 		const CPosition& _position );
 
-	std::string GetName() const;
+	const CSymbol* GetName() const;
 
-	std::string GetBaseClassName() const;
+	const CSymbol* GetBaseClassName() const;
 
 	const IVarDeclList* GetVarDeclList() const;
 
@@ -97,8 +98,8 @@ public:
 
 private:
 	CPosition position;
-	const std::string className;
-	const std::string baseClassName;
+	const CSymbol* className;
+	const CSymbol* baseClassName;
 	const std::shared_ptr<IVarDeclList> varList;
 	const std::shared_ptr<IMethodDeclList> methodList;
 };
@@ -124,14 +125,14 @@ public:
 
 	const IType* GetType() const;
 
-	std::string GetName() const;
+	const CSymbol* GetName() const;
 
 	void Accept( IVisitor* visitor ) const override;
 
 private:
 	CPosition position;
 	const std::shared_ptr<IType> type;
-	const std::string identifier;
+	const CSymbol* identifier;
 };
 
 class CVarDeclList : public IVarDeclList {
@@ -162,7 +163,7 @@ public:
 
 	const IType* GetType() const;
 
-	std::string GetName() const;
+	const CSymbol* GetName() const;
 
 	const IFormalList* GetFormalList() const;
 
@@ -176,7 +177,7 @@ public:
 
 private:
 	const std::shared_ptr<IType> type;
-	const std::string methodName;
+	const CSymbol* methodName;
 	const std::shared_ptr<IFormalList> formalList;
 	const std::shared_ptr<IVarDeclList> varList;
 	const std::shared_ptr<IStatementList> statementList;
@@ -208,7 +209,7 @@ public:
 
 	const IType* GetType() const;
 
-	std::string GetIdentifier() const;
+	const CSymbol* GetIdentifier() const;
 
 
 	void Accept( IVisitor* visitor ) const override
@@ -217,7 +218,7 @@ public:
 	}
 private:
 	std::shared_ptr<IType> type;
-	std::string identifier;
+	const CSymbol* identifier;
 
 	std::shared_ptr<IFormalList> formalList;
 
@@ -324,7 +325,7 @@ class CArrayAssignStatement : public IStatement {
 public:
 	CArrayAssignStatement( const std::string& _arrayId, IExp* _elementNumber, IExp* _rightPart, const CPosition& _position );
 
-	std::string GetArrayName() const;
+	const CSymbol* GetArrayName() const;
 
 	const IExp* GetElementNumber() const;
 
@@ -333,7 +334,7 @@ public:
 	void Accept( IVisitor* visitor ) const override;
 
 private:
-	const std::string arrayId;
+	const CSymbol* arrayId;
 	const std::shared_ptr<IExp> elementNumber;
 	const std::shared_ptr<IExp> rightPart;
 	CPosition position;
@@ -362,13 +363,13 @@ public:
 	CUserType( const std::string& _typeName, const CPosition& _position );
 	CUserType( const CUserType* other );
 
-	std::string GetTypeName() const;
+	const CSymbol* GetTypeName() const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 	CPosition GetPosition( ) const;
 private:
-	const std::string typeName;
+	const CSymbol* typeName;
 	CPosition position;
 };
 
@@ -429,14 +430,14 @@ public:
 
 	const IExpList* GetIndexExp() const;
 
-	std::string GetIdentifier() const;
+	const CSymbol* GetIdentifier() const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
 	const std::shared_ptr<IExp> exp;
 	const std::shared_ptr<IExpList> expList;
-	const std::string identifier;
+	const CSymbol* identifier;
 	CPosition position;
 };
 
@@ -444,12 +445,12 @@ class CIntLiteralExpression : public IExp {
 public:
 	CIntLiteralExpression( const std::string& _val, const CPosition& pos );
 
-	std::string GetValue( ) const;
+	const CSymbol* GetValue( ) const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
-	std::string val;
+	const CSymbol* val;
 	CPosition position;
 };
 
@@ -457,12 +458,12 @@ class CBoolLiteralExpression : public IExp {
 public:
 	CBoolLiteralExpression( const std::string& _val, const CPosition& pos );
 
-	std::string GetValue( ) const;
+	const CSymbol* GetValue( ) const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
-	std::string val;
+	const CSymbol* val;
 	CPosition position;
 };
 
@@ -470,12 +471,12 @@ class CIdentifierExpression : public IExp {
 public:
 	CIdentifierExpression( const std::string& id, const CPosition& pos );
 
-	std::string GetIdentifier() const;
+	const CSymbol* GetIdentifier() const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
-	const std::string identifier;
+	const CSymbol* identifier;
 	CPosition position;
 };
 
@@ -506,12 +507,12 @@ class CNewExpression : public IExp {
 public:
 	CNewExpression( const std::string& id, const CPosition& pos );
 
-	std::string GetIdentifier() const;
+	const CSymbol* GetIdentifier() const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
 private:
-	const std::string identifier;
+	const CSymbol* identifier;
 	CPosition position;
 };
 

@@ -3,7 +3,7 @@
 CVarDecl::CVarDecl( IType* _type, const std::string& _identifier, const CPosition& _position ) :
 position( _position ),
 type( _type ),
-identifier( _identifier )
+identifier( CSymbol::GetSymbol(_identifier) )
 {
 }
 
@@ -12,7 +12,7 @@ const IType* CVarDecl::GetType() const
 	return type.get();
 }
 
-std::string CVarDecl::GetName() const
+const CSymbol* CVarDecl::GetName() const
 {
 	return identifier;
 }

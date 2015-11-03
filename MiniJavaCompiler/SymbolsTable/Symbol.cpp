@@ -1,3 +1,3 @@
 #include "Symbol.h"
 
-std::unordered_map<std::string, Symbol::CSymbol*> Symbol::CSymbol::mapping;
+std::unordered_map<std::string, CSymbol*> CSymbol::mapping;

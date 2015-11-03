@@ -28,7 +28,7 @@ CPosition CStandardType::GetPosition() const
 }
 
 CUserType::CUserType( const std::string& _typeName, const CPosition& _position ) :
-	typeName( _typeName ),
+	typeName( CSymbol::GetSymbol(_typeName) ),
 	position( _position )
 {
 }
@@ -39,7 +39,7 @@ CUserType::CUserType( const CUserType* other ) :
 {
 }
 
-std::string CUserType::GetTypeName() const
+const CSymbol* CUserType::GetTypeName() const
 {
 	return typeName;
 }

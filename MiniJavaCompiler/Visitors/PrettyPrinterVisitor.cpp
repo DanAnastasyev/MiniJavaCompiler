@@ -156,7 +156,7 @@ void CPrettyPrinterVisitor::Visit( const CFormalList* list )
 	if( list->GetType() != nullptr ) {
 		list->GetType()->Accept( this );
 	}
-	std::cout << " " + list->GetIdentifier() << " ";
+	std::cout << " " + list->GetIdentifier()->GetString() << " ";
 	if( list->GetFormalRest() != nullptr ) {
 		list->GetFormalRest()->Accept( this );
 	}

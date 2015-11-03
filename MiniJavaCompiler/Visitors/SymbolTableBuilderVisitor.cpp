@@ -15,10 +15,10 @@ void CSymbolTableBuilderVisitor::Visit( const CProgram* program )
 
 void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 {
-	if( !symbolsTable->AddClass( program->GetClassName() ) ) {
-		std::cout << "Class " + program->GetClassName() + " redefined" << std::endl;
+	if( !symbolsTable->AddClass( program->GetClassName()->GetString() ) ) {
+		std::cout << "Class " + program->GetClassName()->GetString() + " redefined" << std::endl;
 	}
-	curClass = symbolsTable->GetClass( program->GetClassName() );
+	curClass = symbolsTable->GetClass( program->GetClassName()->GetString());
 	if( !curClass->AddMethod( "main", nullptr ) ) {
 		std::cout << "Method main in class " + curClass->GetName() + " redefined" << std::endl;
 	} else if( isDebug ) {
@@ -42,10 +42,10 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDeclList* program )
 
 void CSymbolTableBuilderVisitor::Visit( const CClassDecl* program )
 {
-	if( !symbolsTable->AddClass( program->GetName() ) ) {
-		std::cout << "Class " + program->GetName() + " redefined" << std::endl;
+	if( !symbolsTable->AddClass( program->GetName()->GetString()) ) {
+		std::cout << "Class " + program->GetName()->GetString() + " redefined" << std::endl;
 	}
-	curClass = symbolsTable->GetClass( program->GetName() );
+	curClass = symbolsTable->GetClass( program->GetName()->GetString());
 	if( program->GetVarDeclList() != nullptr ) {
 		program->GetVarDeclList()->Accept( this );
 	}
@@ -56,12 +56,12 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDecl* program )
 
 void CSymbolTableBuilderVisitor::Visit( const CClassDeclDerived* program )
 {
-	if( !symbolsTable->AddClass( program->GetName() ) ) {
-		std::cout << "Class " + program->GetName() + " redefined" << std::endl;
+	if( !symbolsTable->AddClass( program->GetName()->GetString()) ) {
+		std::cout << "Class " + program->GetName()->GetString() + " redefined" << std::endl;
 	}
-	curClass = symbolsTable->GetClass( program->GetName() );
+	curClass = symbolsTable->GetClass( program->GetName()->GetString());
 	// Переносим все методы и переменные из базового класса в наследника
-	SymbolsTable::CClassInfo* baseClass = symbolsTable->GetClass( program->GetBaseClassName() );
+	SymbolsTable::CClassInfo* baseClass = symbolsTable->GetClass( program->GetBaseClassName()->GetString());
 	for( auto method : baseClass->GetMethods() ) {
 		method->GetReturnType()->GetType()->Accept( this );
 		curClass->AddMethod( method->GetName(), lastTypeValue.get() );
@@ -83,7 +83,7 @@ void CSymbolTableBuilderVisitor::Visit( const CVarDecl* program )
 {
 	program->GetType()->Accept( this );
 	IType* type = lastTypeValue.get();
-	std::string id = program->GetName();
+	std::string id = program->GetName()->GetString();
 
 	if( curClass == nullptr ) {
 		std::cout << "Var " + id + " is defined out of scope" << std::endl;
@@ -110,7 +110,7 @@ void CSymbolTableBuilderVisitor::Visit( const CFormalList* list )
 {
 	list->GetType()->Accept( this );
 	IType* type = lastTypeValue.get();
-	std::string id = list->GetIdentifier();
+	std::string id = list->GetIdentifier()->GetString();
 
 	if( curMethod == nullptr ) {
 		std::cout << "Var " + id + " is defined out of scope" << std::endl;
@@ -139,11 +139,11 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 	IType* returnType = lastTypeValue.get();
 
 	if( curClass == nullptr ) {
-		std::cout << "Method " << program->GetName() + " is defined out of scope" << std::endl;
-	} else if( !curClass->AddMethod( program->GetName(), returnType ) ) {
-		std::cout << "Method " << program->GetName() + " is already defined in class " << curClass->GetName() << std::endl;
+		std::cout << "Method " << program->GetName()->GetString() + " is defined out of scope" << std::endl;
+	} else if( !curClass->AddMethod( program->GetName()->GetString(), returnType ) ) {
+		std::cout << "Method " << program->GetName()->GetString() + " is already defined in class " << curClass->GetName() << std::endl;
 	} else {
-		curMethod = curClass->GetMethod( program->GetName() );
+		curMethod = curClass->GetMethod( program->GetName()->GetString());
 		if( program->GetFormalList() != nullptr ) {
 			program->GetFormalList()->Accept( this );
 		}

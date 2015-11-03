@@ -24,13 +24,13 @@ void CClassDeclList::Accept( IVisitor* visitor ) const
 
 CClassDecl::CClassDecl( IVarDeclList* _varList, IMethodDeclList* _methodList, const std::string& _className, const CPosition& _position ) :
 	position( _position ),
-	className( _className ),
+	className( CSymbol::GetSymbol(_className) ),
 	varList( _varList ),
 	methodList( _methodList )
 {
 }
 
-std::string CClassDecl::GetName() const
+const CSymbol* CClassDecl::GetName() const
 {
 	return className;
 }
@@ -52,19 +52,19 @@ void CClassDecl::Accept( IVisitor* visitor ) const
 
 CClassDeclDerived::CClassDeclDerived( IVarDeclList* _varList, IMethodDeclList* _methodList, const std::string& _className, const std::string& _baseClassName, const CPosition& _position ) :
 	position( _position ),
-	className( _className ),
-	baseClassName( _baseClassName ),
+	className( CSymbol::GetSymbol(_className) ),
+	baseClassName( CSymbol::GetSymbol(_baseClassName) ),
 	varList( _varList ),
 	methodList( _methodList )
 {
 }
 
-std::string CClassDeclDerived::GetName() const
+const CSymbol* CClassDeclDerived::GetName() const
 {
 	return className;
 }
 
-std::string CClassDeclDerived::GetBaseClassName() const
+const CSymbol* CClassDeclDerived::GetBaseClassName() const
 {
 	return baseClassName;
 }

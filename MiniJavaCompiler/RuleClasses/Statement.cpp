@@ -105,14 +105,14 @@ void CAssignStatement::Accept( IVisitor* visitor ) const
 }
 
 CArrayAssignStatement::CArrayAssignStatement( const std::string& _arrayId, IExp* _elementNumber, IExp* _rightPart, const CPosition& _position ) :
-arrayId( _arrayId ),
+arrayId( CSymbol::GetSymbol(_arrayId) ),
 elementNumber( _elementNumber ),
 rightPart( _rightPart ),
 position( _position )
 {
 }
 
-std::string CArrayAssignStatement::GetArrayName() const
+const CSymbol* CArrayAssignStatement::GetArrayName() const
 {
 	return arrayId;
 }
