@@ -1,37 +1,62 @@
 #include <vector>
 #include <memory>
-#include <map>
+#include <string>
 
 #include "RuleClasses/RuleClasses.h"
 
 namespace SymbolsTable {
-	
-	class CTable {
+	class CVarInfo {
 	public:
+		CVarInfo( const std::string& name, IType* _type ) : varName( name ), type( _type ) {}
 
+		std::string GetName() const;
+		IType* GetType() const;
 	private:
-		std::map<std::string, std::shared_ptr<CClassInfo>> classes;
-	};
-
-	class CClassInfo {
-	public:
-	private:
-		std::map<std::string, std::shared_ptr<CVarInfo>> vars;
-		std::map<std::string, std::shared_ptr<CMethodInfo>> methods;
+		std::string varName;
+		IType* type;
 	};
 
 	class CMethodInfo {
 	public:
+		CMethodInfo( const std::string& name, IType* type ) : methodName( name ), returnType( new CVarInfo( "", type ) ) {}
+
+		bool AddParamVar( const std::string& varName, IType* type );
+		bool AddLocalVar( const std::string& varName, IType* type );
+
+		std::string GetName() const;
+		CVarInfo* GetVar( const std::string& varName ) const;
+		CVarInfo* GetReturnType() const;
 	private:
-		CStandardType::StandardType returnType;
-		std::map<std::string, std::shared_ptr<CVarInfo>> params;
-		std::map<std::string, std::shared_ptr<CVarInfo>> locals;
+		std::string methodName;
+		std::shared_ptr<CVarInfo> returnType;
+		std::vector<std::shared_ptr<CVarInfo>> params;
+		std::vector<std::shared_ptr<CVarInfo>> locals;
 	};
 
-	class CVarInfo {
+	class CClassInfo {
 	public:
+		CClassInfo( const std::string& name ) : className( name ) {}
+
+		bool AddVar( const std::string& varName, IType* type );
+		bool AddMethod( const std::string& methodName, IType* type );
+
+		std::string GetName() const;
+		CMethodInfo* GetMethod( const std::string& methodName ) const;
+		CVarInfo* GetVar( const std::string varName ) const;
+		std::vector<std::shared_ptr<CMethodInfo>> GetMethods() const;
+		std::vector<std::shared_ptr<CVarInfo>> GerVars() const;
 	private:
-		CStandardType::StandardType standartType;
-		CUserType userType;
+		std::string className;
+		std::vector<std::shared_ptr<CVarInfo>> vars;
+		std::vector<std::shared_ptr<CMethodInfo>> methods;
+	};
+
+	class CTable {
+	public:
+		bool AddClass( const std::string& className );
+
+		CClassInfo* GetClass( const std::string& className );
+	private:
+		std::vector<std::shared_ptr<CClassInfo>> classes;
 	};
 }

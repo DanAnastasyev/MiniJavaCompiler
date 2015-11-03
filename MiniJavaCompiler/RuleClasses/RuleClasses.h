@@ -345,10 +345,13 @@ public:
 
 	CStandardType( StandardType _type, const CPosition& _position );
 
+	CStandardType( const CStandardType* other );
+
 	StandardType GetType() const;
 
 	void Accept( IVisitor* visitor ) const override;
 
+	CPosition GetPosition() const;
 private:
 	StandardType type;
 	CPosition position;
@@ -357,11 +360,13 @@ private:
 class CUserType : public IType {
 public:
 	CUserType( const std::string& _typeName, const CPosition& _position );
+	CUserType( const CUserType* other );
 
 	std::string GetTypeName() const;
 
 	void Accept( IVisitor*  visitor ) const override;
 
+	CPosition GetPosition( ) const;
 private:
 	const std::string typeName;
 	CPosition position;

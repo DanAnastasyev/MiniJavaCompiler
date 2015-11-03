@@ -33,8 +33,10 @@
     <ClCompile Include="RuleClasses\Statement.cpp" />
     <ClCompile Include="RuleClasses\Type.cpp" />
     <ClCompile Include="RuleClasses\Var.cpp" />
+    <ClCompile Include="SymbolsTable\SymbolsTable.cpp" />
     <ClCompile Include="Visitors\PrettyPrinterVisitor.cpp" />
     <ClCompile Include="Visitors\TypeCheckerVisitor.cpp" />
+    <ClCompile Include="Visitors\SymbolTableBuilderVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser.y">
@@ -54,6 +56,7 @@
     <ClInclude Include="SymbolsTable\SymbolsTable.h" />
     <ClInclude Include="Visitors\PrettyPrinterVisitor.h" />
     <ClInclude Include="Visitors\TypeCheckerVisitor.h" />
+    <ClInclude Include="Visitors\SymbolTableBuilderVisitor.h" />
     <ClInclude Include="Visitors\Visitor.h" />
   </ItemGroup>
   <ItemGroup>

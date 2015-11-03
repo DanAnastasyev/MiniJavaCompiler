@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Visitors/SymbolTableBuilderVisitor.h"
 #include "Visitors/PrettyPrinterVisitor.h"
 extern int yyparse( std::shared_ptr<IProgram>& );
 
@@ -9,5 +10,8 @@ int main( int argc, char **argv )
 	yyparse( root );
 	std::shared_ptr<CPrettyPrinterVisitor> prettyPrinter( new CPrettyPrinterVisitor );
 	root->Accept( prettyPrinter.get() );
+
+	std::shared_ptr<CSymbolTableBuilderVisitor> symbolTableBuilder( new CSymbolTableBuilderVisitor );
+	root->Accept( symbolTableBuilder.get() );
 	return 0;
 }

@@ -89,6 +89,12 @@
     <ClCompile Include="ErrorStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Visitors\SymbolTableBuilderVisitor.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolsTable\SymbolsTable.cpp">
+      <Filter>Source Files\SymbolsTable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -120,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="ErrorStorage.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitors\SymbolTableBuilderVisitor.h">
+      <Filter>Source Files\Visitors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
