@@ -2,7 +2,7 @@
 
 CFormalList::CFormalList( IType* _type, const std::string& _identifier, IFormalList* _formalList, const CPosition& pos ) :
 type( _type ),
-identifier( _identifier ),
+identifier( CSymbol::GetSymbol(_identifier) ),
 formalList( _formalList ),
 position( pos )
 {
@@ -18,7 +18,7 @@ const IType* CFormalList::GetType() const
 	return type.get();
 }
 
-std::string CFormalList::GetIdentifier() const
+const CSymbol* CFormalList::GetIdentifier() const
 {
 	return identifier;
 }

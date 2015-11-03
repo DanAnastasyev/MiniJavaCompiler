@@ -2,7 +2,7 @@
 
 CMethodDecl::CMethodDecl( IType* _type, const std::string& _methodName, IFormalList* _formalList, IVarDeclList* _varList, IStatementList* _statementList, IExp* _returnExpr, const CPosition& _position ) :
 type( _type ),
-methodName( _methodName ),
+methodName( CSymbol::GetSymbol(_methodName) ),
 formalList( _formalList ),
 varList( _varList ),
 statementList( _statementList ),
@@ -16,7 +16,7 @@ const IType* CMethodDecl::GetType() const
 	return type.get();
 }
 
-std::string CMethodDecl::GetName() const
+const CSymbol* CMethodDecl::GetName() const
 {
 	return methodName;
 }

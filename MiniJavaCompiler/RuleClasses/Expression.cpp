@@ -69,7 +69,7 @@ void CLenghtExpression::Accept( IVisitor* visitor ) const
 CMethodExpression::CMethodExpression( IExp* _exp, const std::string& _identifier, IExpList* _expList, const CPosition& pos ) :
 exp( _exp ),
 expList( _expList ),
-identifier( _identifier ),
+identifier( CSymbol::GetSymbol(_identifier) ),
 position( pos )
 {
 }
@@ -84,7 +84,7 @@ const IExpList* CMethodExpression::GetIndexExp() const
 	return expList.get();
 }
 
-std::string CMethodExpression::GetIdentifier() const
+const CSymbol* CMethodExpression::GetIdentifier() const
 {
 	return identifier;
 }
@@ -95,12 +95,12 @@ void CMethodExpression::Accept( IVisitor* visitor ) const
 }
 
 CIntLiteralExpression::CIntLiteralExpression( const std::string& _val, const CPosition& pos ) :
-val( _val ),
+val( CSymbol::GetSymbol(_val) ),
 position( pos )
 {
 }
 
-std::string CIntLiteralExpression::GetValue() const
+const CSymbol* CIntLiteralExpression::GetValue() const
 {
 	return val;
 }
@@ -111,12 +111,12 @@ void CIntLiteralExpression::Accept( IVisitor* visitor ) const
 }
 
 CBoolLiteralExpression::CBoolLiteralExpression( const std::string& _val, const CPosition& pos ) :
-val( _val ),
+val( CSymbol::GetSymbol(_val) ),
 position( pos )
 {
 }
 
-std::string CBoolLiteralExpression::GetValue() const
+const CSymbol* CBoolLiteralExpression::GetValue() const
 {
 	return val;
 }
@@ -127,12 +127,12 @@ void CBoolLiteralExpression::Accept( IVisitor* visitor ) const
 }
 
 CIdentifierExpression::CIdentifierExpression( const std::string& id, const CPosition& pos ) :
-identifier( id ),
+identifier( CSymbol::GetSymbol(id) ),
 position( pos )
 {
 }
 
-std::string CIdentifierExpression::GetIdentifier() const
+const CSymbol* CIdentifierExpression::GetIdentifier() const
 {
 	return identifier;
 }
@@ -169,12 +169,12 @@ void CNewIntArrayExpression::Accept( IVisitor* visitor ) const
 }
 
 CNewExpression::CNewExpression( const std::string& id, const CPosition& pos ) :
-identifier( id ),
+identifier( CSymbol::GetSymbol(id) ),
 position( pos )
 {
 }
 
-std::string CNewExpression::GetIdentifier() const
+const CSymbol* CNewExpression::GetIdentifier() const
 {
 	return identifier;
 }
