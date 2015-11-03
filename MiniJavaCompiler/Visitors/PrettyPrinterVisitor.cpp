@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "PrettyPrinterVisitor.h"
 
 void CPrettyPrinterVisitor::Visit( const CProgram* program )

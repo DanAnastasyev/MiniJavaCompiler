@@ -11,11 +11,11 @@ public:
 		endColumn( _endColumn )
 	{}
 
-	std::pair< int, int > GetBeginPos() const
+	std::pair<int, int> GetBeginPos() const
 	{
 		return std::make_pair( beginLine, beginColumn );
 	}
-	std::pair< int, int > GetEndPos() const
+	std::pair<int, int> GetEndPos() const
 	{
 		return std::make_pair( endLine, endColumn );
 	}

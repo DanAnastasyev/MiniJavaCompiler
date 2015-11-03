@@ -1,6 +1,6 @@
-#line 2 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 2 "c:\\work\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 
-#line 4 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 4 "c:\\work\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -579,7 +579,7 @@ char *yytext;
     }
 
 	#define YY_USER_ACTION onNextToken();
-#line 583 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 583 "c:\\work\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 
 #define INITIAL 0
 
@@ -760,7 +760,7 @@ YY_DECL
     
 #line 34 "lexer.l"
 
-#line 764 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 764 "c:\\work\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -990,7 +990,7 @@ YY_RULE_SETUP
 #line 62 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 994 "C:\\Users\\qBic\\Documents\\GitHub\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
+#line 994 "c:\\work\\MiniJavaCompiler\\MiniJavaCompiler\\\\BuildOutputs\\lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

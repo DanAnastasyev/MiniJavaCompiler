@@ -83,6 +83,12 @@
     <ClCompile Include="Visitors\PrettyPrinterVisitor.cpp">
       <Filter>Source Files\Visitors</Filter>
     </ClCompile>
+    <ClCompile Include="Visitors\TypeCheckerVisitor.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -108,6 +114,12 @@
     </ClInclude>
     <ClInclude Include="RuleClasses\RuleClasses.h">
       <Filter>Source Files\RuleClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitors\TypeCheckerVisitor.h">
+      <Filter>Source Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorStorage.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

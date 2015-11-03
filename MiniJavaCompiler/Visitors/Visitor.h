@@ -37,16 +37,19 @@ class CFormalRestList;
 
 class IVisitor {
 public:
+	virtual ~IVisitor( ) {
+	}
+
 	virtual void Visit( const CProgram* program ) = 0;
-	virtual void Visit( const CMainClass* program ) = 0;
-	virtual void Visit( const CClassDeclList* program ) = 0;
-	virtual void Visit( const CClassDecl* program ) = 0;
-	virtual void Visit( const CClassDeclDerived* program ) = 0;
-	virtual void Visit( const CVarDecl* program ) = 0;
-	virtual void Visit( const CVarDeclList* program ) = 0;
-	virtual void Visit( const CMethodDecl* program ) = 0;
-	virtual void Visit( const CStandardType* program ) = 0;
-	virtual void Visit( const CUserType* program ) = 0;
+	virtual void Visit( const CMainClass* mainClass ) = 0;
+	virtual void Visit( const CClassDeclList* classDeclList ) = 0;
+	virtual void Visit( const CClassDecl* classDecl ) = 0;
+	virtual void Visit( const CClassDeclDerived* classDeclDerived ) = 0;
+	virtual void Visit( const CVarDecl* varDecl ) = 0;
+	virtual void Visit( const CVarDeclList* varDeclList ) = 0;
+	virtual void Visit( const CMethodDecl* methodDecl ) = 0;
+	virtual void Visit( const CStandardType* type ) = 0;
+	virtual void Visit( const CUserType* type ) = 0;
 	virtual void Visit( const CStatementListStatement* statement ) = 0;
 	virtual void Visit( const CArrayAssignStatement* statement ) = 0;
 	virtual void Visit( const CAssignStatement* statement ) = 0;

@@ -1,7 +1,8 @@
 #include <vector>
 #include <memory>
-#include "RuleClasses.h"
 #include <map>
+
+#include "RuleClasses/RuleClasses.h"
 
 namespace SymbolsTable {
 	
@@ -33,5 +34,4 @@ namespace SymbolsTable {
 		CStandardType::StandardType standartType;
 		CUserType userType;
 	};
-
 }

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="BuildOutputs\lexer.cpp" />
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
+    <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RuleClasses\Class.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="RuleClasses\Type.cpp" />
     <ClCompile Include="RuleClasses\Var.cpp" />
     <ClCompile Include="Visitors\PrettyPrinterVisitor.cpp" />
+    <ClCompile Include="Visitors\TypeCheckerVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser.y">
@@ -44,12 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
+    <ClInclude Include="ErrorStorage.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RuleClasses\RuleClasses.h" />
     <ClInclude Include="SymbolsTable\SymbolsTable.h" />
     <ClInclude Include="Visitors\PrettyPrinterVisitor.h" />
+    <ClInclude Include="Visitors\TypeCheckerVisitor.h" />
     <ClInclude Include="Visitors\Visitor.h" />
   </ItemGroup>
   <ItemGroup>

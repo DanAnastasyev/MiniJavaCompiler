@@ -4,6 +4,9 @@ class IVisitor;
 
 class IHost {
 public:
+	virtual ~IHost( ) {
+	}
+
 	virtual void Accept( IVisitor* visitor ) const = 0;
 };
 
