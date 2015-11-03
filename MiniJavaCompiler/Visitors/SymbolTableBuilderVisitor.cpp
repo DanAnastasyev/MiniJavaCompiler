@@ -172,4 +172,3 @@ void CSymbolTableBuilderVisitor::Visit( const CUserType* program )
 {
 	lastTypeValue = std::make_shared<CUserType>( program );
 }
-

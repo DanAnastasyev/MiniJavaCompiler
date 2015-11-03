@@ -95,6 +95,7 @@ void CTypeCheckerVisitor::Visit( const CUserType* type )
 
 void CTypeCheckerVisitor::Visit( const CStatementListStatement* statement )
 {
+
 }
 
 void CTypeCheckerVisitor::Visit( const CArrayAssignStatement* statement )
@@ -115,6 +116,9 @@ void CTypeCheckerVisitor::Visit( const CWhileStatement* statement )
 
 void CTypeCheckerVisitor::Visit( const CPrintStatement* statement )
 {
+	if( statement->GetExpression() != nullptr ) {
+		statement->GetExpression()->Accept( this );
+	}
 }
 
 void CTypeCheckerVisitor::Visit( const CBinOpExpression* expr )
@@ -135,6 +139,7 @@ void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 
 void CTypeCheckerVisitor::Visit( const CIntLiteralExpression* expr )
 {
+	
 }
 
 void CTypeCheckerVisitor::Visit( const CBoolLiteralExpression* expr )

@@ -1,4 +1,15 @@
+#include <memory>
+
 #include "Visitors/Visitor.h"
+
+namespace SymbolsTable
+{
+	class CClassInfo;
+	class CMethodInfo;
+	class CTable;
+}
+
+class IType;
 
 class CTypeCheckerVisitor : public IVisitor {
 public:
@@ -43,5 +54,10 @@ public:
 	}
 
 private:
+	SymbolsTable::CClassInfo* curClass;
+	SymbolsTable::CMethodInfo* curMethod;
+	SymbolsTable::CTable* symbolsTable;
+	std::shared_ptr<IType> lastTypeValue;
+
 	CErrorStorage errorStorage;
 };
