@@ -18,7 +18,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 	if( !symbolsTable->AddClass( program->GetClassName()->GetString() ) ) {
 		std::cout << "Class " + program->GetClassName()->GetString() + " redefined" << std::endl;
 	}
-	curClass = symbolsTable->GetClass( program->GetClassName()->GetString());
+	curClass = symbolsTable->GetClass( program->GetClassName()->GetString() );
 	if( !curClass->AddMethod( "main", nullptr ) ) {
 		std::cout << "Method main in class " + curClass->GetName() + " redefined" << std::endl;
 	} else if( isDebug ) {
@@ -60,16 +60,16 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDeclDerived* program )
 		std::cout << "Class " + program->GetName()->GetString() + " redefined" << std::endl;
 	}
 	curClass = symbolsTable->GetClass( program->GetName()->GetString());
-	// Переносим все методы и переменные из базового класса в наследника
-	SymbolsTable::CClassInfo* baseClass = symbolsTable->GetClass( program->GetBaseClassName()->GetString());
-	for( auto method : baseClass->GetMethods() ) {
-		method->GetReturnType()->GetType()->Accept( this );
-		curClass->AddMethod( method->GetName(), lastTypeValue.get() );
-	}
-	for( auto var : baseClass->GerVars() ) {
-		var->GetType()->Accept( this );
-		curClass->AddVar( var->GetName(), lastTypeValue.get() );
-	}
+	//// Переносим все методы и переменные из базового класса в наследника
+	curClass->SetBaseClass( symbolsTable->GetClass( program->GetBaseClassName()->GetString() ) );
+	//for( auto method : baseClass->GetMethods() ) {
+	//	method->GetReturnType()->GetType()->Accept( this );
+	//	curClass->AddMethod( method->GetName(), lastTypeValue.get() );
+	//}
+	//for( auto var : baseClass->GerVars() ) {
+	//	var->GetType()->Accept( this );
+	//	curClass->AddVar( var->GetName(), lastTypeValue.get() );
+	//}
 
 	if( program->GetVarDeclList() != nullptr ) {
 		program->GetVarDeclList()->Accept( this );

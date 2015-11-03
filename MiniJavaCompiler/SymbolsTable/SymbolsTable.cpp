@@ -45,6 +45,15 @@ namespace SymbolsTable {
 		return true;
 	}
 
+	bool CClassInfo::SetBaseClass( CClassInfo* _baseClass )
+	{
+		if( baseClass != nullptr ) {
+			return false;
+		}
+		baseClass = std::shared_ptr<CClassInfo>( _baseClass );
+		return true;
+	}
+
 	std::string CClassInfo::GetName() const
 	{
 		return className;

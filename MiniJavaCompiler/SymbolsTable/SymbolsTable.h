@@ -40,6 +40,8 @@ namespace SymbolsTable {
 		bool AddVar( const std::string& varName, IType* type );
 		bool AddMethod( const std::string& methodName, IType* type );
 
+		bool SetBaseClass( CClassInfo* baseClass );
+
 		std::string GetName() const;
 		CMethodInfo* GetMethod( const std::string& methodName ) const;
 		CVarInfo* GetVar( const std::string varName ) const;
@@ -47,6 +49,7 @@ namespace SymbolsTable {
 		std::vector<std::shared_ptr<CVarInfo>> GerVars() const;
 	private:
 		std::string className;
+		std::shared_ptr<CClassInfo> baseClass;
 		std::vector<std::shared_ptr<CVarInfo>> vars;
 		std::vector<std::shared_ptr<CMethodInfo>> methods;
 	};
