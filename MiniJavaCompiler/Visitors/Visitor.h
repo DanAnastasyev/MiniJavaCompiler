@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ErrorStorage.h"
+
 class CExpressionList;
 class CBracesExpression;
 class CUnaryOpExpression;

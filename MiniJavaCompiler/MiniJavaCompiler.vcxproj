@@ -33,6 +33,7 @@
     <ClCompile Include="RuleClasses\Statement.cpp" />
     <ClCompile Include="RuleClasses\Type.cpp" />
     <ClCompile Include="RuleClasses\Var.cpp" />
+    <ClCompile Include="SymbolsTable\Symbol.cpp" />
     <ClCompile Include="SymbolsTable\SymbolsTable.cpp" />
     <ClCompile Include="Visitors\PrettyPrinterVisitor.cpp" />
     <ClCompile Include="Visitors\TypeCheckerVisitor.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RuleClasses\RuleClasses.h" />
+    <ClInclude Include="SymbolsTable\Symbol.h" />
     <ClInclude Include="SymbolsTable\SymbolsTable.h" />
     <ClInclude Include="Visitors\PrettyPrinterVisitor.h" />
     <ClInclude Include="Visitors\TypeCheckerVisitor.h" />

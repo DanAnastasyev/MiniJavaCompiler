@@ -95,6 +95,9 @@
     <ClCompile Include="SymbolsTable\SymbolsTable.cpp">
       <Filter>Source Files\SymbolsTable</Filter>
     </ClCompile>
+    <ClCompile Include="SymbolsTable\Symbol.cpp">
+      <Filter>Source Files\SymbolsTable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -129,6 +132,9 @@
     </ClInclude>
     <ClInclude Include="Visitors\SymbolTableBuilderVisitor.h">
       <Filter>Source Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolsTable\Symbol.h">
+      <Filter>Source Files\SymbolsTable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

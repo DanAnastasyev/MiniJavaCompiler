@@ -36,4 +36,12 @@ public:
 	void Visit( const CMethodDeclList* methodList ) override;
 	void Visit( const CFormalList* list ) override;
 	void Visit( const CFormalRestList* list ) override;
+
+	const CErrorStorage& GetErrorStorage() const
+	{
+		return errorStorage;
+	}
+
+private:
+	CErrorStorage errorStorage;
 };
