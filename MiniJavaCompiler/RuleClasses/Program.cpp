@@ -1,9 +1,9 @@
 #include "RuleClasses.h"
 
 CProgram::CProgram( IMainClass* _mainClass, IClassDeclList* _classList, CPosition& position ) :
+	CPositionStorage( position ),
 	mainClass( _mainClass ),
-	classList( _classList ),
-	position( position )
+	classList( _classList )
 {
 }
 

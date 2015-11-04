@@ -79,6 +79,10 @@ namespace SymbolsTable {
 		return nullptr;
 	}
 
+	CClassInfo* CClassInfo::GetBaseClass( ) const {
+		return baseClass.get();
+	}
+
 	std::vector<std::shared_ptr<CMethodInfo>> CClassInfo::GetMethods() const
 	{
 		return methods;

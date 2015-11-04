@@ -136,6 +136,9 @@
     <ClInclude Include="SymbolsTable\Symbol.h">
       <Filter>Source Files\SymbolsTable</Filter>
     </ClInclude>
+    <ClInclude Include="RuleClasses\PositionStorage.h">
+      <Filter>Source Files\RuleClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output">

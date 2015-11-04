@@ -54,9 +54,9 @@ public:
 	}
 
 private:
-	SymbolsTable::CClassInfo* curClass;
-	SymbolsTable::CMethodInfo* curMethod;
-	SymbolsTable::CTable* symbolsTable;
+	SymbolsTable::CClassInfo* curClass = nullptr;
+	SymbolsTable::CMethodInfo* curMethod = nullptr;
+	SymbolsTable::CTable* symbolsTable = nullptr;
 	std::shared_ptr<IType> lastTypeValue;
 
 	CErrorStorage errorStorage;

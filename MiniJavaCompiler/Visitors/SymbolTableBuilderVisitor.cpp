@@ -1,5 +1,5 @@
-#include "SymbolTableBuilderVisitor.h"
 #include <iostream>
+#include "SymbolTableBuilderVisitor.h"
 
 void CSymbolTableBuilderVisitor::Visit( const CProgram* program )
 {

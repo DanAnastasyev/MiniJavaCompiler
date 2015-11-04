@@ -1,9 +1,9 @@
 #include "RuleClasses.h"
 
 CBinOpExpression::CBinOpExpression( IExp* _leftExp, BinOp _binOp, IExp* _rightExp, const CPosition& pos ) :
+CPositionStorage( pos ),
 leftExp( _leftExp ),
 rightExp( _rightExp ),
-position( pos ),
 binOp( _binOp )
 {
 }
@@ -29,9 +29,9 @@ void CBinOpExpression::Accept( IVisitor* visitor ) const
 }
 
 CIndexExpression::CIndexExpression( IExp* _exp, IExp* _indexExp, const CPosition& pos ) :
+CPositionStorage( pos ),
 exp( _exp ),
-indexExp( _indexExp ),
-position( pos )
+indexExp( _indexExp )
 {
 }
 
@@ -51,8 +51,8 @@ void CIndexExpression::Accept( IVisitor* visitor ) const
 }
 
 CLenghtExpression::CLenghtExpression( IExp* _exp, const CPosition& pos ) :
-exp( _exp ),
-position( pos )
+CPositionStorage( pos ),
+exp( _exp )
 {
 }
 
@@ -67,10 +67,10 @@ void CLenghtExpression::Accept( IVisitor* visitor ) const
 }
 
 CMethodExpression::CMethodExpression( IExp* _exp, const std::string& _identifier, IExpList* _expList, const CPosition& pos ) :
+CPositionStorage( pos ),
 exp( _exp ),
 expList( _expList ),
-identifier( CSymbol::GetSymbol(_identifier) ),
-position( pos )
+identifier( CSymbol::GetSymbol(_identifier) )
 {
 }
 
@@ -95,8 +95,8 @@ void CMethodExpression::Accept( IVisitor* visitor ) const
 }
 
 CIntLiteralExpression::CIntLiteralExpression( const std::string& _val, const CPosition& pos ) :
-val( CSymbol::GetSymbol(_val) ),
-position( pos )
+CPositionStorage( pos ),
+val( CSymbol::GetSymbol( _val ) )
 {
 }
 
@@ -111,8 +111,8 @@ void CIntLiteralExpression::Accept( IVisitor* visitor ) const
 }
 
 CBoolLiteralExpression::CBoolLiteralExpression( const std::string& _val, const CPosition& pos ) :
-val( CSymbol::GetSymbol(_val) ),
-position( pos )
+CPositionStorage( pos ),
+val( CSymbol::GetSymbol( _val ) )
 {
 }
 
@@ -127,8 +127,8 @@ void CBoolLiteralExpression::Accept( IVisitor* visitor ) const
 }
 
 CIdentifierExpression::CIdentifierExpression( const std::string& id, const CPosition& pos ) :
-identifier( CSymbol::GetSymbol(id) ),
-position( pos )
+CPositionStorage( pos ),
+identifier( CSymbol::GetSymbol( id ) )
 {
 }
 
@@ -143,7 +143,7 @@ void CIdentifierExpression::Accept( IVisitor* visitor ) const
 }
 
 CThisExpression::CThisExpression( const CPosition& pos ) :
-position( pos )
+CPositionStorage( pos )
 {
 }
 
@@ -153,8 +153,8 @@ void CThisExpression::Accept( IVisitor* visitor ) const
 }
 
 CNewIntArrayExpression::CNewIntArrayExpression( IExp* _exp, const CPosition& pos ) :
-exp( _exp ),
-position( pos )
+CPositionStorage( pos ),
+exp( _exp )
 {
 }
 
@@ -169,8 +169,8 @@ void CNewIntArrayExpression::Accept( IVisitor* visitor ) const
 }
 
 CNewExpression::CNewExpression( const std::string& id, const CPosition& pos ) :
-identifier( CSymbol::GetSymbol(id) ),
-position( pos )
+CPositionStorage( pos ),
+identifier( CSymbol::GetSymbol( id ) )
 {
 }
 
@@ -185,8 +185,8 @@ void CNewExpression::Accept( IVisitor* visitor ) const
 }
 
 CUnaryOpExpression::CUnaryOpExpression( UnaryOp _op, IExp* _exp, const CPosition& pos ) :
+CPositionStorage( pos ),
 exp( _exp ),
-position( pos ),
 op( _op )
 {
 }
@@ -207,8 +207,8 @@ void CUnaryOpExpression::Accept( IVisitor* visitor ) const
 }
 
 CBracesExpression::CBracesExpression( IExp* _exp, const CPosition& pos ) :
-exp( _exp ),
-position( pos )
+CPositionStorage( pos ),
+exp( _exp )
 {
 }
 
@@ -223,9 +223,9 @@ void CBracesExpression::Accept( IVisitor* visitor ) const
 }
 
 CExpressionList::CExpressionList( IExp* _exp, IExpList* _expList, const CPosition& pos ) :
+CPositionStorage( pos ),
 exp( _exp ),
-expList( _expList ),
-position( pos )
+expList( _expList )
 {
 }
 
@@ -245,8 +245,8 @@ void CExpressionList::Accept( IVisitor* visitor ) const
 }
 
 CExpressionRest::CExpressionRest( IExp* _exp, const CPosition& pos ) :
-exp( _exp ),
-position( pos )
+CPositionStorage( pos ),
+exp( _exp )
 {
 }
 

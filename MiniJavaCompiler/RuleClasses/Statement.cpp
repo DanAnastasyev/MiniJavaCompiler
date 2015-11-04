@@ -1,8 +1,8 @@
 #include "RuleClasses.h"
 
 CStatementListStatement::CStatementListStatement( IStatementList* _statementList, const CPosition& _position ) :
-statementList( _statementList ),
-position( _position )
+CPositionStorage( _position ),
+statementList( _statementList )
 {
 }
 
@@ -17,10 +17,10 @@ void CStatementListStatement::Accept( IVisitor* visitor ) const
 }
 
 CIfStatement::CIfStatement( IExp* _condition, IStatement* _statementIfTrue, IStatement* _statementIfFalse, const CPosition _position ) :
+CPositionStorage( _position ),
 condition( _condition ),
 statementIfTrue( _statementIfTrue ),
-statementIfFalse( _statementIfFalse ),
-position( _position )
+statementIfFalse( _statementIfFalse )
 {
 }
 
@@ -45,9 +45,9 @@ void CIfStatement::Accept( IVisitor* visitor ) const
 }
 
 CWhileStatement::CWhileStatement( IExp* _condition, IStatement* _cycleBody, const CPosition& _position ) :
+CPositionStorage( _position ),
 condition( _condition ),
-cycleBody( _cycleBody ),
-position( _position )
+cycleBody( _cycleBody )
 {
 }
 
@@ -67,8 +67,8 @@ void CWhileStatement::Accept( IVisitor* visitor ) const
 }
 
 CPrintStatement::CPrintStatement( IExp* _expression, const CPosition& _position ) :
-expression( _expression ),
-position( _position )
+CPositionStorage( _position ),
+expression( _expression )
 {
 }
 
@@ -83,9 +83,9 @@ void CPrintStatement::Accept( IVisitor* visitor ) const
 }
 
 CAssignStatement::CAssignStatement( const std::string& _left, IExp* _right, const CPosition& _position ) :
+CPositionStorage( _position ),
 left( _left ),
-right( _right ),
-position( _position )
+right( _right )
 {
 }
 
@@ -105,10 +105,10 @@ void CAssignStatement::Accept( IVisitor* visitor ) const
 }
 
 CArrayAssignStatement::CArrayAssignStatement( const std::string& _arrayId, IExp* _elementNumber, IExp* _rightPart, const CPosition& _position ) :
-arrayId( CSymbol::GetSymbol(_arrayId) ),
+CPositionStorage( _position ),
+arrayId( CSymbol::GetSymbol( _arrayId ) ),
 elementNumber( _elementNumber ),
-rightPart( _rightPart ),
-position( _position )
+rightPart( _rightPart )
 {
 }
 
@@ -133,9 +133,9 @@ void CArrayAssignStatement::Accept( IVisitor* visitor ) const
 }
 
 CStatementList::CStatementList( IStatement* _stmt, IStatementList* _stmtList, const CPosition& pos ) :
+CPositionStorage( pos ),
 stmt( _stmt ),
-stmtList( _stmtList ),
-position( pos )
+stmtList( _stmtList )
 {
 }
 

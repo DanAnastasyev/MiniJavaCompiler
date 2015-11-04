@@ -1,10 +1,10 @@
 #include "RuleClasses.h"
 
 CMainClass::CMainClass( const std::string& _identifier, const std::string& _arsId, IStatement* _statement, const CPosition& _position ) :
-	identifier( CSymbol::GetSymbol(_identifier) ),
-	argsIdentifier(CSymbol::GetSymbol(_arsId) ),
-	statement( _statement ),
-	position( _position )
+CPositionStorage( _position ),
+identifier( CSymbol::GetSymbol(_identifier) ),
+argsIdentifier(CSymbol::GetSymbol(_arsId) ),
+statement( _statement )
 {
 }
 

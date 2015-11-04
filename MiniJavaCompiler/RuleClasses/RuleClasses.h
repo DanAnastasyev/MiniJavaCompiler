@@ -6,78 +6,70 @@
 #include "grammar.h"
 #include "Position.h"
 #include "Visitors/Visitor.h"
-#include "SymbolsTable\Symbol.h"
+#include "SymbolsTable/Symbol.h"
+#include "PositionStorage.h"
 
-class CProgram : public IProgram {
+class CProgram : public IProgram, public CPositionStorage {
 public:
 	CProgram( IMainClass* _mainClass, IClassDeclList* _classList, CPosition& position );
 
-	const IMainClass* GetMainClass() const;
-
-	const IClassDeclList* GetClassDeclList() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IMainClass* GetMainClass() const;
+	const IClassDeclList* GetClassDeclList() const;
 
 private:
 	const std::shared_ptr<IMainClass> mainClass;
 	const std::shared_ptr<IClassDeclList> classList;
-	CPosition position;
 };
 
-class CMainClass : public IMainClass {
+class CMainClass : public IMainClass, public CPositionStorage {
 public:
 	CMainClass( const std::string& _identifier, const std::string& _arsId, IStatement* _statement, const CPosition& _position );
 
-	const IStatement* GetStatement() const;
-
-	const CSymbol* GetClassName() const;
-
-	const CSymbol* GetMainArgsIdentifier() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IStatement* GetStatement() const;
+	const CSymbol* GetClassName() const;
+	const CSymbol* GetMainArgsIdentifier() const;
 
 private:
 	const CSymbol* identifier;
 	const CSymbol* argsIdentifier;
 	const std::shared_ptr<IStatement> statement;
-	CPosition position;
 }; 
 
-class CClassDeclList : public IClassDeclList {
+class CClassDeclList : public IClassDeclList, public CPositionStorage {
 public:
-	CClassDeclList( IClassDecl* _declaration, IClassDeclList* _list, const CPosition& _positon );
-
-	const IClassDeclList* GetClassDeclList() const;
-
-	const IClassDecl* GetClassDecl() const;
+	CClassDeclList( IClassDecl* _declaration, IClassDeclList* _list, const CPosition& _position );
 
 	void Accept( IVisitor* visitor ) const override;
+	
+	const IClassDeclList* GetClassDeclList() const;
+	const IClassDecl* GetClassDecl() const;
+
 private:
 	const std::shared_ptr<IClassDeclList> list;
 	const std::shared_ptr<IClassDecl> declaration;
-	CPosition position;
 };
 
-class CClassDecl : public IClassDecl {
+class CClassDecl : public IClassDecl, public CPositionStorage {
 public:
 	CClassDecl( IVarDeclList* _varList, IMethodDeclList* _methodList, const std::string& _className, const CPosition& _position );
 
-	const CSymbol* GetName() const;
-
-	const IVarDeclList* GetVarDeclList() const;
-
-	const IMethodDeclList* GetMethodDeclList() const;
-
 	void Accept( IVisitor* visitor ) const override;
 
+	const CSymbol* GetName() const;
+	const IVarDeclList* GetVarDeclList() const;
+	const IMethodDeclList* GetMethodDeclList( ) const;
+
 private:
-	CPosition position;
 	const CSymbol* className;
 	const std::shared_ptr<IVarDeclList> varList;
 	const std::shared_ptr<IMethodDeclList> methodList;
 };
 
-class CClassDeclDerived : public IClassDecl {
+class CClassDeclDerived : public IClassDecl, public CPositionStorage {
 public:
 	CClassDeclDerived(
 		IVarDeclList* _varList,
@@ -86,71 +78,63 @@ public:
 		const std::string& _baseClassName,
 		const CPosition& _position );
 
-	const CSymbol* GetName() const;
-
-	const CSymbol* GetBaseClassName() const;
-
-	const IVarDeclList* GetVarDeclList() const;
-
-	const IMethodDeclList* GetMethodDeclList() const;
-
 	void Accept( IVisitor* visitor ) const override;
 
+	const CSymbol* GetName() const;
+	const CSymbol* GetBaseClassName() const;
+	const IVarDeclList* GetVarDeclList() const;
+	const IMethodDeclList* GetMethodDeclList() const;
+
 private:
-	CPosition position;
 	const CSymbol* className;
 	const CSymbol* baseClassName;
 	const std::shared_ptr<IVarDeclList> varList;
 	const std::shared_ptr<IMethodDeclList> methodList;
 };
 
-class CStatementList : public IStatementList { // not implemented
+class CStatementList : public IStatementList, public CPositionStorage { // not implemented
 public:
 	CStatementList( IStatement* _stmt, IStatementList* _stmtList, const CPosition& pos );
 
-	const IStatement* GetStatement() const;
+	void Accept( IVisitor* visitor ) const override;
 
+	const IStatement* GetStatement() const;
 	const IStatementList* GetStatementList() const;
 
-	void Accept( IVisitor* visitor ) const override;
 private:
 	const std::shared_ptr<IStatement> stmt;
 	const std::shared_ptr<IStatementList> stmtList;
-	CPosition position;
 };
 
-class CVarDecl : public IVarDecl {
+class CVarDecl : public IVarDecl, public CPositionStorage {
 public:
 	CVarDecl( IType* _type, const std::string& _identifier, const CPosition& _position );
 
-	const IType* GetType() const;
-
-	const CSymbol* GetName() const;
-
 	void Accept( IVisitor* visitor ) const override;
 
+	const IType* GetType() const;
+	const CSymbol* GetName() const;
+
 private:
-	CPosition position;
 	const std::shared_ptr<IType> type;
 	const CSymbol* identifier;
 };
 
-class CVarDeclList : public IVarDeclList {
+class CVarDeclList : public IVarDeclList, public CPositionStorage {
 public:
 	CVarDeclList( IVarDeclList* _varDeclList, IVarDecl* _varDecl, const CPosition& pos );
 
-	const IVarDeclList* GetVarDeclList() const;
+	void Accept( IVisitor* visitor ) const override;
 
+	const IVarDeclList* GetVarDeclList() const;
 	const IVarDecl* GetVarDecl() const;
 
-	void Accept( IVisitor* visitor ) const override;
 private:
 	const std::shared_ptr<IVarDeclList> varDeclList;
 	const std::shared_ptr<IVarDecl> varDecl;
-	CPosition position;
 };
 
-class CMethodDecl : public IMethodDecl {
+class CMethodDecl : public IMethodDecl, public CPositionStorage {
 public:
 	CMethodDecl(
 		IType* _type,
@@ -161,19 +145,14 @@ public:
 		IExp* _returnExpr,
 		const CPosition& _position );
 
-	const IType* GetType() const;
-
-	const CSymbol* GetName() const;
-
-	const IFormalList* GetFormalList() const;
-
-	const IVarDeclList* GetVarList() const;
-
-	const IStatementList* GetStatementList() const;
-
-	const IExp* GetReturnExpression() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IType* GetType( ) const;
+	const CSymbol* GetName() const;
+	const IFormalList* GetFormalList() const;
+	const IVarDeclList* GetVarList() const;
+	const IStatementList* GetStatementList() const;
+	const IExp* GetReturnExpression() const;
 
 private:
 	const std::shared_ptr<IType> type;
@@ -182,396 +161,344 @@ private:
 	const std::shared_ptr<IVarDeclList> varList;
 	const std::shared_ptr<IStatementList> statementList;
 	const std::shared_ptr<IExp> returnExpr;
-	CPosition position;
 };
 
-class CMethodDeclList : public IMethodDeclList {
+class CMethodDeclList : public IMethodDeclList, public CPositionStorage {
 public:
 	CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList, const CPosition& pos );
 
-	const IMethodDeclList* GetMethodDeclList() const;
-
-	const IMethodDecl* GetMethodDecl() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IMethodDeclList* GetMethodDeclList() const;
+	const IMethodDecl* GetMethodDecl() const;
 
 private:
 	const std::shared_ptr<IMethodDeclList> methodDeclList;
 	const std::shared_ptr<IMethodDecl> methodDecl;
-	CPosition position;
 };
 
-class CFormalList : public IFormalList {
+class CFormalList : public IFormalList, public CPositionStorage
+{
 public:
 	CFormalList( IType* _type, const std::string& _identifier, IFormalList* _formalList, const CPosition& pos );
 
+	void Accept( IVisitor* visitor ) const override;
+
 	const IFormalList* GetFormalRest() const;
-
 	const IType* GetType() const;
-
 	const CSymbol* GetIdentifier() const;
 
-
-	void Accept( IVisitor* visitor ) const override
-	{
-		visitor->Visit( this );
-	}
 private:
 	std::shared_ptr<IType> type;
 	const CSymbol* identifier;
-
 	std::shared_ptr<IFormalList> formalList;
-
-	CPosition position;
 };
 
-class CFormalRestList : public IFormalList {
+class CFormalRestList : public IFormalList, public CPositionStorage {
 public:
 	CFormalRestList( IFormalList* _formalRest, IFormalList* _formalRestList, const CPosition& pos );
 
-	const IFormalList* GetFormalRest() const;
+	void Accept( IVisitor* visitor ) const override;
 
+	const IFormalList* GetFormalRest() const;
 	const IFormalList* GetFormalRestList() const;
 
-
-	void Accept( IVisitor* visitor ) const override
-	{
-		visitor->Visit( this );
-	}
 private:
 	std::shared_ptr<IFormalList> formalRest;
 	std::shared_ptr<IFormalList> formalRestList;
-	CPosition position;
 };
 
-class CStatementListStatement : public IStatement {
+class CStatementListStatement : public IStatement, public CPositionStorage {
 public:
 	CStatementListStatement( IStatementList* _statementList, const CPosition& _position );
 
-	const IStatementList* GetStatementList() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IStatementList* GetStatementList() const;
 
 private:
 	const std::shared_ptr<IStatementList> statementList;
-	CPosition position;
 };
 
-class CIfStatement : public IStatement {
+class CIfStatement : public IStatement, public CPositionStorage {
 public:
 	CIfStatement( IExp* _condition, IStatement* _statementIfTrue, IStatement* _statementIfFalse, const CPosition _position );
 
-	const IExp* GetCondition() const;
-
-	const IStatement* GetIfTrueStatement() const;
-
-	const IStatement* GetIfFalseStatement() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IExp* GetCondition() const;
+	const IStatement* GetIfTrueStatement() const;
+	const IStatement* GetIfFalseStatement() const;
 
 private:
 	const std::shared_ptr<IExp> condition;
 	const std::shared_ptr<IStatement> statementIfTrue;
 	const std::shared_ptr<IStatement> statementIfFalse;
-	CPosition position;
 };
 
-class CWhileStatement : public IStatement {
+class CWhileStatement : public IStatement, public CPositionStorage {
 public:
 	CWhileStatement( IExp* _condition, IStatement* _cycleBody, const CPosition& _position );
 
-	const IExp* GetCondition() const;
-
-	const IStatement* GetBodyCycle() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IExp* GetCondition() const;
+	const IStatement* GetBodyCycle() const;
 
 private:
 	const std::shared_ptr<IExp> condition;
 	const std::shared_ptr<IStatement> cycleBody;
-	CPosition position;
 };
 
-class CPrintStatement : public IStatement {
+class CPrintStatement : public IStatement, public CPositionStorage {
 public:
 	CPrintStatement( IExp* _expression, const CPosition& _position );
 
-	const IExp* GetExpression() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IExp* GetExpression() const;
 
 private:
 	const std::shared_ptr<IExp> expression;
-	CPosition position;
 };
 
-class CAssignStatement : public IStatement {
+class CAssignStatement : public IStatement, public CPositionStorage {
 public:
 	CAssignStatement( const std::string& _left, IExp* _right, const CPosition& _position );
 
-	std::string GetLeftPart() const;
-
-	const IExp* GetRightPart() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	std::string GetLeftPart() const;
+	const IExp* GetRightPart() const;
 
 private:
 	const std::string left;
 	const std::shared_ptr<IExp> right;
-	CPosition position;
 };
 
-class CArrayAssignStatement : public IStatement {
+class CArrayAssignStatement : public IStatement, public CPositionStorage {
 public:
 	CArrayAssignStatement( const std::string& _arrayId, IExp* _elementNumber, IExp* _rightPart, const CPosition& _position );
 
-	const CSymbol* GetArrayName() const;
-
-	const IExp* GetElementNumber() const;
-
-	const IExp* GetRightPart() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const CSymbol* GetArrayName() const;
+	const IExp* GetElementNumber() const;
+	const IExp* GetRightPart() const;
 
 private:
 	const CSymbol* arrayId;
 	const std::shared_ptr<IExp> elementNumber;
 	const std::shared_ptr<IExp> rightPart;
-	CPosition position;
 };
 
-class CStandardType : public IType {
+class CStandardType : public IType, public CPositionStorage {
 public:
 	enum StandardType { INT = 0, INT_ARRAY, BOOL };
 
 	CStandardType( StandardType _type, const CPosition& _position );
-
 	CStandardType( const CStandardType* other );
-
-	StandardType GetType() const;
 
 	void Accept( IVisitor* visitor ) const override;
 
-	CPosition GetPosition() const;
+	StandardType GetType() const;
+	bool IsPODType() const override;
+
 private:
 	StandardType type;
-	CPosition position;
 };
 
-class CUserType : public IType {
+class CUserType : public IType, public CPositionStorage {
 public:
 	CUserType( const std::string& _typeName, const CPosition& _position );
 	CUserType( const CUserType* other );
 
-	const CSymbol* GetTypeName() const;
-
 	void Accept( IVisitor*  visitor ) const override;
 
-	CPosition GetPosition( ) const;
+	bool IsPODType() const override;
+	const CSymbol* GetTypeName() const;
+
 private:
 	const CSymbol* typeName;
-	CPosition position;
 };
 
-class CBinOpExpression : public IExp {
+class CBinOpExpression : public IExp, public CPositionStorage {
 public:
 	enum BinOp { AND, LESS, PLUS, MINUS, TIMES, DIVIDE };
 
 	CBinOpExpression( IExp* _leftExp, BinOp _binOp, IExp* _rightExp, const CPosition& pos );
 
-	BinOp GetBinOp() const;
+	void Accept( IVisitor*  visitor ) const override;
 
-	const IExp* GetLeftExp() const;
-	
+	BinOp GetBinOp() const;
+	const IExp* GetLeftExp() const;	
 	const IExp* GetRightExp() const;
 
-	void Accept( IVisitor*  visitor ) const override;
 private:
 	const std::shared_ptr<IExp> leftExp;
 	const std::shared_ptr<IExp> rightExp;
-	CPosition position;
 	BinOp binOp;
 };
 
-class CIndexExpression : public IExp {
+class CIndexExpression : public IExp, public CPositionStorage {
 public:
 	CIndexExpression( IExp* _exp, IExp* _indexExp, const CPosition& pos );
 
-	const IExp* GetExp() const;
-
-	const IExp* GetIndexExp() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const IExp* GetExp() const;
+	const IExp* GetIndexExp() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
 	const std::shared_ptr<IExp> indexExp;
-	CPosition position;
 };
 
-class CLenghtExpression : public IExp {
+class CLenghtExpression : public IExp, public CPositionStorage {
 public:
 	CLenghtExpression( IExp* _exp, const CPosition& pos );
 
-	const IExp* GetExp() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const IExp* GetExp() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
-	CPosition position;
 };
 
-class CMethodExpression : public IExp {
+class CMethodExpression : public IExp, public CPositionStorage {
 public:
 	CMethodExpression( IExp* _exp, const std::string& _identifier, IExpList* _expList, const CPosition& pos );
 
-	const IExp* GetExp() const;
-
-	const IExpList* GetIndexExp() const;
-
-	const CSymbol* GetIdentifier() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const IExp* GetExp() const;
+	const IExpList* GetIndexExp() const;
+	const CSymbol* GetIdentifier() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
 	const std::shared_ptr<IExpList> expList;
 	const CSymbol* identifier;
-	CPosition position;
 };
 
-class CIntLiteralExpression : public IExp {
+class CIntLiteralExpression : public IExp, public CPositionStorage {
 public:
 	CIntLiteralExpression( const std::string& _val, const CPosition& pos );
 
-	const CSymbol* GetValue( ) const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const CSymbol* GetValue() const;
 
 private:
 	const CSymbol* val;
-	CPosition position;
 };
 
-class CBoolLiteralExpression : public IExp {
+class CBoolLiteralExpression : public IExp, public CPositionStorage {
 public:
 	CBoolLiteralExpression( const std::string& _val, const CPosition& pos );
 
-	const CSymbol* GetValue( ) const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const CSymbol* GetValue() const;
 
 private:
 	const CSymbol* val;
-	CPosition position;
 };
 
-class CIdentifierExpression : public IExp {
+class CIdentifierExpression : public IExp, public CPositionStorage {
 public:
 	CIdentifierExpression( const std::string& id, const CPosition& pos );
 
-	const CSymbol* GetIdentifier() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const CSymbol* GetIdentifier() const;
 
 private:
 	const CSymbol* identifier;
-	CPosition position;
 };
 
-class CThisExpression : public IExp {
+class CThisExpression : public IExp, public CPositionStorage {
 public:
 	CThisExpression( const CPosition& pos );
 
 	void Accept( IVisitor*  visitor ) const override;
-
-private:
-	CPosition position;
 };
 
-class CNewIntArrayExpression : public IExp {
+class CNewIntArrayExpression : public IExp, public CPositionStorage {
 public:
 	CNewIntArrayExpression( IExp* _exp, const CPosition& pos );
 
-	const IExp* GetExp() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const IExp* GetExp() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
-	CPosition position;
 };
 
-class CNewExpression : public IExp {
+class CNewExpression : public IExp, public CPositionStorage {
 public:
 	CNewExpression( const std::string& id, const CPosition& pos );
 
-	const CSymbol* GetIdentifier() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const CSymbol* GetIdentifier() const;
 
 private:
 	const CSymbol* identifier;
-	CPosition position;
 };
 
-class CUnaryOpExpression : public IExp {
+class CUnaryOpExpression : public IExp, public CPositionStorage {
 public:
 	enum UnaryOp { MINUS, NOT };
 
 	CUnaryOpExpression( UnaryOp _op, IExp* _exp, const CPosition& pos );
 
-	const IExp* GetLeftExp() const;
-
-	UnaryOp GetOperation() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const IExp* GetLeftExp() const;
+	UnaryOp GetOperation() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
-	CPosition position;
 	UnaryOp op;
 };
 
-class CBracesExpression : public IExp {
+class CBracesExpression : public IExp, public CPositionStorage {
 public:
 	CBracesExpression( IExp* _exp, const CPosition& pos );
 
-	const IExp* GetExp() const;
-
 	void Accept( IVisitor*  visitor ) const override;
+
+	const IExp* GetExp() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
-	CPosition position;
 };
 
-class CExpressionList : public IExpList {
+class CExpressionList : public IExpList, public CPositionStorage {
 public:
 	CExpressionList( IExp* _exp, IExpList* _expList, const CPosition& pos );
-	
-	const IExp* GetExp() const;
-
-	const IExpList* GetExpList() const;
 
 	void Accept( IVisitor*  visitor ) const override;
+	
+	const IExp* GetExp() const;
+	const IExpList* GetExpList() const;
 
 private:
 	const std::shared_ptr<IExp> exp;
 	const std::shared_ptr<IExpList> expList;
-	CPosition position;
 };
 
-class CExpressionRest : public IExp {
+class CExpressionRest : public IExp, public CPositionStorage {
 public:
 	CExpressionRest( IExp* _exp, const CPosition& pos );
 
-	const IExp* GetExp() const;
-
 	void Accept( IVisitor* visitor ) const override;
+
+	const IExp* GetExp() const;
 
 private:
 	std::shared_ptr<IExp> exp;
-	CPosition position;
 };

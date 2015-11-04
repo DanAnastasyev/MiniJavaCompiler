@@ -1,7 +1,7 @@
 #include "RuleClasses.h"
 
 CVarDecl::CVarDecl( IType* _type, const std::string& _identifier, const CPosition& _position ) :
-position( _position ),
+CPositionStorage( _position ),
 type( _type ),
 identifier( CSymbol::GetSymbol(_identifier) )
 {
@@ -23,9 +23,9 @@ void CVarDecl::Accept( IVisitor* visitor ) const
 }
 
 CVarDeclList::CVarDeclList( IVarDeclList* _varDeclList, IVarDecl* _varDecl, const CPosition& pos ) :
+CPositionStorage( pos ),
 varDeclList( _varDeclList ),
-varDecl( _varDecl ),
-position( pos )
+varDecl( _varDecl )
 {
 }
 

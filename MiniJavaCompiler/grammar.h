@@ -67,6 +67,7 @@ public:
 // Тип
 class IType : public IHost {
 public:
+	virtual bool IsPODType() const = 0;
 	virtual ~IType() {}
 };
 

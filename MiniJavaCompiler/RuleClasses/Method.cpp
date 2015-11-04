@@ -1,13 +1,13 @@
 #include "RuleClasses.h"
 
 CMethodDecl::CMethodDecl( IType* _type, const std::string& _methodName, IFormalList* _formalList, IVarDeclList* _varList, IStatementList* _statementList, IExp* _returnExpr, const CPosition& _position ) :
+CPositionStorage( _position ),
 type( _type ),
 methodName( CSymbol::GetSymbol(_methodName) ),
 formalList( _formalList ),
 varList( _varList ),
 statementList( _statementList ),
-returnExpr( _returnExpr ),
-position( _position )
+returnExpr( _returnExpr )
 {
 }
 
@@ -47,9 +47,9 @@ void CMethodDecl::Accept( IVisitor* visitor ) const
 }
 
 CMethodDeclList::CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList, const CPosition& pos ) :
+CPositionStorage( pos ),
 methodDeclList( _methodDeclList ),
-methodDecl( _methodDecl ),
-position( pos )
+methodDecl( _methodDecl )
 {
 }
 

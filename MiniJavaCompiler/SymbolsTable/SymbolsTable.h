@@ -26,6 +26,7 @@ namespace SymbolsTable {
 		std::string GetName() const;
 		CVarInfo* GetVar( const std::string& varName ) const;
 		CVarInfo* GetReturnType() const;
+
 	private:
 		std::string methodName;
 		std::shared_ptr<CVarInfo> returnType;
@@ -45,8 +46,10 @@ namespace SymbolsTable {
 		std::string GetName() const;
 		CMethodInfo* GetMethod( const std::string& methodName ) const;
 		CVarInfo* GetVar( const std::string varName ) const;
+		CClassInfo* GetBaseClass() const;
 		std::vector<std::shared_ptr<CMethodInfo>> GetMethods() const;
 		std::vector<std::shared_ptr<CVarInfo>> GerVars() const;
+
 	private:
 		std::string className;
 		std::shared_ptr<CClassInfo> baseClass;

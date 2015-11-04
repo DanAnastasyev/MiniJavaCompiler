@@ -1,9 +1,9 @@
 #include "RuleClasses.h"
 
-CClassDeclList::CClassDeclList( IClassDecl* _declaration, IClassDeclList* _list, const CPosition& _positon ) :
+CClassDeclList::CClassDeclList( IClassDecl* _declaration, IClassDeclList* _list, const CPosition& _position ) :
+	CPositionStorage( _position ),
 	list( _list ),
-	declaration( _declaration ),
-	position( _positon )
+	declaration( _declaration )
 {
 }
 
@@ -23,10 +23,10 @@ void CClassDeclList::Accept( IVisitor* visitor ) const
 }
 
 CClassDecl::CClassDecl( IVarDeclList* _varList, IMethodDeclList* _methodList, const std::string& _className, const CPosition& _position ) :
-	position( _position ),
-	className( CSymbol::GetSymbol(_className) ),
-	varList( _varList ),
-	methodList( _methodList )
+CPositionStorage( _position ),
+className( CSymbol::GetSymbol( _className ) ),
+varList( _varList ),
+methodList( _methodList )
 {
 }
 
@@ -51,11 +51,11 @@ void CClassDecl::Accept( IVisitor* visitor ) const
 }
 
 CClassDeclDerived::CClassDeclDerived( IVarDeclList* _varList, IMethodDeclList* _methodList, const std::string& _className, const std::string& _baseClassName, const CPosition& _position ) :
-	position( _position ),
-	className( CSymbol::GetSymbol(_className) ),
-	baseClassName( CSymbol::GetSymbol(_baseClassName) ),
-	varList( _varList ),
-	methodList( _methodList )
+CPositionStorage( _position ),
+className( CSymbol::GetSymbol( _className ) ),
+baseClassName( CSymbol::GetSymbol(_baseClassName) ),
+varList( _varList ),
+methodList( _methodList )
 {
 }
 
