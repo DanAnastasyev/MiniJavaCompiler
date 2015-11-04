@@ -6,7 +6,7 @@
 #include "grammar.h"
 #include "Position.h"
 #include "Visitors/Visitor.h"
-#include "SymbolsTable\Symbol.h"
+#include "SymbolsTable/Symbol.h"
 
 class CProgram : public IProgram {
 public:
@@ -309,14 +309,14 @@ class CAssignStatement : public IStatement {
 public:
 	CAssignStatement( const std::string& _left, IExp* _right, const CPosition& _position );
 
-	std::string GetLeftPart() const;
+	const CSymbol* GetLeftPart() const;
 
 	const IExp* GetRightPart() const;
 
 	void Accept( IVisitor* visitor ) const override;
 
 private:
-	const std::string left;
+	const CSymbol* left;
 	const std::shared_ptr<IExp> right;
 	CPosition position;
 };

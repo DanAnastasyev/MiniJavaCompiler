@@ -10,7 +10,6 @@ namespace SymbolsTable
 }
 
 class IType;
-
 class CTypeCheckerVisitor : public IVisitor {
 public:
 	void Visit( const CProgram* program ) override;
@@ -57,7 +56,7 @@ private:
 	SymbolsTable::CClassInfo* curClass;
 	SymbolsTable::CMethodInfo* curMethod;
 	SymbolsTable::CTable* symbolsTable;
-	std::shared_ptr<IType> lastTypeValue;
+	std::string lastTypeValue;
 
 	CErrorStorage errorStorage;
 };

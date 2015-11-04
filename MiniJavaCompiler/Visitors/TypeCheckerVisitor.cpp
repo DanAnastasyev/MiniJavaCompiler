@@ -87,10 +87,24 @@ void CTypeCheckerVisitor::Visit( const CMethodDecl* methodDecl )
 
 void CTypeCheckerVisitor::Visit( const CStandardType* type )
 {
+	switch( type->GetType() ) {
+	case CStandardType::StandardType::INT:
+		lastTypeValue = "INT";
+		break;
+	case CStandardType::StandardType::BOOL:
+		lastTypeValue = "BOOL";
+		break;
+	case CStandardType::StandardType::INT_ARRAY:
+		lastTypeValue = "INT_ARRAY";
+		break;
+	default:
+		break;
+	}
 }
 
 void CTypeCheckerVisitor::Visit( const CUserType* type )
 {
+	lastTypeValue = type->GetTypeName()->GetString();
 }
 
 void CTypeCheckerVisitor::Visit( const CStatementListStatement* statement )
@@ -100,10 +114,40 @@ void CTypeCheckerVisitor::Visit( const CStatementListStatement* statement )
 
 void CTypeCheckerVisitor::Visit( const CArrayAssignStatement* statement )
 {
+	if( curClass == nullptr ) {
+		errorStorage.PutError( "Assign statement out of scope " + statement->GetPosition().ToString() );
+		return;
+	}
+	if( curMethod == nullptr ) {
+		errorStorage.PutError( "Assign statement out of scope " + statement->GetPosition().ToString() );
+		return;
+	}
+	SymbolsTable::CVarInfo* var = curMethod->GetVar( statement->GetArrayName()->GetString() );
+	var->GetType()->Accept( this );
+	std::string leftType = lastTypeValue;
+	statement->GetRightPart()->Accept( this );
+	if( leftType != lastTypeValue ) {
+		errorStorage.PutError( "Incompatible types " + statement->GetPosition().ToString() );
+	}
 }
 
 void CTypeCheckerVisitor::Visit( const CAssignStatement* statement )
 {
+	if( curClass == nullptr ) {
+		errorStorage.PutError( "Assign statement out of scope " + statement->GetPosition().ToString() );
+		return;
+	}
+	if( curMethod == nullptr ) {
+		errorStorage.PutError( "Assign statement out of scope " + statement->GetPosition().ToString() );
+		return;
+	}
+	SymbolsTable::CVarInfo* var = curMethod->GetVar( statement->GetLeftPart( )->GetString( ) );
+	var->GetType()->Accept( this );
+	std::string leftType = lastTypeValue;
+	statement->GetRightPart()->Accept( this );
+	if( leftType != lastTypeValue ) {
+		errorStorage.PutError( "Incompatible types " + statement->GetPosition().ToString() );
+	}
 }
 
 void CTypeCheckerVisitor::Visit( const CIfStatement* statement )
