@@ -268,11 +268,11 @@ public:
 
 	void Accept( IVisitor* visitor ) const override;
 
-	std::string GetLeftPart() const;
+	const CSymbol* GetLeftPart() const;
 	const IExp* GetRightPart() const;
 
 private:
-	const std::string left;
+	const CSymbol* left;
 	const std::shared_ptr<IExp> right;
 };
 
@@ -373,7 +373,7 @@ public:
 	void Accept( IVisitor*  visitor ) const override;
 
 	const IExp* GetExp() const;
-	const IExpList* GetIndexExp() const;
+	const IExpList* GetExpList() const;
 	const CSymbol* GetIdentifier() const;
 
 private:

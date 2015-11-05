@@ -79,7 +79,7 @@ const IExp* CMethodExpression::GetExp() const
 	return exp.get();
 }
 
-const IExpList* CMethodExpression::GetIndexExp() const
+const IExpList* CMethodExpression::GetExpList() const
 {
 	return expList.get();
 }

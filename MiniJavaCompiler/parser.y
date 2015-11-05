@@ -149,7 +149,6 @@ FormalList:
 		$$ = new CFormalList( $1, $2, $3, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
-
 FormalRestList:
 	/* empty */ {
 		//debugRule(@$, "FormalRestList -> empty");

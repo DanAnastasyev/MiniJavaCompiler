@@ -10,7 +10,6 @@ namespace SymbolsTable
 }
 
 class IType;
-
 class CTypeCheckerVisitor : public IVisitor {
 public:
 	void Visit( const CProgram* program ) override;
@@ -48,16 +47,15 @@ public:
 	void Visit( const CFormalList* list ) override;
 	void Visit( const CFormalRestList* list ) override;
 
-	const CErrorStorage& GetErrorStorage() const
-	{
-		return errorStorage;
-	}
+	const CErrorStorage& GetErrorStorage() const;
 
 private:
+	bool isPODType( const std::string& type ) const;
+
 	SymbolsTable::CClassInfo* curClass = nullptr;
 	SymbolsTable::CMethodInfo* curMethod = nullptr;
 	SymbolsTable::CTable* symbolsTable = nullptr;
-	std::shared_ptr<IType> lastTypeValue;
+	std::string lastTypeValue;
 
 	CErrorStorage errorStorage;
 };

@@ -20,6 +20,12 @@ public:
 		return std::make_pair( endLine, endColumn );
 	}
 
+	std::string ToString() const
+	{
+		return "(" + std::to_string( beginLine ) + " " + std::to_string( beginColumn ) +
+			" " + std::to_string( endLine ) + " " + std::to_string( endColumn ) + ")";
+	}
+
 private:
 	int beginLine;
 	int beginColumn;

@@ -83,13 +83,11 @@ void CPrintStatement::Accept( IVisitor* visitor ) const
 }
 
 CAssignStatement::CAssignStatement( const std::string& _left, IExp* _right, const CPosition& _position ) :
-CPositionStorage( _position ),
-left( _left ),
-right( _right )
+left( CSymbol::GetSymbol( _left ) ),CPositionStorage( _position ),right( _right )
 {
 }
 
-std::string CAssignStatement::GetLeftPart( ) const
+const CSymbol* CAssignStatement::GetLeftPart( ) const
 {
 	return left;
 }

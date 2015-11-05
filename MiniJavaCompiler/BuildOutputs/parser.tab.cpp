@@ -536,11 +536,11 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint16 yyrline[] =
 {
        0,    79,    79,    85,    91,    95,   101,   105,   111,   115,
-     121,   127,   131,   137,   143,   147,   154,   158,   164,   170,
-     174,   178,   182,   188,   192,   198,   202,   206,   210,   214,
-     218,   224,   228,   232,   236,   240,   244,   248,   252,   256,
-     260,   264,   268,   272,   276,   280,   284,   288,   292,   298,
-     302,   308,   312,   318
+     121,   127,   131,   137,   143,   147,   153,   157,   163,   169,
+     173,   177,   181,   187,   191,   197,   201,   205,   209,   213,
+     217,   223,   227,   231,   235,   239,   243,   247,   251,   255,
+     259,   263,   267,   271,   275,   279,   283,   287,   291,   297,
+     301,   307,   311,   317
 };
 #endif
 
@@ -1790,7 +1790,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 154 "parser.y"
+#line 153 "parser.y"
     {
 		//debugRule(@$, "FormalRestList -> empty");
 		(yyval.formalListVal) = nullptr;
@@ -1799,7 +1799,7 @@ yyreduce:
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 158 "parser.y"
+#line 157 "parser.y"
     {
 		//debugRule(@$, "FormalRestList -> FormalRest FormalRestList");
 		(yyval.formalListVal) = new CFormalRestList( (yyvsp[(1) - (2)].formalListVal), (yyvsp[(2) - (2)].formalListVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1808,7 +1808,7 @@ yyreduce:
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 164 "parser.y"
+#line 163 "parser.y"
     {
 		//debugRule(@$, "FormalRest -> , Type IDENTIFIER");
 		(yyval.formalListVal) = new CFormalList( (yyvsp[(2) - (3)].typeVal), (yyvsp[(3) - (3)].val), nullptr, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1817,7 +1817,7 @@ yyreduce:
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 170 "parser.y"
+#line 169 "parser.y"
     {
 		//debugRule(@$, "Type -> INT[]");
 		(yyval.typeVal) = new CStandardType( CStandardType::StandardType::INT_ARRAY, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1826,7 +1826,7 @@ yyreduce:
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 174 "parser.y"
+#line 173 "parser.y"
     {
 		//debugRule(@$, "Type -> BOOL");
 		(yyval.typeVal) = new CStandardType( CStandardType::StandardType::BOOL, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1835,7 +1835,7 @@ yyreduce:
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 178 "parser.y"
+#line 177 "parser.y"
     {
 		//debugRule(@$, "Type -> INT");
 		(yyval.typeVal) = new CStandardType( CStandardType::StandardType::INT, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1844,7 +1844,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 182 "parser.y"
+#line 181 "parser.y"
     {
 		//debugRule(@$, "Type -> CLASS");
 		(yyval.typeVal) = new CUserType( (yyvsp[(1) - (1)].val), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1853,7 +1853,7 @@ yyreduce:
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 188 "parser.y"
+#line 187 "parser.y"
     {
 		//debugRule(@$, "StatementList -> empty");
 		(yyval.statementListVal) = nullptr;
@@ -1862,7 +1862,7 @@ yyreduce:
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 192 "parser.y"
+#line 191 "parser.y"
     {
 		//debugRule(@$, "StatementList -> Statement StatementList");
 		(yyval.statementListVal) = new CStatementList( (yyvsp[(1) - (2)].statementVal), (yyvsp[(2) - (2)].statementListVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1871,7 +1871,7 @@ yyreduce:
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 198 "parser.y"
+#line 197 "parser.y"
     {
 		//debugRule(@$, "Statement -> { StatementList }");
 		(yyval.statementVal) = new CStatementListStatement( (yyvsp[(2) - (3)].statementListVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1880,7 +1880,7 @@ yyreduce:
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 202 "parser.y"
+#line 201 "parser.y"
     {
 		//debugRule(@$, "Statement -> IF ( Expression ) Statement ELSE Statement");
 		(yyval.statementVal) = new CIfStatement( (yyvsp[(3) - (7)].expressionVal), (yyvsp[(5) - (7)].statementVal), (yyvsp[(7) - (7)].statementVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1889,7 +1889,7 @@ yyreduce:
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 206 "parser.y"
+#line 205 "parser.y"
     {
 		//debugRule(@$, "Statement -> WHILE ( Expression ) Statement");
 		(yyval.statementVal) = new CWhileStatement( (yyvsp[(3) - (5)].expressionVal), (yyvsp[(5) - (5)].statementVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1898,7 +1898,7 @@ yyreduce:
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 210 "parser.y"
+#line 209 "parser.y"
     {
 		//debugRule(@$, "Statement -> PRINTLN ( Expression ) ;");
 		(yyval.statementVal) = new CPrintStatement( (yyvsp[(3) - (5)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1907,7 +1907,7 @@ yyreduce:
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 214 "parser.y"
+#line 213 "parser.y"
     {
 		//debugRule(@$, "Statement -> IDENTIFIER = Expression ;");
 		(yyval.statementVal) = new CAssignStatement( (yyvsp[(1) - (4)].val), (yyvsp[(3) - (4)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1916,7 +1916,7 @@ yyreduce:
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 218 "parser.y"
+#line 217 "parser.y"
     {
 		//debugRule(@$, "Statement -> IDENTIFIER [ Expression ] = Expression ;");
 		(yyval.statementVal) = new CArrayAssignStatement( (yyvsp[(1) - (7)].val), (yyvsp[(3) - (7)].expressionVal), (yyvsp[(6) - (7)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1925,7 +1925,7 @@ yyreduce:
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 224 "parser.y"
+#line 223 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression AND Expression");
 		(yyval.expressionVal) = new CBinOpExpression( (yyvsp[(1) - (3)].expressionVal), CBinOpExpression::BinOp::AND, (yyvsp[(3) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1934,7 +1934,7 @@ yyreduce:
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 228 "parser.y"
+#line 227 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression < Expression");
 		(yyval.expressionVal) = new CBinOpExpression( (yyvsp[(1) - (3)].expressionVal), CBinOpExpression::BinOp::LESS, (yyvsp[(3) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1943,7 +1943,7 @@ yyreduce:
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 232 "parser.y"
+#line 231 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression + Expression");
 		(yyval.expressionVal) = new CBinOpExpression( (yyvsp[(1) - (3)].expressionVal), CBinOpExpression::BinOp::PLUS, (yyvsp[(3) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1952,7 +1952,7 @@ yyreduce:
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 236 "parser.y"
+#line 235 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression - Expression");
 		(yyval.expressionVal) = new CBinOpExpression( (yyvsp[(1) - (3)].expressionVal), CBinOpExpression::BinOp::MINUS, (yyvsp[(3) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1961,7 +1961,7 @@ yyreduce:
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 240 "parser.y"
+#line 239 "parser.y"
     {
 		//debugRule(@$, "Expression -> -Expression");
 		(yyval.expressionVal) = new CUnaryOpExpression( CUnaryOpExpression::UnaryOp::MINUS, (yyvsp[(2) - (2)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1970,7 +1970,7 @@ yyreduce:
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 244 "parser.y"
+#line 243 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression * Expression");
 		(yyval.expressionVal) = new CBinOpExpression( (yyvsp[(1) - (3)].expressionVal), CBinOpExpression::BinOp::TIMES, (yyvsp[(3) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1979,7 +1979,7 @@ yyreduce:
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 248 "parser.y"
+#line 247 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression / Expression");
 		(yyval.expressionVal) = new CBinOpExpression( (yyvsp[(1) - (3)].expressionVal), CBinOpExpression::BinOp::DIVIDE, (yyvsp[(3) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1988,7 +1988,7 @@ yyreduce:
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 252 "parser.y"
+#line 251 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression[Expression]");
 		(yyval.expressionVal) = new CIndexExpression( (yyvsp[(1) - (4)].expressionVal), (yyvsp[(3) - (4)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -1997,7 +1997,7 @@ yyreduce:
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 256 "parser.y"
+#line 255 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression.LENGTH");
 		(yyval.expressionVal) = new CLenghtExpression( (yyvsp[(1) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2006,7 +2006,7 @@ yyreduce:
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 260 "parser.y"
+#line 259 "parser.y"
     {
 		//debugRule(@$, "Expression -> Expression.IDENTIFIER(ExpressionList)");
 		(yyval.expressionVal) = new CMethodExpression( (yyvsp[(1) - (6)].expressionVal), (yyvsp[(3) - (6)].val), (yyvsp[(5) - (6)].expressionListVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2015,7 +2015,7 @@ yyreduce:
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 264 "parser.y"
+#line 263 "parser.y"
     {
 		//debugRule(@$, (std::string("Expression -> INTEGER_VALUE(") + std::string($1) + std::string(")")).c_str() );
 		(yyval.expressionVal) = new CIntLiteralExpression( (yyvsp[(1) - (1)].val), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2024,7 +2024,7 @@ yyreduce:
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 268 "parser.y"
+#line 267 "parser.y"
     {
 		//debugRule(@$, (std::string("Expression -> BOOLEAN_VALUE(") + std::string($1) + std::string(")")).c_str() );
 		(yyval.expressionVal) = new CBoolLiteralExpression( (yyvsp[(1) - (1)].val), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2033,7 +2033,7 @@ yyreduce:
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 272 "parser.y"
+#line 271 "parser.y"
     {
 		//debugRule(@$, (std::string("Expression -> IDENTIFIER(") + std::string($1) + std::string(")")).c_str() );
 		(yyval.expressionVal) = new CIdentifierExpression( (yyvsp[(1) - (1)].val), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2042,7 +2042,7 @@ yyreduce:
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 276 "parser.y"
+#line 275 "parser.y"
     {
 		//debugRule(@$, "Expression -> THIS");
 		(yyval.expressionVal) = new CThisExpression( CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2051,7 +2051,7 @@ yyreduce:
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 280 "parser.y"
+#line 279 "parser.y"
     {
 		//debugRule(@$, "Expression -> new int[]");
 		(yyval.expressionVal) = new CNewIntArrayExpression( (yyvsp[(4) - (5)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2060,7 +2060,7 @@ yyreduce:
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 284 "parser.y"
+#line 283 "parser.y"
     {
 		//debugRule(@$, "Expression -> new IDENTIFIER()");
 		(yyval.expressionVal) = new CNewExpression( (yyvsp[(2) - (4)].val), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );	
@@ -2069,7 +2069,7 @@ yyreduce:
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 288 "parser.y"
+#line 287 "parser.y"
     {
 		//debugRule(@$, "Expression -> !Expression");
 		(yyval.expressionVal) = new CUnaryOpExpression( CUnaryOpExpression::UnaryOp::NOT, (yyvsp[(2) - (2)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2078,7 +2078,7 @@ yyreduce:
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 292 "parser.y"
+#line 291 "parser.y"
     {
 		//debugRule(@$, "Expression -> (Expression)");
 		(yyval.expressionVal) = new CBracesExpression( (yyvsp[(2) - (3)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2087,7 +2087,7 @@ yyreduce:
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 298 "parser.y"
+#line 297 "parser.y"
     {
 		//debugRule(@$, "ExpressionList -> empty");
 		(yyval.expressionListVal) = nullptr;
@@ -2096,7 +2096,7 @@ yyreduce:
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 302 "parser.y"
+#line 301 "parser.y"
     {
 		//debugRule(@$, "ExpressionList -> Expression ExpressionRestList");
 		(yyval.expressionListVal) = new CExpressionList( (yyvsp[(1) - (2)].expressionVal), (yyvsp[(2) - (2)].expressionListVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2105,7 +2105,7 @@ yyreduce:
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 308 "parser.y"
+#line 307 "parser.y"
     {
 		//debugRule(@$, "ExpressionRestList -> empty");
 		(yyval.expressionListVal) = nullptr;
@@ -2114,7 +2114,7 @@ yyreduce:
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 312 "parser.y"
+#line 311 "parser.y"
     {
 		//debugRule(@$, "ExpressionRestList -> Expression ExpressionRestList");
 		(yyval.expressionListVal) = new CExpressionList( (yyvsp[(1) - (2)].expressionVal), (yyvsp[(2) - (2)].expressionListVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2123,7 +2123,7 @@ yyreduce:
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 318 "parser.y"
+#line 317 "parser.y"
     {
 		//debugRule(@$, "ExpressionRest -> , Expression");
 		(yyval.expressionVal) = new CExpressionRest( (yyvsp[(2) - (2)].expressionVal), CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
@@ -2371,7 +2371,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 323 "parser.y"
+#line 322 "parser.y"
 
 
 void yyerror(std::shared_ptr<IProgram>& root, const char *s) 
