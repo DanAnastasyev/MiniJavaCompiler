@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Visitors/SymbolTableBuilderVisitor.h"
 #include "Visitors/PrettyPrinterVisitor.h"
+#include "Visitors/TypeCheckerVisitor.h"
 extern int yyparse( std::shared_ptr<IProgram>& );
 
 int main( int argc, char **argv )
@@ -13,5 +14,14 @@ int main( int argc, char **argv )
 
 	std::shared_ptr<CSymbolTableBuilderVisitor> symbolTableBuilder( new CSymbolTableBuilderVisitor );
 	root->Accept( symbolTableBuilder.get() );
+
+	if( !symbolTableBuilder->GetErrorStorage().GetAllErrors().empty() ) {
+		for( auto ex : symbolTableBuilder->GetErrorStorage().GetAllErrors() ) {
+			std::cout << ex << std::endl;
+		}
+	} else {
+		std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable().get() ) );
+		root->Accept( typeChecker.get() );
+	}
 	return 0;
 }

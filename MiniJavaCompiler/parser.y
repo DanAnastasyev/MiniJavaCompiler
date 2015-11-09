@@ -146,7 +146,10 @@ FormalList:
 	}
 	| Type IDENTIFIER FormalRestList {
 		//debugRule(@$, "FormalList -> Type IDENTIFIER FormalRestList");
-		$$ = new CFormalList( $1, $2, $3, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		//$$ = new CFormalList( $1, $2, $3, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		CFormalList* list = new CFormalList( $3, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		list->PushParam( new CFormalParam( $1, $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) ) );
+		$$ = new CFormalList( list, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
 FormalRestList:
@@ -156,13 +159,17 @@ FormalRestList:
 	}
 	| FormalRest FormalRestList {
 		//debugRule(@$, "FormalRestList -> FormalRest FormalRestList");
-		$$ = new CFormalRestList( $1, $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		//$$ = new CFormalRestList( $1, $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		CFormalList* list = new CFormalList( $2, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		list->PushParam( $1 );
+		$$ = list;
 	}
 
 FormalRest:
 	',' Type IDENTIFIER {
 		//debugRule(@$, "FormalRest -> , Type IDENTIFIER");
-		$$ = new CFormalList( $2, $3, nullptr, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		//$$ = new CFormalList( $2, $3, nullptr, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
+		$$ = new CFormalParam( $2, $3, CPosition( yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column ) );
 	}
 
 Type:

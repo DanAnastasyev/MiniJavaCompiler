@@ -35,7 +35,8 @@ class CStatementList;
 class CMethodDeclList;
 class CExpressionRest;
 class CFormalList;
-class CFormalRestList;
+//class CFormalRestList;
+class CFormalParam;
 
 class IVisitor {
 public:
@@ -75,5 +76,5 @@ public:
 	virtual void Visit( const CExpressionRest* expr ) = 0;
 	virtual void Visit( const CMethodDeclList* methodList ) = 0;
 	virtual void Visit( const CFormalList* list ) = 0;
-	virtual void Visit( const CFormalRestList* list ) = 0;
+	virtual void Visit( const CFormalParam* list ) = 0;
 };

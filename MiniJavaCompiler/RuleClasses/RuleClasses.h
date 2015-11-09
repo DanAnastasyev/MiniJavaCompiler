@@ -177,35 +177,33 @@ private:
 	const std::shared_ptr<IMethodDecl> methodDecl;
 };
 
-class CFormalList : public IFormalList, public CPositionStorage
+class CFormalParam : public IFormalList, public CPositionStorage 
 {
 public:
-	CFormalList( IType* _type, const std::string& _identifier, IFormalList* _formalList, const CPosition& pos );
+	CFormalParam( IType* _type, const std::string& _identifier, const CPosition& pos );
 
 	void Accept( IVisitor* visitor ) const override;
 
-	const IFormalList* GetFormalRest() const;
 	const IType* GetType() const;
 	const CSymbol* GetIdentifier() const;
-
 private:
 	std::shared_ptr<IType> type;
 	const CSymbol* identifier;
-	std::shared_ptr<IFormalList> formalList;
 };
 
-class CFormalRestList : public IFormalList, public CPositionStorage {
+class CFormalList : public IFormalList, public CPositionStorage
+{
 public:
-	CFormalRestList( IFormalList* _formalRest, IFormalList* _formalRestList, const CPosition& pos );
+	CFormalList( IFormalList* _formalList, const CPosition& pos );
 
 	void Accept( IVisitor* visitor ) const override;
 
-	const IFormalList* GetFormalRest() const;
-	const IFormalList* GetFormalRestList() const;
+	// ¬озвращает список переменных в обратном пор€дке
+	std::vector<std::shared_ptr<IFormalList>> GetParamList() const;
 
+	void PushParam( IFormalList* param );
 private:
-	std::shared_ptr<IFormalList> formalRest;
-	std::shared_ptr<IFormalList> formalRestList;
+	std::vector<std::shared_ptr<IFormalList>> formalList;
 };
 
 class CStatementListStatement : public IStatement, public CPositionStorage {

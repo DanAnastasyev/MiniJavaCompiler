@@ -4,6 +4,10 @@
 
 class CSymbolTableBuilderVisitor : public IVisitor {
 public:
+	CSymbolTableBuilderVisitor();
+
+	std::shared_ptr<SymbolsTable::CTable> GetSymbolsTable();
+
 	void Visit( const CProgram* program ) override;
 	void Visit( const CMainClass* program ) override;
 	void Visit( const CClassDeclList* program ) override;
@@ -12,7 +16,7 @@ public:
 	void Visit( const CVarDecl* program ) override;
 	void Visit( const CVarDeclList* program ) override;
 	void Visit( const CFormalList* list ) override;
-	void Visit( const CFormalRestList* list ) override;
+	void Visit( const CFormalParam* param ) override;
 	void Visit( const CMethodDecl* program ) override;
 	void Visit( const CMethodDeclList* methodList ) override;
 	void Visit( const CStandardType* program ) override;
@@ -39,11 +43,15 @@ public:
 	void Visit( const CStatementList* stmtList ) override {}
 	void Visit( const CExpressionRest* expr ) override {}
 
+	const CErrorStorage& GetErrorStorage() const;
+
 private:
-	SymbolsTable::CClassInfo* curClass;
-	SymbolsTable::CMethodInfo* curMethod;
-	SymbolsTable::CTable* symbolsTable;
-	std::shared_ptr<IType> lastTypeValue;
+	SymbolsTable::CClassInfo* curClass = nullptr;
+	SymbolsTable::CMethodInfo* curMethod = nullptr;
+	std::shared_ptr<SymbolsTable::CTable> symbolsTable;
+	std::shared_ptr<IType> lastTypeValue = nullptr;
 
 	bool isDebug = true;
+
+	CErrorStorage errorStorage;
 };

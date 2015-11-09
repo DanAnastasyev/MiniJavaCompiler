@@ -6,7 +6,7 @@
 class CErrorStorage {
 public:
 	void PutError( const std::string& error );
-	std::vector<std::string> GetAllErrors();
+	std::vector<std::string> GetAllErrors() const;
 
 private:
 	std::vector<std::string> errors;

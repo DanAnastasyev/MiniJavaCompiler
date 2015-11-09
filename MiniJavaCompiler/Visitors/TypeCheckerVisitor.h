@@ -12,6 +12,8 @@ namespace SymbolsTable
 class IType;
 class CTypeCheckerVisitor : public IVisitor {
 public:
+	CTypeCheckerVisitor( SymbolsTable::CTable* table );
+
 	void Visit( const CProgram* program ) override;
 	void Visit( const CMainClass* mainClass ) override;
 	void Visit( const CClassDeclList* classDeclList ) override;
@@ -45,7 +47,7 @@ public:
 	void Visit( const CExpressionRest* expr ) override;
 	void Visit( const CMethodDeclList* methodList ) override;
 	void Visit( const CFormalList* list ) override;
-	void Visit( const CFormalRestList* list ) override;
+	void Visit( const CFormalParam* param ) override;
 
 	const CErrorStorage& GetErrorStorage() const;
 
@@ -54,8 +56,8 @@ private:
 
 	SymbolsTable::CClassInfo* curClass = nullptr;
 	SymbolsTable::CMethodInfo* curMethod = nullptr;
-	SymbolsTable::CTable* symbolsTable = nullptr;
-	std::string lastTypeValue;
+	SymbolsTable::CTable* symbolsTable;
+	std::vector<std::string> lastTypeValueStack;
 
 	CErrorStorage errorStorage;
 };

@@ -4,6 +4,11 @@
 #include "SymbolsTable/SymbolsTable.h"
 #include "RuleClasses/RuleClasses.h"
 
+CTypeCheckerVisitor::CTypeCheckerVisitor( SymbolsTable::CTable* table )
+{
+	symbolsTable = table;
+}
+
 void CTypeCheckerVisitor::Visit( const CProgram* program )
 {
 	if( program->GetMainClass() != nullptr ) {
@@ -17,11 +22,13 @@ void CTypeCheckerVisitor::Visit( const CProgram* program )
 void CTypeCheckerVisitor::Visit( const CMainClass* mainClass )
 {
 	curClass = symbolsTable->GetClass( mainClass->GetClassName()->GetString() );
-
+	curMethod = curClass->GetMethod( "main" );
+	
 	if( mainClass->GetStatement() != nullptr ) {
 		mainClass->GetStatement()->Accept( this );
 	}
 
+	curMethod = nullptr;
 	curClass = nullptr;
 }
 
@@ -86,10 +93,12 @@ void CTypeCheckerVisitor::Visit( const CVarDecl* varDecl )
 	}
 	varDecl->GetType()->Accept( this );
 
-	if( !isPODType( lastTypeValue ) && symbolsTable->GetClass( lastTypeValue ) == nullptr ) {
+	std::string lastType = lastTypeValueStack.back();
+	lastTypeValueStack.pop_back();
+	if( !isPODType( lastType ) && symbolsTable->GetClass( lastType ) == nullptr ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CVarDecl. " ) +
-			lastTypeValue + " " + varDecl->GetName()->GetString() +
-			" - incorrect variable declaration, class " + lastTypeValue + " not found. " +
+			lastType + " " + varDecl->GetName( )->GetString( ) +
+			" - incorrect variable declaration, class " + lastType + " not found. " +
 			"Line " + std::to_string( varDecl->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( varDecl->GetPosition().GetBeginPos().second ) + "." );
 	}
@@ -113,6 +122,8 @@ void CTypeCheckerVisitor::Visit( const CMethodDecl* methodDecl )
 	}
 	methodDecl->GetType()->Accept( this );
 
+	std::string lastTypeValue = lastTypeValueStack.back( );
+	lastTypeValueStack.pop_back();
 	if( !isPODType( lastTypeValue ) && symbolsTable->GetClass( lastTypeValue ) == nullptr ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CMethodDecl. " ) +
 			lastTypeValue + " " + methodDecl->GetName()->GetString() +
@@ -139,23 +150,23 @@ void CTypeCheckerVisitor::Visit( const CStandardType* type )
 {
 	switch( type->GetType() ) {
 	case CStandardType::StandardType::INT:
-		lastTypeValue = ".INT";
+		lastTypeValueStack.push_back( ".INT" );
 		break;
 	case CStandardType::StandardType::BOOL:
-		lastTypeValue = ".BOOL";
+		lastTypeValueStack.push_back( ".BOOL" );
 		break;
 	case CStandardType::StandardType::INT_ARRAY:
-		lastTypeValue = ".INT_ARRAY";
+		lastTypeValueStack.push_back( ".INT_ARRAY" );
 		break;
 	default:
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		break;
 	}
 }
 
 void CTypeCheckerVisitor::Visit( const CUserType* type )
 {
-	lastTypeValue = type->GetTypeName()->GetString();
+	lastTypeValueStack.push_back( type->GetTypeName()->GetString() );
 }
 
 void CTypeCheckerVisitor::Visit( const CStatementListStatement* statement )
@@ -179,8 +190,11 @@ void CTypeCheckerVisitor::Visit( const CArrayAssignStatement* statement )
 
 	SymbolsTable::CVarInfo* var = curMethod->GetVar( statement->GetArrayName()->GetString() );
 	var->GetType()->Accept( this );
-	std::string leftType = lastTypeValue;
+	std::string leftType = lastTypeValueStack.back();
+	lastTypeValueStack.pop_back();
 	statement->GetRightPart()->Accept( this );
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( leftType != lastTypeValue ) {
 		errorStorage.PutError( "Incompatible types " + statement->GetPosition().ToString() );
 	}
@@ -195,8 +209,11 @@ void CTypeCheckerVisitor::Visit( const CAssignStatement* statement )
 
 	SymbolsTable::CVarInfo* var = curMethod->GetVar( statement->GetLeftPart()->GetString() );
 	var->GetType()->Accept( this );
-	std::string leftType = lastTypeValue;
+	std::string leftType = lastTypeValueStack.back();
+	lastTypeValueStack.pop_back();
 	statement->GetRightPart()->Accept( this );
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( leftType != lastTypeValue ) {
 		errorStorage.PutError( "Incompatible types " + statement->GetPosition().ToString() );
 	}
@@ -211,6 +228,8 @@ void CTypeCheckerVisitor::Visit( const CIfStatement* statement )
 
 	statement->GetCondition()->Accept( this );
 
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".BOOL" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CIfStatement. " ) +
 			"Expression of type " + lastTypeValue + " cannot be used as condition. " +
@@ -235,6 +254,8 @@ void CTypeCheckerVisitor::Visit( const CWhileStatement* statement )
 
 	statement->GetCondition()->Accept( this );
 
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".BOOL" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CWhileStatement. " ) +
 			"Expression of type " + lastTypeValue + " cannot be used as condition. " +
@@ -256,6 +277,8 @@ void CTypeCheckerVisitor::Visit( const CPrintStatement* statement )
 
 	statement->GetExpression()->Accept( this );
 
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".INT" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CPrintStatement. " ) +
 			"Expression of type " + lastTypeValue + " cannot be printed. Simple java can only print variables of type 'int'. " +
@@ -268,49 +291,59 @@ void CTypeCheckerVisitor::Visit( const CBinOpExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
 
 	expr->GetLeftExp()->Accept( this );
-	auto left = lastTypeValue;
+	auto left = lastTypeValueStack.back();
+	lastTypeValueStack.pop_back();
 	expr->GetRightExp()->Accept( this );
-	auto right = lastTypeValue;
+	auto right = lastTypeValueStack.back();
+	lastTypeValueStack.pop_back();
 
-	if( (expr->GetBinOp() == CBinOpExpression::MINUS || expr->GetBinOp() == CBinOpExpression::PLUS ||
-		expr->GetBinOp() == CBinOpExpression::TIMES || expr->GetBinOp() == CBinOpExpression::DIVIDE) &&
-		(left != ".INT" || right != ".INT") ) {
-		errorStorage.PutError( std::string( "[Type check] Node type - CBinOpExpression. " ) +
-			"Expression of type " + lastTypeValue + " cannot be used in arithmetic operations, use 'int'. " +
-			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
-			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+	if( expr->GetBinOp() == CBinOpExpression::MINUS || expr->GetBinOp() == CBinOpExpression::PLUS ||
+		expr->GetBinOp() == CBinOpExpression::TIMES || expr->GetBinOp() == CBinOpExpression::DIVIDE ) {
+		if( left != ".INT" || right != ".INT" ) {
+			errorStorage.PutError( std::string( "[Type check] Node type - CBinOpExpression. " ) +
+				"Expression of type " + (left != ".INT" ? left : right) + " cannot be used in arithmetic operations, use 'int'. " +
+				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
+				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+		}
+		lastTypeValueStack.push_back( ".INT" );
 	}
-	if( expr->GetBinOp() == CBinOpExpression::AND && (left != ".BOOL" || right != ".BOOL") ) {
-		errorStorage.PutError( std::string( "[Type check] Node type - CBinOpExpression. " ) +
-			"Expression of type " + lastTypeValue + " cannot be used in logic operations, use 'bool'. " +
-			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
-			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+	if( expr->GetBinOp() == CBinOpExpression::AND ) {
+		if( left != ".BOOL" || right != ".BOOL" ) {
+			errorStorage.PutError( std::string( "[Type check] Node type - CBinOpExpression. " ) +
+				"Expression of type " + (left != ".BOOL" ? left : right) + " cannot be used in logic operations, use 'bool'. " +
+				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
+				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+		}
+		lastTypeValueStack.push_back( ".BOOL" );
 	}
-
-	lastTypeValue = ".INT";
 }
 
 void CTypeCheckerVisitor::Visit( const CIndexExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
 
 	expr->GetExp()->Accept( this );
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".INT_ARRAY" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CIndexExpression. " ) +
 			"Cannot get element of not variable which is not array. " +
 			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 	}
+
 	expr->GetIndexExp()->Accept( this );
+	lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".INT" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CIndexExpression. " ) +
 			"Cannot get element of array, when index is not an integer. " +
@@ -325,12 +358,14 @@ void CTypeCheckerVisitor::Visit( const CLenghtExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition( ).ToString( ) );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
 
 	expr->GetExp()->Accept( this );
 
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".INT_ARRAY" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CLengthExpression. " ) +
 			"Cannot get length of not array expression. " +
@@ -343,24 +378,51 @@ void CTypeCheckerVisitor::Visit( const CLenghtExpression* expr )
 
 void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 {
-	not implemented;
+	expr->GetExp()->Accept( this );
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
+	SymbolsTable::CClassInfo* usedClass = symbolsTable->GetClass( lastTypeValue );
+	if( usedClass == nullptr ) {
+		errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
+			"Cannot find such class " + lastTypeValue +
+			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
+			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+	}
+
+	SymbolsTable::CMethodInfo* usedMethod = usedClass->GetMethod( expr->GetIdentifier()->GetString() );
+	int typeValuePointer = lastTypeValueStack.size();
+	expr->GetExpList()->Accept( this );
+	auto params = usedMethod->GetParams();
+	for( int i = typeValuePointer; i < lastTypeValueStack.size(); ++i ) {
+		if( params[i - typeValuePointer]->GetName() != lastTypeValueStack[i] ) {
+			errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
+				"Wrong function argument type " + params[i - typeValuePointer]->GetName() +
+				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
+				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+		}
+	}
+
+	for( int i = 0, size = lastTypeValueStack.size() - typeValuePointer; i < size; ++i ) {
+		lastTypeValueStack.pop_back();
+	}
+	lastTypeValueStack.push_back( usedMethod->GetReturnType()->GetName() );
 }
 
 void CTypeCheckerVisitor::Visit( const CIntLiteralExpression* expr )
 {
-	lastTypeValue = ".INT";
+	lastTypeValueStack.push_back( ".INT" );
 }
 
 void CTypeCheckerVisitor::Visit( const CBoolLiteralExpression* expr )
 {
-	lastTypeValue = ".BOOL";
+	lastTypeValueStack.push_back( ".BOOL" );
 }
 
 void CTypeCheckerVisitor::Visit( const CIdentifierExpression* expr )
 {
 	if( curClass == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
 
@@ -371,7 +433,7 @@ void CTypeCheckerVisitor::Visit( const CIdentifierExpression* expr )
 				"Undeclared identifier " + expr->GetIdentifier()->GetString() + ". " +
 				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
-			lastTypeValue = nullptr;
+			lastTypeValueStack.push_back( nullptr );
 			return;
 		}
 		varInfo->GetType()->Accept( this );
@@ -387,7 +449,7 @@ void CTypeCheckerVisitor::Visit( const CIdentifierExpression* expr )
 				"Undeclared identifier " + expr->GetIdentifier()->GetString() + ". " +
 				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
-			lastTypeValue = nullptr;
+			lastTypeValueStack.push_back( nullptr );
 			return;
 		}
 	}
@@ -398,21 +460,24 @@ void CTypeCheckerVisitor::Visit( const CThisExpression* expr )
 {
 	if( curClass == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
-	lastTypeValue = curClass->GetName();
+	lastTypeValueStack.push_back( curClass->GetName() );
 }
 
 void CTypeCheckerVisitor::Visit( const CNewIntArrayExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
 
 	expr->GetExp()->Accept( this );
+
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
 	if( lastTypeValue != ".INT" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CNewIntArrayExpression. " ) +
 			"Cannot create array of non integer length. " +
@@ -420,14 +485,14 @@ void CTypeCheckerVisitor::Visit( const CNewIntArrayExpression* expr )
 			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 	}
 
-	lastTypeValue = ".INT_ARRAY";
+	lastTypeValueStack.push_back( ".INT_ARRAY" );
 }
 
 void CTypeCheckerVisitor::Visit( const CNewExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValue = nullptr;
+		lastTypeValueStack.push_back( nullptr );
 		return;
 	}
 
@@ -438,7 +503,7 @@ void CTypeCheckerVisitor::Visit( const CNewExpression* expr )
 			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 	}
 
-	lastTypeValue = expr->GetIdentifier()->GetString();
+	lastTypeValueStack.push_back( expr->GetIdentifier()->GetString() );
 }
 
 void CTypeCheckerVisitor::Visit( const CUnaryOpExpression* expr )
@@ -448,20 +513,25 @@ void CTypeCheckerVisitor::Visit( const CUnaryOpExpression* expr )
 		return;
 	}
 	
-	expr->GetLeftExp( )->Accept( this );
-	if( expr->GetOperation( ) == CUnaryOpExpression::MINUS && lastTypeValue != ".INT" ) {
+	expr->GetLeftExp()->Accept( this );
+
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
+	if( expr->GetOperation() == CUnaryOpExpression::MINUS && lastTypeValue != ".INT" ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CUnaryOpExpression. " ) +
 			"Expression of type " + lastTypeValue + " cannot be used in arithmetic operations, use 'int'. " +
-			"Line " + std::to_string( expr->GetPosition( ).GetBeginPos( ).first ) +
-			", column " + std::to_string( expr->GetPosition( ).GetBeginPos( ).second ) + "." );
+			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
+			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 	}
 
-	lastTypeValue = ".INT";
+	lastTypeValueStack.push_back( ".INT" );
 }
 
 void CTypeCheckerVisitor::Visit( const CBracesExpression* expr )
 {
-	not implemented
+	if( expr->GetExp() != nullptr ) {
+		expr->GetExp()->Accept( this );
+	}
 }
 
 void CTypeCheckerVisitor::Visit( const CExpressionList* exprList )
@@ -501,30 +571,28 @@ void CTypeCheckerVisitor::Visit( const CMethodDeclList* methodList )
 	}
 }
 
-void CTypeCheckerVisitor::Visit( const CFormalList* list )
+void CTypeCheckerVisitor::Visit( const CFormalParam* param )
 {
-	list->GetType()->Accept( this );
-
-	if( !isPODType( lastTypeValue ) && symbolsTable->GetClass( lastTypeValue ) == nullptr ) {
-		errorStorage.PutError( std::string( "[Type check] Node type - CFormalList. " ) +
-			lastTypeValue + " " + list->GetIdentifier()->GetString() +
-			" - wrong argument type in method declaration, class " + lastTypeValue + " not found. " +
-			"Line " + std::to_string( list->GetPosition().GetBeginPos().first ) +
-			", column " + std::to_string( list->GetPosition().GetBeginPos().second ) + "." );
+	if( param->GetType() != nullptr ) {
+		param->GetType()->Accept( this );
 	}
 
-	if( list->GetFormalRest() != nullptr ) {
-		list->GetFormalRest()->Accept( this );
+	std::string lastTypeValue = lastTypeValueStack.back();
+	lastTypeValueStack.back();
+	if( !isPODType( lastTypeValue ) && symbolsTable->GetClass( lastTypeValue ) == nullptr ) {
+		errorStorage.PutError( std::string( "[Type check] Node type - CFormalList. " ) +
+			lastTypeValue + " " + param->GetIdentifier()->GetString() +
+			" - wrong argument type in method declaration, class " + lastTypeValue + " not found. " +
+			"Line " + std::to_string( param->GetPosition().GetBeginPos().first ) +
+			", column " + std::to_string( param->GetPosition().GetBeginPos().second ) + "." );
 	}
 }
 
-void CTypeCheckerVisitor::Visit( const CFormalRestList* list )
+void CTypeCheckerVisitor::Visit( const CFormalList* list )
 {
-	if( list->GetFormalRest() != nullptr ) {
-		list->GetFormalRest()->Accept( this );
-	}
-	if( list->GetFormalRestList() != nullptr ) {
-		list->GetFormalRestList()->Accept( this );
+	auto params = list->GetParamList();
+	for( int i = params.size() - 1; i >= 0; --i ) {
+		params[i].get()->Accept( this );
 	}
 }
 

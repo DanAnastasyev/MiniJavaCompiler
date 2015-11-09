@@ -15,10 +15,10 @@ void CPrettyPrinterVisitor::Visit( const CProgram* program )
 void CPrettyPrinterVisitor::Visit( const CMainClass* program )
 {
 	std::cout << "class ";
-	std::cout << program->GetClassName();
+	std::cout << program->GetClassName()->GetString();
 	std::cout << " { \n";
 	std::cout << "public static void main(String[] ";
-	std::cout << program->GetMainArgsIdentifier();
+	std::cout << program->GetMainArgsIdentifier()->GetString();
 	std::cout << ") {\n";
 	if( program->GetStatement() != nullptr ) {
 		program->GetStatement()->Accept( this );
@@ -38,7 +38,7 @@ void CPrettyPrinterVisitor::Visit( const CClassDeclList* program )
 
 void CPrettyPrinterVisitor::Visit( const CClassDecl* program )
 {
-	std::cout << "class " << program->GetName() << " {\n";
+	std::cout << "class " << program->GetName()->GetString() << " {\n";
 	if( program->GetVarDeclList() != nullptr ) {
 		program->GetVarDeclList()->Accept( this );
 	}
@@ -50,8 +50,8 @@ void CPrettyPrinterVisitor::Visit( const CClassDecl* program )
 
 void CPrettyPrinterVisitor::Visit( const CClassDeclDerived* program )
 {
-	std::cout << "class " << program->GetName();
-	std::cout << " extends " << program->GetBaseClassName() << " {\n";
+	std::cout << "class " << program->GetName()->GetString();
+	std::cout << " extends " << program->GetBaseClassName()->GetString() << " {\n";
 	if( program->GetVarDeclList() != nullptr ) {
 		program->GetVarDeclList()->Accept( this );
 	}
@@ -64,7 +64,7 @@ void CPrettyPrinterVisitor::Visit( const CClassDeclDerived* program )
 void CPrettyPrinterVisitor::Visit( const CVarDecl* program )
 {
 	program->GetType()->Accept( this );
-	std::cout << program->GetName() << ";\n";
+	std::cout << program->GetName()->GetString() << ";\n";
 }
 
 void CPrettyPrinterVisitor::Visit( const CVarDeclList* program )
@@ -83,7 +83,7 @@ void CPrettyPrinterVisitor::Visit( const CMethodDecl* program )
 	if( program->GetType() != nullptr ) {
 		program->GetType()->Accept( this );
 	}
-	std::cout << program->GetName() << "( ";
+	std::cout << program->GetName()->GetString() << "( ";
 	if( program->GetFormalList() != nullptr ) {
 		program->GetFormalList()->Accept( this );
 	}
@@ -118,7 +118,7 @@ void CPrettyPrinterVisitor::Visit( const CStandardType* program )
 
 void CPrettyPrinterVisitor::Visit( const CUserType* program )
 {
-	std::cout << program->GetTypeName() << std::endl;
+	std::cout << program->GetTypeName()->GetString() << std::endl;
 }
 
 void CPrettyPrinterVisitor::Visit( const CStatementListStatement* statement )
@@ -132,7 +132,7 @@ void CPrettyPrinterVisitor::Visit( const CStatementListStatement* statement )
 
 void CPrettyPrinterVisitor::Visit( const CArrayAssignStatement* statement )
 {
-	std::cout << statement->GetArrayName() << "[";
+	std::cout << statement->GetArrayName()->GetString() << "[";
 	if( statement->GetElementNumber() != nullptr ) {
 		statement->GetElementNumber()->Accept( this );
 	}
@@ -143,25 +143,22 @@ void CPrettyPrinterVisitor::Visit( const CArrayAssignStatement* statement )
 	std::cout << ";" << std::endl;
 }
 
-void CPrettyPrinterVisitor::Visit( const CFormalRestList* list )
+void CPrettyPrinterVisitor::Visit( const CFormalParam* param )
 {
-	if( list->GetFormalRest() != nullptr ) {
-		list->GetFormalRest()->Accept( this );
+	if( param->GetType( ) != nullptr ) {
+		param->GetType( )->Accept( this );
 	}
-	if( list->GetFormalRestList() != nullptr ) {
-		list->GetFormalRestList()->Accept( this );
-	}
+	std::cout << " " + param->GetIdentifier()->GetString( ) << " ";
 }
 
 void CPrettyPrinterVisitor::Visit( const CFormalList* list )
 {
-	if( list->GetType() != nullptr ) {
-		list->GetType()->Accept( this );
+	auto params = list->GetParamList();
+	for( int i = params.size() - 1; i > 0; --i ) {
+		params[i].get()->Accept( this );
+		std::cout << ", ";
 	}
-	std::cout << " " + list->GetIdentifier()->GetString() << " ";
-	if( list->GetFormalRest() != nullptr ) {
-		list->GetFormalRest()->Accept( this );
-	}
+	params[0].get()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::Visit( const CMethodDeclList* methodList )
@@ -183,7 +180,7 @@ void CPrettyPrinterVisitor::Visit( const CExpressionRest* expr )
 
 void CPrettyPrinterVisitor::Visit( const CAssignStatement* statement )
 {
-	std::cout << statement->GetLeftPart() << " = ";
+	std::cout << statement->GetLeftPart()->GetString() << " = ";
 	if( statement->GetRightPart() != nullptr ) {
 		statement->GetRightPart()->Accept( this );
 	}
@@ -284,7 +281,7 @@ void CPrettyPrinterVisitor::Visit( const CMethodExpression* expr )
 	if( expr->GetExp() != nullptr ) {
 		expr->GetExp()->Accept( this );
 	}
-	std::cout << "." << expr->GetIdentifier() << "(";
+	std::cout << "." << expr->GetIdentifier()->GetString() << "(";
 	if( expr->GetExpList() != nullptr ) {
 		expr->GetExpList()->Accept( this );
 	}
@@ -293,17 +290,17 @@ void CPrettyPrinterVisitor::Visit( const CMethodExpression* expr )
 
 void CPrettyPrinterVisitor::Visit( const CIntLiteralExpression* expr )
 {
-	std::cout << expr->GetValue();
+	std::cout << expr->GetValue()->GetString();
 }
 
 void CPrettyPrinterVisitor::Visit( const CBoolLiteralExpression* expr )
 {
-	std::cout << expr->GetValue();
+	std::cout << expr->GetValue()->GetString();
 }
 
 void CPrettyPrinterVisitor::Visit( const CIdentifierExpression* expr )
 {
-	std::cout << expr->GetIdentifier();
+	std::cout << expr->GetIdentifier()->GetString();
 }
 
 void CPrettyPrinterVisitor::Visit( const CThisExpression* expr )
@@ -322,7 +319,7 @@ void CPrettyPrinterVisitor::Visit( const CNewIntArrayExpression* expr )
 
 void CPrettyPrinterVisitor::Visit( const CNewExpression* expr )
 {
-	std::cout << "new " << expr->GetIdentifier() << "()";
+	std::cout << "new " << expr->GetIdentifier()->GetString() << "()";
 }
 
 void CPrettyPrinterVisitor::Visit( const CUnaryOpExpression* expr )

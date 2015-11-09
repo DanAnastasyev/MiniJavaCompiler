@@ -41,7 +41,7 @@ namespace SymbolsTable {
 				return false;
 			}
 		}
-		methods.push_back( std::make_shared<CMethodInfo>( methodName, type ) );
+		methods.push_back( std::make_shared<CMethodInfo>( methodName, type, this ) );
 		return true;
 	}
 
@@ -95,6 +95,12 @@ namespace SymbolsTable {
 
 	bool CMethodInfo::AddParamVar( const std::string& varName, IType* type )
 	{
+		for( auto curVar : curClass->GerVars() ) {
+			if( curVar->GetName() == varName ) {
+				return false;
+			}
+		}
+
 		for( auto curVar : params ) {
 			if( curVar->GetName() == varName ) {
 				return false;
@@ -106,8 +112,20 @@ namespace SymbolsTable {
 
 	bool CMethodInfo::AddLocalVar( const std::string& varName, IType* type )
 	{
+		for( auto curVar : curClass->GerVars() ) {
+			if( curVar->GetName() == varName ) {
+				return false;
+			}
+		}
+
+		for( auto curVar : params ) {
+			if( curVar->GetName() == varName ) {
+				return false;
+			}
+		}
+
 		for( auto curVar : locals ) {
-			if( curVar->GetName( ) == varName ) {
+			if( curVar->GetName() == varName ) {
 				return false;
 			}
 		}
@@ -138,6 +156,11 @@ namespace SymbolsTable {
 	CVarInfo* CMethodInfo::GetReturnType() const
 	{
 		return returnType.get();
+	}
+
+	std::vector<std::shared_ptr<CVarInfo>> CMethodInfo::GetParams() const
+	{
+		return params;
 	}
 
 	std::string CVarInfo::GetName() const

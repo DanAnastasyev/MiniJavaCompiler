@@ -70,5 +70,5 @@ public:
 
 	void Visit( const CFormalList* list ) override;
 
-	void Visit( const CFormalRestList* list ) override;
+	void Visit( const CFormalParam* param ) override;
 };
