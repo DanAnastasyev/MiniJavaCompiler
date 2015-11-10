@@ -23,7 +23,7 @@ namespace SymbolsTable {
 		return nullptr;
 	}
 
-	bool CClassInfo::AddVar( const std::string& varName, IType* type )
+	bool CClassInfo::AddVar( const std::string& varName, const std::string& type )
 	{
 		for( auto curVar : vars ) {
 			if( curVar->GetName() == varName ) {
@@ -34,7 +34,7 @@ namespace SymbolsTable {
 		return true;
 	}
 
-	bool CClassInfo::AddMethod( const std::string& methodName, IType* type )
+	bool CClassInfo::AddMethod( const std::string& methodName, const std::string& type )
 	{
 		for( auto curMethod : methods ) {
 			if( curMethod->GetName() == methodName ) {
@@ -93,7 +93,7 @@ namespace SymbolsTable {
 		return vars;
 	}
 
-	bool CMethodInfo::AddParamVar( const std::string& varName, IType* type )
+	bool CMethodInfo::AddParamVar( const std::string& varName, const std::string& type )
 	{
 		for( auto curVar : curClass->GerVars() ) {
 			if( curVar->GetName() == varName ) {
@@ -110,7 +110,7 @@ namespace SymbolsTable {
 		return true;
 	}
 
-	bool CMethodInfo::AddLocalVar( const std::string& varName, IType* type )
+	bool CMethodInfo::AddLocalVar( const std::string& varName, const std::string& type )
 	{
 		for( auto curVar : curClass->GerVars() ) {
 			if( curVar->GetName() == varName ) {
@@ -140,6 +140,12 @@ namespace SymbolsTable {
 
 	CVarInfo* CMethodInfo::GetVar( const std::string& varName ) const
 	{
+		for( auto curVar : curClass->GerVars() ) {
+			if( curVar->GetName() == varName ) {
+				return curVar.get();
+			}
+		}
+
 		for( auto curVar : locals ) {
 			if( curVar->GetName() == varName ) {
 				return curVar.get();
@@ -168,9 +174,9 @@ namespace SymbolsTable {
 		return varName;
 	}
 
-	IType* CVarInfo::GetType() const
+	std::string CVarInfo::GetType() const
 	{
-		return type.get();
+		return type;
 	}
 
 }

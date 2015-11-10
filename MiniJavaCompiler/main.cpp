@@ -23,7 +23,7 @@ int main( int argc, char **argv )
 	} 
 	std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( typeChecker.get() );
-	if( !symbolTableBuilder->GetErrorStorage().GetAllErrors().empty() ) {
+	if( !typeChecker->GetErrorStorage().GetAllErrors().empty( ) ) {
 		for( auto ex : symbolTableBuilder->GetErrorStorage().GetAllErrors() ) {
 			std::cout << ex << std::endl;
 		}

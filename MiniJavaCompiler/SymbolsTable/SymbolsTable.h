@@ -7,27 +7,27 @@
 namespace SymbolsTable {
 	class CVarInfo {
 	public:
-		CVarInfo( const std::string& name, IType* _type ) : varName( name ), type( _type ) {}
+		CVarInfo( const std::string& name, const std::string& _type ) : varName( name ), type( _type ) {}
 
 		std::string GetName() const;
-		IType* GetType() const;
+		std::string GetType() const;
 	private:
 		std::string varName;
-		std::shared_ptr<IType> type;
+		std::string type;
 	};
 
 	class CClassInfo;
 
 	class CMethodInfo {
 	public:
-		CMethodInfo( const std::string& name, IType* type, CClassInfo* _curClass ) : 
+		CMethodInfo( const std::string& name, const std::string& type, CClassInfo* _curClass ) : 
 			methodName( name ), 
 			returnType( new CVarInfo( "", type ) ),
 			curClass( _curClass )
 		{}
 
-		bool AddParamVar( const std::string& varName, IType* type );
-		bool AddLocalVar( const std::string& varName, IType* type );
+		bool AddParamVar( const std::string& varName, const std::string& type );
+		bool AddLocalVar( const std::string& varName, const std::string& type );
 
 		std::string GetName() const;
 		CVarInfo* GetVar( const std::string& varName ) const;
@@ -45,8 +45,8 @@ namespace SymbolsTable {
 	public:
 		CClassInfo( const std::string& name ) : className( name ) {}
 
-		bool AddVar( const std::string& varName, IType* type );
-		bool AddMethod( const std::string& methodName, IType* type );
+		bool AddVar( const std::string& varName, const std::string& type );
+		bool AddMethod( const std::string& methodName, const std::string& type );
 
 		bool SetBaseClass( CClassInfo* baseClass );
 

@@ -32,7 +32,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 	}
 	curClass = symbolsTable->GetClass( program->GetClassName()->GetString() );
 	
-	if( !curClass->AddMethod( "main", nullptr ) ) {
+	if( !curClass->AddMethod( "main", "" ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMainClass. " ) +
 			"Method main in class " + curClass->GetName() + " redefined"
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
@@ -112,7 +112,7 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDeclDerived* program )
 void CSymbolTableBuilderVisitor::Visit( const CVarDecl* program )
 {
 	program->GetType()->Accept( this );
-	IType* type = lastTypeValue;
+	std::string type = lastTypeValue;
 	std::string id = program->GetName()->GetString();
 
 	if( curClass == nullptr ) {
@@ -152,7 +152,7 @@ void CSymbolTableBuilderVisitor::Visit( const CVarDeclList* program )
 void CSymbolTableBuilderVisitor::Visit( const CFormalParam* list )
 {
 	list->GetType()->Accept( this );
-	IType* type = lastTypeValue;
+	std::string type = lastTypeValue;
 	std::string id = list->GetIdentifier()->GetString();
 
 	if( curMethod == nullptr ) {
@@ -181,7 +181,7 @@ void CSymbolTableBuilderVisitor::Visit( const CFormalList* list )
 void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 {
 	program->GetType()->Accept( this );
-	IType* returnType = lastTypeValue;
+	std::string returnType = lastTypeValue;
 
 	if( curClass == nullptr ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
@@ -234,12 +234,28 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDeclList* methodList )
 
 void CSymbolTableBuilderVisitor::Visit( const CStandardType* program )
 {
-	lastTypeValue = new CStandardType( program );
+	switch( program->GetType() ) {
+	case CStandardType::StandardType::INT:
+		lastTypeValue = ".INT";
+		break;
+	case CStandardType::StandardType::BOOL:
+		lastTypeValue = ".BOOL";
+		break;
+	case CStandardType::StandardType::INT_ARRAY:
+		lastTypeValue = ".INT_ARRAY";
+	default:
+		break;
+	}
 }
 
 void CSymbolTableBuilderVisitor::Visit( const CUserType* program )
 {
-	lastTypeValue = new CUserType( program );
+	lastTypeValue = program->GetTypeName()->GetString();
+}
+
+void CSymbolTableBuilderVisitor::Visit( const CIndexExpression* expr )
+{
+	lastTypeValue = ".INT";
 }
 
 const CErrorStorage& CSymbolTableBuilderVisitor::GetErrorStorage() const
