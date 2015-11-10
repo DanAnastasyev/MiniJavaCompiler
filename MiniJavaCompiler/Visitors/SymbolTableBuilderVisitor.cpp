@@ -175,13 +175,26 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 			"Method " + program->GetName()->GetString() + " is defined out of scope" +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
-	} else if( !curClass->AddMethod( program->GetName()->GetString(), returnType ) ) {
+		return;
+	}
+	if( curClass->GetBaseClass() != nullptr ) {
+		for( auto method : curClass->GetBaseClass()->GetMethods() ) {
+			if( method->GetName() == program->GetName()->GetString() ) {
+				errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
+					"Method " + program->GetName()->GetString() + " already defined in base class " + program->GetName()->GetString() +
+					"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
+					", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
+				return;
+			}
+		}
+	}
+	if( !curClass->AddMethod( program->GetName()->GetString(), returnType ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
 			"Method " + program->GetName()->GetString() + " is already defined in class " + curClass->GetName() +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else {
-		curMethod = curClass->GetMethod( program->GetName()->GetString());
+		curMethod = curClass->GetMethod( program->GetName()->GetString() );
 		if( program->GetFormalList() != nullptr ) {
 			program->GetFormalList()->Accept( this );
 		}

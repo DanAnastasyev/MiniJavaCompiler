@@ -160,7 +160,7 @@ void CTypeCheckerVisitor::Visit( const CStandardType* type )
 		lastTypeValueStack.push_back( ".INT_ARRAY" );
 		break;
 	default:
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( ".INT" );
 		break;
 	}
 }
@@ -292,7 +292,7 @@ void CTypeCheckerVisitor::Visit( const CBinOpExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( ".BOOL" );
 		return;
 	}
 
@@ -328,7 +328,7 @@ void CTypeCheckerVisitor::Visit( const CIndexExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( ".INT" );
 		return;
 	}
 
@@ -359,7 +359,7 @@ void CTypeCheckerVisitor::Visit( const CLenghtExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition( ).ToString( ) );
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( ".INT" );
 		return;
 	}
 
@@ -374,7 +374,7 @@ void CTypeCheckerVisitor::Visit( const CLenghtExpression* expr )
 			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 	}
 
-	lastTypeValue = ".INT";
+	lastTypeValueStack.push_back( ".INT" );
 }
 
 void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
@@ -429,7 +429,7 @@ void CTypeCheckerVisitor::Visit( const CIdentifierExpression* expr )
 {
 	if( curClass == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( ".INT" );
 		return;
 	}
 
@@ -440,7 +440,7 @@ void CTypeCheckerVisitor::Visit( const CIdentifierExpression* expr )
 				"Undeclared identifier " + expr->GetIdentifier()->GetString() + ". " +
 				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
-			lastTypeValueStack.push_back( nullptr );
+			lastTypeValueStack.push_back( ".INT" );
 			return;
 		}
 		varInfo->GetType()->Accept( this );
@@ -456,7 +456,7 @@ void CTypeCheckerVisitor::Visit( const CIdentifierExpression* expr )
 				"Undeclared identifier " + expr->GetIdentifier()->GetString() + ". " +
 				"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 				", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
-			lastTypeValueStack.push_back( nullptr );
+			lastTypeValueStack.push_back( ".INT" );
 			return;
 		}
 	}
@@ -467,7 +467,7 @@ void CTypeCheckerVisitor::Visit( const CThisExpression* expr )
 {
 	if( curClass == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( curClass->GetName( ) );
 		return;
 	}
 	lastTypeValueStack.push_back( curClass->GetName() );
@@ -477,7 +477,7 @@ void CTypeCheckerVisitor::Visit( const CNewIntArrayExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValueStack.push_back( nullptr );
+		lastTypeValueStack.push_back( ".INT_ARRAY" );
 		return;
 	}
 
@@ -499,7 +499,11 @@ void CTypeCheckerVisitor::Visit( const CNewExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition().ToString() );
-		lastTypeValueStack.push_back( nullptr );
+		if( expr->GetIdentifier() != nullptr ) {
+			lastTypeValueStack.push_back( expr->GetIdentifier()->GetString() );
+		} else {
+			lastTypeValueStack.push_back( ".INT" );
+		}
 		return;
 	}
 
@@ -517,6 +521,7 @@ void CTypeCheckerVisitor::Visit( const CUnaryOpExpression* expr )
 {
 	if( curClass == nullptr || curMethod == nullptr ) {
 		errorStorage.PutError( "Expression out of scope " + expr->GetPosition( ).ToString( ) );
+		lastTypeValueStack.push_back( ".INT" );
 		return;
 	}
 	
