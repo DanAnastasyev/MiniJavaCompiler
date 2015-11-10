@@ -25,7 +25,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 {
 	if( !symbolsTable->AddClass( program->GetClassName()->GetString() ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMainClass. " ) +
-			program->GetClassName( )->GetString( ) + " redefined" +
+			program->GetClassName()->GetString() + " redefined" +
 			"Line " + std::to_string( program->GetPosition( ).GetBeginPos( ).first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	}
@@ -105,7 +105,7 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDeclDerived* program )
 void CSymbolTableBuilderVisitor::Visit( const CVarDecl* program )
 {
 	program->GetType()->Accept( this );
-	IType* type = lastTypeValue.get();
+	IType* type = lastTypeValue;
 	std::string id = program->GetName()->GetString();
 
 	if( curClass == nullptr ) {
@@ -141,7 +141,7 @@ void CSymbolTableBuilderVisitor::Visit( const CVarDeclList* program )
 void CSymbolTableBuilderVisitor::Visit( const CFormalParam* list )
 {
 	list->GetType()->Accept( this );
-	IType* type = lastTypeValue.get();
+	IType* type = lastTypeValue;
 	std::string id = list->GetIdentifier()->GetString();
 
 	if( curMethod == nullptr ) {
@@ -168,7 +168,7 @@ void CSymbolTableBuilderVisitor::Visit( const CFormalList* list )
 void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 {
 	program->GetType()->Accept( this );
-	IType* returnType = lastTypeValue.get();
+	IType* returnType = lastTypeValue;
 
 	if( curClass == nullptr ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
@@ -204,12 +204,12 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDeclList* methodList )
 
 void CSymbolTableBuilderVisitor::Visit( const CStandardType* program )
 {
-	lastTypeValue = std::make_shared<CStandardType>( program );
+	lastTypeValue = new CStandardType( program );
 }
 
 void CSymbolTableBuilderVisitor::Visit( const CUserType* program )
 {
-	lastTypeValue = std::make_shared<CUserType>( program );
+	lastTypeValue = new CUserType( program );
 }
 
 const CErrorStorage& CSymbolTableBuilderVisitor::GetErrorStorage() const

@@ -15,7 +15,7 @@ void CTypeCheckerVisitor::Visit( const CProgram* program )
 		program->GetMainClass()->Accept( this );
 	}
 	if( program->GetClassDeclList() != nullptr ) {
-		program->GetMainClass()->Accept( this );
+		program->GetClassDeclList()->Accept( this );
 	}
 }
 
@@ -120,6 +120,7 @@ void CTypeCheckerVisitor::Visit( const CMethodDecl* methodDecl )
 		errorStorage.PutError( "Method declaration out of scope " + methodDecl->GetPosition().ToString() );
 		return;
 	}
+	curMethod = curClass->GetMethod( methodDecl->GetName()->GetString() );
 	methodDecl->GetType()->Accept( this );
 
 	std::string lastTypeValue = lastTypeValueStack.back( );
@@ -393,6 +394,12 @@ void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 	int typeValuePointer = lastTypeValueStack.size();
 	expr->GetExpList()->Accept( this );
 	auto params = usedMethod->GetParams();
+	if( lastTypeValueStack.size() - typeValuePointer != params.size() ) {
+		errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
+			"Invalid number of arguments " + usedMethod->GetName() +
+			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
+			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+	}
 	for( int i = typeValuePointer; i < lastTypeValueStack.size(); ++i ) {
 		if( params[i - typeValuePointer]->GetName() != lastTypeValueStack[i] ) {
 			errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
