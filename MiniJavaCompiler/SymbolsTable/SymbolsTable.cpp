@@ -170,7 +170,7 @@ namespace SymbolsTable {
 
 	IType* CVarInfo::GetType() const
 	{
-		return type;
+		return type.get();
 	}
 
 }

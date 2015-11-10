@@ -6,9 +6,9 @@ CSymbolTableBuilderVisitor::CSymbolTableBuilderVisitor()
 	symbolsTable = std::make_shared<SymbolsTable::CTable>();
 }
 
-std::shared_ptr<SymbolsTable::CTable> CSymbolTableBuilderVisitor::GetSymbolsTable()
+SymbolsTable::CTable* CSymbolTableBuilderVisitor::GetSymbolsTable()
 {
-	return symbolsTable;
+	return symbolsTable.get();
 }
 
 void CSymbolTableBuilderVisitor::Visit( const CProgram* program )
@@ -37,7 +37,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
-		std::cout << program->GetClassName() << " main method was added" << std::endl;
+		std::cout << program->GetClassName() << "::main(String[])" << std::endl;
 	}
 	
 	curMethod = curClass->GetMethod( "main" );

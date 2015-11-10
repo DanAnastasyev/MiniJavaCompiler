@@ -13,7 +13,7 @@ namespace SymbolsTable {
 		IType* GetType() const;
 	private:
 		std::string varName;
-		IType* type;
+		std::shared_ptr<IType> type;
 	};
 
 	class CClassInfo;
@@ -38,7 +38,7 @@ namespace SymbolsTable {
 		std::shared_ptr<CVarInfo> returnType;
 		std::vector<std::shared_ptr<CVarInfo>> params;
 		std::vector<std::shared_ptr<CVarInfo>> locals;
-		std::shared_ptr<CClassInfo> curClass;
+		CClassInfo* curClass;
 	};
 
 	class CClassInfo {
@@ -59,7 +59,7 @@ namespace SymbolsTable {
 
 	private:
 		std::string className;
-		std::shared_ptr<CClassInfo> baseClass = nullptr;
+		std::shared_ptr<CClassInfo> baseClass;
 		std::vector<std::shared_ptr<CVarInfo>> vars;
 		std::vector<std::shared_ptr<CMethodInfo>> methods;
 	};

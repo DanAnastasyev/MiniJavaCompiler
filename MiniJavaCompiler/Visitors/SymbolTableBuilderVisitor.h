@@ -6,7 +6,7 @@ class CSymbolTableBuilderVisitor : public IVisitor {
 public:
 	CSymbolTableBuilderVisitor();
 
-	std::shared_ptr<SymbolsTable::CTable> GetSymbolsTable();
+	SymbolsTable::CTable* GetSymbolsTable();
 
 	void Visit( const CProgram* program ) override;
 	void Visit( const CMainClass* program ) override;

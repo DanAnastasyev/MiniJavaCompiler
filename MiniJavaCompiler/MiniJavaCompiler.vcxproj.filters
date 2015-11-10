@@ -31,6 +31,9 @@
     <Filter Include="Source Files\SymbolsTable">
       <UniqueIdentifier>{4ea6a3de-1a88-4d37-a8cd-b56fed82280c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\examples\bad examples">
+      <UniqueIdentifier>{88adb4ee-f985-495e-9147-494424158afd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -143,6 +146,9 @@
   <ItemGroup>
     <None Include="BuildOutputs\parser.output">
       <Filter>Source Files\BuildOutputs</Filter>
+    </None>
+    <None Include="example\bad examples\VirtualFunction.java">
+      <Filter>Source Files\examples\bad examples</Filter>
     </None>
     <None Include="example\Factorial.java">
       <Filter>Source Files\examples</Filter>

@@ -19,9 +19,15 @@ int main( int argc, char **argv )
 		for( auto ex : symbolTableBuilder->GetErrorStorage().GetAllErrors() ) {
 			std::cout << ex << std::endl;
 		}
-	} else {
-		std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable().get() ) );
-		root->Accept( typeChecker.get() );
+		return 0;
+	} 
+	std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable() ) );
+	root->Accept( typeChecker.get() );
+	if( !symbolTableBuilder->GetErrorStorage().GetAllErrors().empty() ) {
+		for( auto ex : symbolTableBuilder->GetErrorStorage().GetAllErrors() ) {
+			std::cout << ex << std::endl;
+		}
+		return 0;
 	}
 	return 0;
 }
