@@ -236,13 +236,13 @@ void CSymbolTableBuilderVisitor::Visit( const CStandardType* program )
 {
 	switch( program->GetType() ) {
 	case CStandardType::StandardType::INT:
-		lastTypeValue = ".INT";
+		lastTypeValue = "int";
 		break;
 	case CStandardType::StandardType::BOOL:
-		lastTypeValue = ".BOOL";
+		lastTypeValue = "boolean";
 		break;
 	case CStandardType::StandardType::INT_ARRAY:
-		lastTypeValue = ".INT_ARRAY";
+		lastTypeValue = "int[]";
 	default:
 		break;
 	}
@@ -255,7 +255,7 @@ void CSymbolTableBuilderVisitor::Visit( const CUserType* program )
 
 void CSymbolTableBuilderVisitor::Visit( const CIndexExpression* expr )
 {
-	lastTypeValue = ".INT";
+	lastTypeValue = "int";
 }
 
 const CErrorStorage& CSymbolTableBuilderVisitor::GetErrorStorage() const

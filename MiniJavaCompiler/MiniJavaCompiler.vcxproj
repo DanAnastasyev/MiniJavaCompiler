@@ -64,8 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output" />
-    <None Include="example\bad examples\BadExample2.java" />
-    <None Include="example\bad examples\VirtualFunction.java" />
     <None Include="example\Factorial.java" />
   </ItemGroup>
   <ItemGroup>
