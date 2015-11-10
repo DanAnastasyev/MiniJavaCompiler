@@ -13,6 +13,7 @@ SymbolsTable::CTable* CSymbolTableBuilderVisitor::GetSymbolsTable()
 
 void CSymbolTableBuilderVisitor::Visit( const CProgram* program )
 {
+	std::cout << std::endl << "TableBuilder:" << std::endl;
 	if( program->GetMainClass() != nullptr ) {
 		program->GetMainClass()->Accept( this );
 	}
@@ -37,7 +38,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
-		std::cout << program->GetClassName() << "::main(String[])" << std::endl;
+		std::cout << program->GetClassName()->GetString() << "::main(String[])" << std::endl;
 	}
 	
 	curMethod = curClass->GetMethod( "main" );
@@ -66,7 +67,10 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDecl* program )
 			program->GetName()->GetString() + " redefined" +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
+	} else if( isDebug ) {
+		std::cout << program->GetName()->GetString() << std::endl;
 	}
+
 	curClass = symbolsTable->GetClass( program->GetName()->GetString() );
 
 	if( program->GetVarDeclList() != nullptr ) {
@@ -86,7 +90,10 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDeclDerived* program )
 			"Class " + program->GetName()->GetString() + " redefined" +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
+	} else if( isDebug ) {
+		std::cout << program->GetName()->GetString() << " extends " << program->GetBaseClassName()->GetString() << std::endl;
 	}
+
 	curClass = symbolsTable->GetClass( program->GetName()->GetString() );
 
 	// Переносим все методы и переменные из базового класса в наследника
@@ -119,12 +126,16 @@ void CSymbolTableBuilderVisitor::Visit( const CVarDecl* program )
 				"Var " + id + " is already defined in " + curClass->GetName() +
 				"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 				", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
+		} else if( isDebug ) {
+			std::cout << curClass->GetName() << "::" << id << std::endl;
 		}
 	} else if( !curMethod->AddLocalVar( id, type ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CVarDecl. " ) +
 			"Var " + id + " is already defined in " + curClass->GetName() + "::" + curMethod->GetName() +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
+	} else if( isDebug ) {
+		std::cout << curClass->GetName() << "::" << curMethod->GetName() << "::" << id << std::endl;
 	}
 }
 
@@ -154,6 +165,8 @@ void CSymbolTableBuilderVisitor::Visit( const CFormalParam* list )
 			"Var " + id + " is already defined in " + curMethod->GetName( ) +
 			"Line " + std::to_string( list->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( list->GetPosition().GetBeginPos().second ) + "." );
+	} else if( isDebug ) {
+		std::cout << curMethod->GetName() << " param: " << id << std::endl;
 	}
 }
 
@@ -194,6 +207,10 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else {
+		if( isDebug ) {
+			std::cout << curClass->GetName() << "::" << program->GetName()->GetString() << std::endl;
+		}
+
 		curMethod = curClass->GetMethod( program->GetName()->GetString() );
 		if( program->GetFormalList() != nullptr ) {
 			program->GetFormalList()->Accept( this );

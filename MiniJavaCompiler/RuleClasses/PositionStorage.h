@@ -15,5 +15,5 @@ public:
 	}
 
 protected:
-	CPosition& position;
+	CPosition position;
 };
