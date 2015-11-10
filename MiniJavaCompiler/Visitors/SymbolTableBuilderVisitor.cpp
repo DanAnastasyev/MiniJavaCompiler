@@ -26,7 +26,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 {
 	if( !symbolsTable->AddClass( program->GetClassName()->GetString() ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMainClass. " ) +
-			program->GetClassName()->GetString() + " redefined" +
+			program->GetClassName()->GetString() + " redefined. " +
 			"Line " + std::to_string( program->GetPosition( ).GetBeginPos( ).first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	}
@@ -34,7 +34,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMainClass* program )
 	
 	if( !curClass->AddMethod( "main", "" ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMainClass. " ) +
-			"Method main in class " + curClass->GetName() + " redefined"
+			"Method main in class " + curClass->GetName() + " redefined. "
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
@@ -64,7 +64,7 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDecl* program )
 {
 	if( !symbolsTable->AddClass( program->GetName()->GetString()) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CClassDecl. " ) +
-			program->GetName()->GetString() + " redefined" +
+			program->GetName()->GetString() + " redefined." +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
@@ -87,7 +87,7 @@ void CSymbolTableBuilderVisitor::Visit( const CClassDeclDerived* program )
 {
 	if( !symbolsTable->AddClass( program->GetName()->GetString()) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CClassDeclDerived. " ) +
-			"Class " + program->GetName()->GetString() + " redefined" +
+			"Class " + program->GetName()->GetString() + " redefined" + ". " +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
@@ -117,13 +117,13 @@ void CSymbolTableBuilderVisitor::Visit( const CVarDecl* program )
 
 	if( curClass == nullptr ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CVarDecl. " ) +
-			"Var " + id + " is defined out of scope" +
+			"Var " + id + " is defined out of scope" + ". " +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( curMethod == nullptr ) {
 		if( !curClass->AddVar( id, type ) ) {
 			errorStorage.PutError( std::string( "[Table builder] Node type - CVarDecl. " ) +
-				"Var " + id + " is already defined in " + curClass->GetName() +
+				"Var " + id + " is already defined in " + curClass->GetName() + ". " +
 				"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 				", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 		} else if( isDebug ) {
@@ -131,7 +131,7 @@ void CSymbolTableBuilderVisitor::Visit( const CVarDecl* program )
 		}
 	} else if( !curMethod->AddLocalVar( id, type ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CVarDecl. " ) +
-			"Var " + id + " is already defined in " + curClass->GetName() + "::" + curMethod->GetName() +
+			"Var " + id + " is already defined in " + curClass->GetName() + "::" + curMethod->GetName() + ". " +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
@@ -157,12 +157,12 @@ void CSymbolTableBuilderVisitor::Visit( const CFormalParam* list )
 
 	if( curMethod == nullptr ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CFormalParam. " ) +
-			"Var " + id + " is defined out of scope" +
+			"Var " + id + " is defined out of scope" + ". " +
 			"Line " + std::to_string( list->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( list->GetPosition().GetBeginPos().second ) + "." );
 	} else if( !curMethod->AddParamVar( id, type ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CFormalParam. " ) +
-			"Var " + id + " is already defined in " + curMethod->GetName( ) +
+			"Var " + id + " is already defined in " + curMethod->GetName() + ". " +
 			"Line " + std::to_string( list->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( list->GetPosition().GetBeginPos().second ) + "." );
 	} else if( isDebug ) {
@@ -185,7 +185,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 
 	if( curClass == nullptr ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
-			"Method " + program->GetName()->GetString() + " is defined out of scope" +
+			"Method " + program->GetName()->GetString() + " is defined out of scope" + ". " +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 		return;
@@ -194,7 +194,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 		for( auto method : curClass->GetBaseClass()->GetMethods() ) {
 			if( method->GetName() == program->GetName()->GetString() ) {
 				errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
-					"Method " + program->GetName()->GetString() + " already defined in base class " + program->GetName()->GetString() +
+					"Method " + program->GetName()->GetString() + " already defined in base class " + program->GetName()->GetString() + ". " +
 					"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 					", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 				return;
@@ -203,7 +203,7 @@ void CSymbolTableBuilderVisitor::Visit( const CMethodDecl* program )
 	}
 	if( !curClass->AddMethod( program->GetName()->GetString(), returnType ) ) {
 		errorStorage.PutError( std::string( "[Table builder] Node type - CMethodDecl. " ) +
-			"Method " + program->GetName()->GetString() + " is already defined in class " + curClass->GetName() +
+			"Method " + program->GetName( )->GetString( ) + " is already defined in class " + curClass->GetName() + ". " +
 			"Line " + std::to_string( program->GetPosition().GetBeginPos().first ) +
 			", column " + std::to_string( program->GetPosition().GetBeginPos().second ) + "." );
 	} else {

@@ -24,7 +24,7 @@ int main( int argc, char **argv )
 	std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( typeChecker.get() );
 	if( !typeChecker->GetErrorStorage().GetAllErrors().empty( ) ) {
-		for( auto ex : symbolTableBuilder->GetErrorStorage().GetAllErrors() ) {
+		for( auto ex : typeChecker->GetErrorStorage().GetAllErrors() ) {
 			std::cout << ex << std::endl;
 		}
 		return 0;

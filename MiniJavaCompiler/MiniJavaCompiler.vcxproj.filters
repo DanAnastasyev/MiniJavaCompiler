@@ -153,6 +153,7 @@
     <None Include="example\Factorial.java">
       <Filter>Source Files\examples</Filter>
     </None>
+    <None Include="example\bad examples\BadExample2.java" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="example\BinarySearch.java.txt">

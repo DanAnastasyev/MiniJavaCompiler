@@ -391,9 +391,9 @@ void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 	SymbolsTable::CClassInfo* usedClass = symbolsTable->GetClass( lastTypeValue );
 	if( usedClass == nullptr ) {
 		errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
-			"Cannot find such class " + lastTypeValue +
+			"Cannot find such class " + lastTypeValue + "." +
 			"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
-			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
+			", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + ". " );
 		lastTypeValueStack.push_back( ".INT" );
 	} else {
 		SymbolsTable::CMethodInfo* usedMethod = usedClass->GetMethod( expr->GetIdentifier()->GetString() );
@@ -403,14 +403,14 @@ void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 			auto params = usedMethod->GetParams();
 			if( lastTypeValueStack.size() - typeValuePointer != params.size() ) {
 				errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
-					"Invalid number of arguments " + usedMethod->GetName() +
+					"Invalid number of arguments " + usedMethod->GetName( ) + "." +
 					"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 					", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 			}
 			for( int i = typeValuePointer; i < lastTypeValueStack.size(); ++i ) {
 				if( params[i - typeValuePointer]->GetType() != lastTypeValueStack[i] ) {
 					errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
-						"Wrong function argument type " + params[i - typeValuePointer]->GetName() +
+						"Wrong function argument type " + params[i - typeValuePointer]->GetName( ) + ". " +
 						"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 						", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 				}
@@ -422,7 +422,7 @@ void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 			auto params = usedMethod->GetParams();
 			if( params.size() != 0 ) {
 				errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +
-					"Wrong function argument count " + expr->GetIdentifier()->GetString() +
+					"Wrong function argument count " + expr->GetIdentifier( )->GetString( ) + ". " +
 					"Line " + std::to_string( expr->GetPosition().GetBeginPos().first ) +
 					", column " + std::to_string( expr->GetPosition().GetBeginPos().second ) + "." );
 			}

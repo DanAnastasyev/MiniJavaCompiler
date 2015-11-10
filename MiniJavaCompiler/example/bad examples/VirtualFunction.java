@@ -5,7 +5,7 @@ class Factorial{
 }
 
 class Fac {
-
+	int num_aux;
     public int ComputeFac(int num){
 	int num_aux ;
 	if (num < 1)
