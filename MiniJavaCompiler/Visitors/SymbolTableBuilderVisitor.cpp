@@ -1,5 +1,6 @@
 #include <iostream>
 #include "SymbolTableBuilderVisitor.h"
+#include "RuleClasses/RuleClasses.h"
 
 CSymbolTableBuilderVisitor::CSymbolTableBuilderVisitor()
 {

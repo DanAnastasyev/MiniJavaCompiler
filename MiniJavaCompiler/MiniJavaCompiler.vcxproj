@@ -22,6 +22,8 @@
     <ClCompile Include="BuildOutputs\lexer.cpp" />
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
     <ClCompile Include="ErrorStorage.cpp" />
+    <ClCompile Include="Frame\Label.cpp" />
+    <ClCompile Include="Frame\Temp.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RuleClasses\Class.cpp" />
@@ -50,6 +52,9 @@
   <ItemGroup>
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
     <ClInclude Include="ErrorStorage.h" />
+    <ClInclude Include="Frame\IAccess.h" />
+    <ClInclude Include="Frame\Label.h" />
+    <ClInclude Include="Frame\Temp.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="Position.h" />

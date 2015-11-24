@@ -1,6 +1,5 @@
 #include "Visitor.h"
 #include "SymbolsTable/SymbolsTable.h"
-#include "RuleClasses/RuleClasses.h"
 
 class CSymbolTableBuilderVisitor : public IVisitor {
 public:

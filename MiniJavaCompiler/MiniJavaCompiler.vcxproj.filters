@@ -101,6 +101,12 @@
     <ClCompile Include="SymbolsTable\Symbol.cpp">
       <Filter>Source Files\SymbolsTable</Filter>
     </ClCompile>
+    <ClCompile Include="Frame\Label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Frame\Temp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -141,6 +147,15 @@
     </ClInclude>
     <ClInclude Include="RuleClasses\PositionStorage.h">
       <Filter>Source Files\RuleClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame\IAccess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame\Label.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame\Temp.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
