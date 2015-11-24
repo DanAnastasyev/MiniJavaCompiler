@@ -3,11 +3,12 @@
 namespace IRTree
 {
 	class IExpr {
-		
+	public:
+		virtual ~IExpr() = 0;
 	};
 
 	class CConst : public IExpr {
-
+		
 	};
 
 	class CName : public IExpr {

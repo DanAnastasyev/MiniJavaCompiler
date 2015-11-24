@@ -254,11 +254,6 @@ void CSymbolTableBuilderVisitor::Visit( const CUserType* program )
 	lastTypeValue = program->GetTypeName()->GetString();
 }
 
-void CSymbolTableBuilderVisitor::Visit( const CIndexExpression* expr )
-{
-	lastTypeValue = "int";
-}
-
 const CErrorStorage& CSymbolTableBuilderVisitor::GetErrorStorage() const
 {
 	return errorStorage;

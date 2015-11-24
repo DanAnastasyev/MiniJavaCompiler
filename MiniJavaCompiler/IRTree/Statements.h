@@ -3,11 +3,12 @@
 namespace IRTree
 {
 	class IStm {
-
+	public:
+		virtual ~IStm() = 0;
 	};
 
 	class CMove : public IStm {
-
+		CMove()
 	};
 
 	class CJump : public IStm {

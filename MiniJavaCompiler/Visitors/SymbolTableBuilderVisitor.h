@@ -27,7 +27,7 @@ public:
 	void Visit( const CWhileStatement* statement ) override {}
 	void Visit( const CPrintStatement* statement ) override {}
 	void Visit( const CBinOpExpression* expr ) override {}
-	void Visit( const CIndexExpression* expr ) override;
+	void Visit( const CIndexExpression* expr ) override {}
 	void Visit( const CLenghtExpression* expr ) override {}
 	void Visit( const CMethodExpression* expr ) override {}
 	void Visit( const CIntLiteralExpression* expr ) override {}
