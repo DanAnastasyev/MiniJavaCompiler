@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace IRTree
 {
@@ -7,8 +8,10 @@ namespace IRTree
 		virtual ~IStm() = 0;
 	};
 
+	typedef std::shared_ptr<IStm> CStmPtr;
+
 	class CMove : public IStm {
-		CMove()
+
 	};
 
 	class CJump : public IStm {
