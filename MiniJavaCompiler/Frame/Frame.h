@@ -10,10 +10,11 @@ namespace Frame {
 
 	class CFrame {
 	public:
-		CFrame(const CSymbol* _name, int _formalsCount);
-		const IAccess* Formal(size_t index) const;
+		CFrame( const CSymbol* _name, int _formalsCount );
+		const IAccess* Formal( size_t index ) const;
 	private:
 		const CSymbol*  name;
 		const int formalsCount;
+		std::vector<IAccess> formals;
 	};
 }

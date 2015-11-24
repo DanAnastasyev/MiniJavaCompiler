@@ -21,7 +21,7 @@ namespace Frame
 		const IAccess* Formal( size_t index ) const;
 
 	private:
-		std::vector<IAccess> formals;
+		
 
 	};
 }

@@ -2,6 +2,8 @@
 
 namespace IRTree
 {
+	class IStm;
+
 	class IExpr {
 	public:
 		virtual ~IExpr() = 0;
