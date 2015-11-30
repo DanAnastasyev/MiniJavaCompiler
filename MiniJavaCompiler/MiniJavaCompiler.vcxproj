@@ -24,6 +24,8 @@
     <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="Frame\Label.cpp" />
     <ClCompile Include="Frame\Temp.cpp" />
+    <ClCompile Include="IRTree\Expressions.cpp" />
+    <ClCompile Include="IRTree\Statements.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RuleClasses\Class.cpp" />
@@ -37,6 +39,7 @@
     <ClCompile Include="RuleClasses\Var.cpp" />
     <ClCompile Include="SymbolsTable\Symbol.cpp" />
     <ClCompile Include="SymbolsTable\SymbolsTable.cpp" />
+    <ClCompile Include="Visitors\IRBuilderVisitor.cpp" />
     <ClCompile Include="Visitors\PrettyPrinterVisitor.cpp" />
     <ClCompile Include="Visitors\TypeCheckerVisitor.cpp" />
     <ClCompile Include="Visitors\SymbolTableBuilderVisitor.cpp" />
@@ -56,12 +59,15 @@
     <ClInclude Include="Frame\Label.h" />
     <ClInclude Include="Frame\Temp.h" />
     <ClInclude Include="grammar.h" />
+    <ClInclude Include="IRTree\Expressions.h" />
+    <ClInclude Include="IRTree\Statements.h" />
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RuleClasses\PositionStorage.h" />
     <ClInclude Include="RuleClasses\RuleClasses.h" />
     <ClInclude Include="SymbolsTable\Symbol.h" />
     <ClInclude Include="SymbolsTable\SymbolsTable.h" />
+    <ClInclude Include="Visitors\IRBuilderVisitor.h" />
     <ClInclude Include="Visitors\PrettyPrinterVisitor.h" />
     <ClInclude Include="Visitors\TypeCheckerVisitor.h" />
     <ClInclude Include="Visitors\SymbolTableBuilderVisitor.h" />

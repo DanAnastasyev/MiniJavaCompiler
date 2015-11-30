@@ -2,11 +2,14 @@
 #include <string>
 #include <memory>
 #include <vector>
+
 #include "Statements.h"
-#include <Frame/Temp.h>
+#include "Frame/Temp.h"
 
 namespace IRTree
 {
+	class IStm;
+
 	class IExpr {
 	public:
 		enum BINOP {
@@ -41,8 +44,11 @@ namespace IRTree
 
 	class CTemp : public IExpr {
 	public:
+		CTemp( Temp::CTemp temp );
+		Temp::CTemp& GetTemp() const;
 
-	private: 
+	private:
+		Temp::CTemp temp;
 	};
 
 	class CBinop : public IExpr {

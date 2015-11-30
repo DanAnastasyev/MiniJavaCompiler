@@ -107,6 +107,15 @@
     <ClCompile Include="Frame\Temp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Visitors\IRBuilderVisitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTree\Expressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTree\Statements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -148,14 +157,23 @@
     <ClInclude Include="RuleClasses\PositionStorage.h">
       <Filter>Source Files\RuleClasses</Filter>
     </ClInclude>
+    <ClInclude Include="IRTree\Statements.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTree\Expressions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="Frame\IAccess.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitors\IRBuilderVisitor.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Frame\Label.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Frame\Temp.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,18 +1,21 @@
 #pragma once
-
 #include <string>
 
-class CLabel {
-public:
-	CLabel();
-	explicit CLabel( ... );
+#include "SymbolsTable/Symbol.h"
 
-	const std::string& Name() const
-	{
-		return name;
-	}
+namespace Temp {
+	class CLabel {
+	public:
+		CLabel();
+		explicit CLabel( const CSymbol& label );
 
-private:
-	static int nextUniqueId;
-	std::string name;
+		const std::string& Name() const
+		{
+			return name;
+		}
+
+	private:
+		static int nextUniqueId;
+		std::string name;
+	};
 };
