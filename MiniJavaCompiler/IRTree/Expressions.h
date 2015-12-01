@@ -13,7 +13,7 @@ namespace IRTree
 	class IExpr {
 	public:
 		enum BINOP {
-			PLUS, MINUS, MUL, DIV, AND, OR, LSHIFT, RSHIFT, ARSHIFT, XOR
+			PLUS, MINUS, MUL, DIV, AND, OR, LESS, XOR
 		};
 		enum CJUMP {
 			EQ, NE, LT, GT, LE, GE, ULT, ULE, UGT, UGE

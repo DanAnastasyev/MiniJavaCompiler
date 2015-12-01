@@ -1,6 +1,12 @@
 #pragma once
 #include "Visitor.h"
 
+#include "IRTree\Expressions.h"
+#include "IRTree\Statements.h"
+#include "Frame\Frame.h"
+
+#include <stack>
+
 class IRBuilderVisitor : public IVisitor {
 public:
 	void Visit( const CProgram* program ) override;
@@ -37,4 +43,10 @@ public:
 	void Visit( const CMethodDeclList* methodList ) override;
 	void Visit( const CFormalList* list ) override;
 	void Visit( const CFormalParam* list ) override;
+
+private:
+	std::stack<std::shared_ptr<const IRTree::IExpr>> parsedExpressions;
+	std::stack<std::shared_ptr<const IRTree::IStm>> parsedStatements;
+
+	std::stack<Frame::CFrame> frames;
 };

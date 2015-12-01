@@ -86,6 +86,37 @@ void IRBuilderVisitor::Visit( const CPrintStatement* statement )
 
 void IRBuilderVisitor::Visit( const CBinOpExpression* expr )
 {
+	expr->GetLeftExp->Accept(*this);
+	std::shared_ptr<const IRTree::IExpr> left = parsedExpressions.top();
+	parsedExpressions.pop();
+
+	expr->GetRightExp->Accept(*this);
+	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
+	parsedExpressions.pop();
+
+	IRTree::CBinop* binOp;
+	switch (expr->GetBinOp())
+	{
+	case CBinOpExpression::AND:
+		binOp = new IRTree::CBinop(left, IRTree::IExpr::AND, right);
+	case CBinOpExpression::LESS:
+		// TODO: Bicycle or not?
+		binOp = new IRTree::CBinop(left, IRTree::IExpr::LESS, right);
+		break;
+	case CBinOpExpression::PLUS:
+		binOp = new IRTree::CBinop(left, IRTree::IExpr::PLUS, right);
+		break;
+	case CBinOpExpression::MINUS:
+		binOp = new IRTree::CBinop(left, IRTree::IExpr::MINUS, right);
+		break;
+	case CBinOpExpression::TIMES:
+		binOp = new IRTree::CBinop(left, IRTree::IExpr::MUL, right);
+		break;
+	case CBinOpExpression::DIVIDE:
+		binOp = new IRTree::CBinop(left, IRTree::IExpr::DIV, right);
+		break;
+	}
+
 }
 
 void IRBuilderVisitor::Visit( const CIndexExpression* expr )
