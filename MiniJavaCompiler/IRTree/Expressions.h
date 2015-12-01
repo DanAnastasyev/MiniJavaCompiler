@@ -44,7 +44,7 @@ namespace IRTree
 
 	class CTemp : public IExpr {
 	public:
-		CTemp( const Temp::CTemp* temp );
+		CTemp( const std::shared_ptr<Temp::CTemp> temp );
 		Temp::CTemp GetTemp() const;
 
 	private:

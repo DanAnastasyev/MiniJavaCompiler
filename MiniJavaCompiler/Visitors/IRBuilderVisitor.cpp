@@ -94,29 +94,29 @@ void IRBuilderVisitor::Visit( const CBinOpExpression* expr )
 	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	IRTree::CBinop* binOp;
+	IRTree::CExprPtr binOp;
 	switch (expr->GetBinOp())
 	{
 	case CBinOpExpression::AND:
-		binOp = new IRTree::CBinop(left, IRTree::IExpr::AND, right);
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(left, IRTree::IExpr::AND, right));
 	case CBinOpExpression::LESS:
 		// TODO: Bicycle or not?
-		binOp = new IRTree::CBinop(left, IRTree::IExpr::LESS, right);
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(left, IRTree::IExpr::LESS, right));
 		break;
 	case CBinOpExpression::PLUS:
-		binOp = new IRTree::CBinop(left, IRTree::IExpr::PLUS, right);
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(left, IRTree::IExpr::PLUS, right));
 		break;
 	case CBinOpExpression::MINUS:
-		binOp = new IRTree::CBinop(left, IRTree::IExpr::MINUS, right);
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(left, IRTree::IExpr::MINUS, right));
 		break;
 	case CBinOpExpression::TIMES:
-		binOp = new IRTree::CBinop(left, IRTree::IExpr::MUL, right);
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(left, IRTree::IExpr::MUL, right));
 		break;
 	case CBinOpExpression::DIVIDE:
-		binOp = new IRTree::CBinop(left, IRTree::IExpr::DIV, right);
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(left, IRTree::IExpr::DIV, right));
 		break;
 	}
-
+	parsedExpressions.emplace(binOp);
 }
 
 void IRBuilderVisitor::Visit( const CIndexExpression* expr )
@@ -133,14 +133,17 @@ void IRBuilderVisitor::Visit( const CMethodExpression* expr )
 
 void IRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
 {
+	parsedExpressions.emplace(IRTree::CExprPtr(new IRTree::CConst(expr->GetValue)));
 }
 
 void IRBuilderVisitor::Visit( const CBoolLiteralExpression* expr )
 {
+	parsedExpressions.emplace(IRTree::CExprPtr(new IRTree::CConst(expr->GetValue)));
 }
 
 void IRBuilderVisitor::Visit( const CIdentifierExpression* expr )
 {
+	parsedExpressions.emplace(frames.top().GetFormal(expr->GetIdentifier()->GetString())->GetExp(frames.top().GetFramePtr()));
 }
 
 void IRBuilderVisitor::Visit( const CThisExpression* expr )
@@ -157,10 +160,24 @@ void IRBuilderVisitor::Visit( const CNewExpression* expr )
 
 void IRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
 {
+	expr->GetRightExp.Accept(*this);
+	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
+	parsedExpressions.pop();
+
+	IRTree::CExprPtr binOp;
+	if (expr->GetOperation() == CUnaryOpExpression::UnaryOp::MINUS) {
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(IRTree::CExprPtr(new IRTree::CConst(0)), IRTree::IExpr::MINUS, right));
+	} else {
+		// TODO: Check if it is true
+		binOp = IRTree::CExprPtr(new IRTree::CBinop(IRTree::CExprPtr(new IRTree::CConst(1)), IRTree::IExpr::XOR, right));
+	}
+
+	parsedExpressions.emplace(binOp);
 }
 
 void IRBuilderVisitor::Visit( const CBracesExpression* expr )
 {
+	expr->GetExp.Accept(*this);
 }
 
 void IRBuilderVisitor::Visit( const CExpressionList* exprList )

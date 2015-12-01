@@ -386,10 +386,10 @@ public:
 
 	void Accept( IVisitor*  visitor ) const override;
 
-	const CSymbol* GetValue() const;
+	const int GetValue() const;
 
 private:
-	const CSymbol* val;
+	const int val;
 };
 
 class CBoolLiteralExpression : public IExp, public CPositionStorage {
@@ -398,10 +398,10 @@ public:
 
 	void Accept( IVisitor*  visitor ) const override;
 
-	const CSymbol* GetValue() const;
+	const int GetValue() const;
 
 private:
-	const CSymbol* val;
+	const int val;
 };
 
 class CIdentifierExpression : public IExp, public CPositionStorage {
@@ -455,7 +455,7 @@ public:
 
 	void Accept( IVisitor*  visitor ) const override;
 
-	const IExp* GetLeftExp() const;
+	const IExp* GetRightExp() const;
 	UnaryOp GetOperation() const;
 
 private:

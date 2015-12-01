@@ -13,7 +13,7 @@ CBinOpExpression::BinOp CBinOpExpression::GetBinOp() const
 	return binOp;
 }
 
-const IExp* CBinOpExpression::GetLeftExp() const
+const IExp* CBinOpExpression::GetRightExp() const
 {
 	return leftExp.get();
 }
@@ -96,11 +96,11 @@ void CMethodExpression::Accept( IVisitor* visitor ) const
 
 CIntLiteralExpression::CIntLiteralExpression( const std::string& _val, const CPosition& pos ) :
 CPositionStorage( pos ),
-val( CSymbol::GetSymbol( _val ) )
+val( std::atoi(_val.c_str()) )
 {
 }
 
-const CSymbol* CIntLiteralExpression::GetValue() const
+const int CIntLiteralExpression::GetValue() const
 {
 	return val;
 }
@@ -112,11 +112,11 @@ void CIntLiteralExpression::Accept( IVisitor* visitor ) const
 
 CBoolLiteralExpression::CBoolLiteralExpression( const std::string& _val, const CPosition& pos ) :
 CPositionStorage( pos ),
-val( CSymbol::GetSymbol( _val ) )
+val( _val == "true" ? 1 : 0 )
 {
 }
 
-const CSymbol* CBoolLiteralExpression::GetValue() const
+const int CBoolLiteralExpression::GetValue() const
 {
 	return val;
 }
@@ -191,7 +191,7 @@ op( _op )
 {
 }
 
-const IExp* CUnaryOpExpression::GetLeftExp() const
+const IExp* CUnaryOpExpression::GetRightExp() const
 {
 	return exp.get();
 }

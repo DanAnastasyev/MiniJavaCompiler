@@ -293,7 +293,7 @@ void CTypeCheckerVisitor::Visit( const CBinOpExpression* expr )
 		return;
 	}
 
-	expr->GetLeftExp()->Accept( this );
+	expr->GetRightExp()->Accept( this );
 	auto left = lastTypeValueStack.back();
 	lastTypeValueStack.pop_back();
 	expr->GetRightExp()->Accept( this );
@@ -541,7 +541,7 @@ void CTypeCheckerVisitor::Visit( const CUnaryOpExpression* expr )
 		return;
 	}
 	
-	expr->GetLeftExp()->Accept( this );
+	expr->GetRightExp()->Accept( this );
 
 	std::string lastTypeValue = lastTypeValueStack.back();
 	lastTypeValueStack.pop_back();

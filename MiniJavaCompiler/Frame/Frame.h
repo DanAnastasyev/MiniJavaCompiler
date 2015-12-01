@@ -12,7 +12,7 @@ namespace Frame {
 	// Интерфейс получения поддерева для переменной
 	class IAccess {
 	public:
-		virtual const IRTree::IExpr* GetExp( const Temp::CTemp* framePtr ) const = 0;
+		virtual const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> framePtr ) const = 0;
 		virtual ~IAccess() {}
 	};
 
@@ -21,7 +21,7 @@ namespace Frame {
 	public:
 		CInFrame( int offset );
 
-		const IRTree::IExpr* GetExp( const Temp::CTemp* framePtr ) const;
+		const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> framePtr ) const;
 	private:
 		int offset;
 	};
@@ -31,7 +31,7 @@ namespace Frame {
 	public:
 		CInReg( int offset );
 
-		const IRTree::IExpr* GetExp( const Temp::CTemp* frameRegPtr ) const;
+		const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const;
 	private:
 		int offset;
 	};
