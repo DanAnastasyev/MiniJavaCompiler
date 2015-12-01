@@ -11,7 +11,7 @@ namespace Temp {
 		CTemp();
 
 		// Новая переменная с заданным именем
-		explicit CTemp( const CSymbol* _symbol );
+		explicit CTemp( const CSymbol& _symbol );
 		
 		const std::string& GetName() const;
 	private:

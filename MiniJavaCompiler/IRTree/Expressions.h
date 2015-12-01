@@ -22,7 +22,7 @@ namespace IRTree
 		virtual ~IExpr() = 0;
 	};
 
-	typedef std::shared_ptr<IExpr> CExprPtr;
+	typedef std::shared_ptr<const IExpr> CExprPtr;
 
 	class CConst : public IExpr {
 	public:
@@ -44,16 +44,16 @@ namespace IRTree
 
 	class CTemp : public IExpr {
 	public:
-		CTemp( Temp::CTemp temp );
-		Temp::CTemp& GetTemp() const;
+		CTemp( const Temp::CTemp* temp );
+		Temp::CTemp GetTemp() const;
 
 	private:
-		Temp::CTemp temp;
+		std::shared_ptr<Temp::CTemp> temp;
 	};
 
 	class CBinop : public IExpr {
 	public:
-		CBinop( const IExpr* left, BINOP binop, const IExpr* right );
+		CBinop( CExprPtr left, BINOP binop, CExprPtr right );
 		const CExprPtr GetLeft() const;
 		const CExprPtr GetRight() const;
 
@@ -65,7 +65,7 @@ namespace IRTree
 
 	class CMem : public IExpr {
 	public:
-		CMem( const IExpr* mem );
+		CMem( CExprPtr mem );
 		const CExprPtr GetMem() const;
 
 	private:
@@ -74,18 +74,18 @@ namespace IRTree
 
 	class CCall : public IExpr {
 	public:
-		CCall( const IExpr* returnExpr, const std::vector<IStm*> aguments );
-		const CExprPtr GetReturnExpr() const;
-		const std::vector<const CExprPtr>&  GetArguments();
+		CCall( CExprPtr returnExpr, const std::vector<CStmPtr>& aguments );
 
+		const CExprPtr GetReturnExpr() const;
+		std::vector<CExprPtr> GetArguments() const;
 	private:
 		const CExprPtr returnExp;
-		std::vector<const CExprPtr> arguments;
+		std::vector<CExprPtr> arguments;
 	};
 
 	class CEseq : public IExpr {
 	public:
-		CEseq( IStm* statement, IExpr* expression );
+		CEseq( IStm* statement, CExprPtr expression );
 		const CStmPtr GetStatement() const;
 		const CExprPtr GetExpression() const;
 

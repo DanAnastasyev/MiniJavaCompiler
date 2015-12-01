@@ -8,8 +8,8 @@ namespace Temp {
 		name = std::to_string( nextUniqueId++ );
 	}
 
-	CLabel::CLabel( std::string& _name ) :
-		name( _name )
+	CLabel::CLabel( const CSymbol& label ) :
+		name( label.GetString() )
 	{}
 
 	int CTemp::nextUniqueId = 0;
@@ -19,8 +19,8 @@ namespace Temp {
 		name = std::to_string( nextUniqueId++ );
 	}
 
-	CTemp::CTemp( const CSymbol* symbol ) :
-		name( symbol->GetString() )
+	CTemp::CTemp( const CSymbol& symbol ) :
+		name( symbol.GetString() )
 	{}
 
 }
