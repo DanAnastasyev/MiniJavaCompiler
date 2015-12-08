@@ -10,9 +10,8 @@ namespace Frame {
 	{
 		int machineOffset = offset * CFrame::WORD_SIZE;
 
-		return IRTree::CExprPtr(new IRTree::CMem(IRTree::CExprPtr( new IRTree::CBinop(
-			IRTree::CExprPtr( new IRTree::CTemp( framePtr ) ),
-			IRTree::CBinop::PLUS,
+		return new IRTree::CMem( std::shared_ptr<const IRTree::IExpr>( new IRTree::CBinop( IRTree::CBinop::PLUS,
+			std::shared_ptr<const IRTree::IExpr>( new IRTree::CTemp( framePtr ) ),
 			IRTree::CExprPtr(new IRTree::CConst( machineOffset ) ) ) ) ) );
 	}
 
@@ -24,9 +23,8 @@ namespace Frame {
 	{
 		int machineOffset = offset * CFrame::WORD_SIZE;
 
-		return IRTree::CExprPtr(new IRTree::CMem(IRTree::CExprPtr( new IRTree::CBinop(
-			IRTree::CExprPtr( new IRTree::CTemp( frameRegPtr ) ),
-			IRTree::CBinop::PLUS,
+		return new IRTree::CMem( std::shared_ptr<const IRTree::IExpr>( new IRTree::CBinop( IRTree::CBinop::PLUS,
+			std::shared_ptr<const IRTree::IExpr>( new IRTree::CTemp( frameRegPtr ) ),
 			IRTree::CExprPtr( new IRTree::CConst( machineOffset ) ) ) ) ) );
 	}
 

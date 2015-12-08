@@ -195,3 +195,5 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 MiniJavaCompiler/RuleClasses.h.orig
+MiniJavaCompiler/Frame/Frame.cpp.orig
+*.orig

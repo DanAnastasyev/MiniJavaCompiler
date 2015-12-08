@@ -9,6 +9,8 @@
 
 class IRBuilderVisitor : public IVisitor {
 public:
+	IRBuilderVisitor( SymbolsTable::CTable* table );
+
 	void Visit( const CProgram* program ) override;
 	void Visit( const CMainClass* mainClass ) override;
 	void Visit( const CClassDeclList* classDeclList ) override;
@@ -49,4 +51,8 @@ private:
 	std::stack<std::shared_ptr<const IRTree::IStm>> parsedStatements;
 
 	std::stack<Frame::CFrame> frames;
+
+	SymbolsTable::CTable* symbolsTable;
+	SymbolsTable::CClassInfo* curClass = nullptr;
+	SymbolsTable::CMethodInfo* curMethod = nullptr;
 };

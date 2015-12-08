@@ -39,8 +39,9 @@ namespace Frame {
 	class CFrame {
 	public:
 		CFrame( const std::string& _name );
-		CFrame( const SymbolsTable::CClassInfo& classInfo, const SymbolsTable::CMethodInfo& methodInfo, const SymbolsTable::CTable& table );
+		CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, const SymbolsTable::CTable* table );
 
+		void AddStatements( std::shared_ptr<const IRTree::IStm> statements );
 		bool ContainsFormal( const std::string& name ) const;
 		void AddFormal( const std::string& name, std::shared_ptr<IAccess> formal );
 		std::shared_ptr<IAccess> GetFormal( const std::string& name ) const;
@@ -52,6 +53,8 @@ namespace Frame {
 		static const int WORD_SIZE = 4;
 	private:
 		std::map<std::string, std::shared_ptr<IAccess>> formals;
+		//std::map<std::string, std::shared_ptr<IAccess>> temporires;
+		//std::map<std::string, std::shared_ptr<IAccess>> locals;
 
 		std::string frameName;
 

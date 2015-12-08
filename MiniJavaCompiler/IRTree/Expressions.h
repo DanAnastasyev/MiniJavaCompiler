@@ -53,7 +53,7 @@ namespace IRTree
 
 	class CBinop : public IExpr {
 	public:
-		CBinop( CExprPtr left, BINOP binop, CExprPtr right );
+		CBinop( BINOP binop, CExprPtr left, CExprPtr right );
 		const CExprPtr GetLeft() const;
 		const CExprPtr GetRight() const;
 
