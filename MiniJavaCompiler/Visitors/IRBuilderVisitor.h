@@ -50,7 +50,7 @@ private:
 	std::stack<std::shared_ptr<const IRTree::IExpr>> parsedExpressions;
 	std::stack<std::shared_ptr<const IRTree::IStm>> parsedStatements;
 
-	std::stack<Frame::CFrame> frames;
+	std::vector<Frame::CFrame> frames; // Храним вектор фреймов
 
 	SymbolsTable::CTable* symbolsTable;
 	SymbolsTable::CClassInfo* curClass = nullptr;

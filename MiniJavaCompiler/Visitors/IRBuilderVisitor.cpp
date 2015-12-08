@@ -17,7 +17,7 @@ void IRBuilderVisitor::Visit( const CMainClass* mainClass )
 	curClass = symbolsTable->GetClass( mainClass->GetClassName()->GetString() );
 	curMethod = curClass->GetMethod( "main" );
 
-	frames.emplace( curClass, curMethod, symbolsTable );
+	frames.emplace_back( curClass, curMethod, symbolsTable );
 
 	mainClass->GetStatement()->Accept( this );
 
@@ -26,9 +26,9 @@ void IRBuilderVisitor::Visit( const CMainClass* mainClass )
 		mainClass->GetStatement()->Accept( this );
 		statements = parsedStatements.top();
 		parsedStatements.pop();
-}
+	}
 
-	frames.top().AddStatements( statements );
+	frames.back().AddStatements( statements );
 }
 
 void IRBuilderVisitor::Visit( const CClassDeclList* classDeclList )
@@ -63,17 +63,16 @@ void IRBuilderVisitor::Visit( const CMethodDecl* methodDecl )
 {
 	curMethod = curClass->GetMethod( methodDecl->GetName()->GetString() );
 
-	frames.emplace( curClass, curMethod, symbolsTable );
+	frames.emplace_back( curClass, curMethod, symbolsTable );
 
 	std::shared_ptr<const IRTree::IStm> statements;
 	if( methodDecl->GetStatementList() != nullptr ) {
-	methodDecl->GetStatementList()->Accept( this );
+		methodDecl->GetStatementList()->Accept( this );
 		statements = parsedStatements.top();
 		parsedStatements.pop();
 	}
 
 	methodDecl->GetReturnExpression()->Accept( this );
-	std::shared_ptr<const IRTree::IExpr> 
 }
 
 void IRBuilderVisitor::Visit( const CStandardType* type )
@@ -112,16 +111,16 @@ void IRBuilderVisitor::Visit( const CPrintStatement* statement )
 
 void IRBuilderVisitor::Visit( const CBinOpExpression* expr )
 {
-	expr->GetLeftExp->Accept(*this);
+	expr->GetLeftExp()->Accept( this );
 	std::shared_ptr<const IRTree::IExpr> left = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	expr->GetRightExp->Accept(*this);
+	expr->GetRightExp()->Accept( this );
 	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
 	parsedExpressions.pop();
 
 	IRTree::CExprPtr binOp;
-	switch (expr->GetBinOp())
+	switch( expr->GetBinOp() )
 	{
 	case CBinOpExpression::AND:
 		binOp = std::shared_ptr<const IRTree::IExpr>( new IRTree::CBinop( IRTree::IExpr::AND, left, right ) );
@@ -158,17 +157,17 @@ void IRBuilderVisitor::Visit( const CMethodExpression* expr )
 
 void IRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
 {
-	parsedExpressions.emplace(IRTree::CExprPtr(new IRTree::CConst(expr->GetValue)));
+	parsedExpressions.emplace( IRTree::CExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
 }
 
 void IRBuilderVisitor::Visit( const CBoolLiteralExpression* expr )
 {
-	parsedExpressions.emplace(IRTree::CExprPtr(new IRTree::CConst(expr->GetValue)));
+	parsedExpressions.emplace( IRTree::CExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
 }
 
 void IRBuilderVisitor::Visit( const CIdentifierExpression* expr )
 {
-	parsedExpressions.emplace(frames.top().GetFormal(expr->GetIdentifier()->GetString())->GetExp(frames.top().GetFramePtr()));
+	parsedExpressions.emplace( frames.back().GetFormal( expr->GetIdentifier()->GetString() )->GetExp( frames.back().GetFramePtr() ) );
 }
 
 void IRBuilderVisitor::Visit( const CThisExpression* expr )
@@ -185,7 +184,7 @@ void IRBuilderVisitor::Visit( const CNewExpression* expr )
 
 void IRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
 {
-	expr->GetRightExp.Accept(*this);
+	expr->GetRightExp()->Accept( this );
 	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
 	parsedExpressions.pop();
 
@@ -204,7 +203,7 @@ void IRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
 
 void IRBuilderVisitor::Visit( const CBracesExpression* expr )
 {
-	expr->GetExp.Accept(*this);
+	expr->GetExp()->Accept( this );
 }
 
 void IRBuilderVisitor::Visit( const CExpressionList* exprList )

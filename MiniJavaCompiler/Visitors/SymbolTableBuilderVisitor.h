@@ -8,18 +8,18 @@ public:
 	SymbolsTable::CTable* GetSymbolsTable();
 
 	void Visit( const CProgram* program ) override;
-	void Visit( const CMainClass* program ) override;
-	void Visit( const CClassDeclList* program ) override;
-	void Visit( const CClassDecl* program ) override;
-	void Visit( const CClassDeclDerived* program ) override;
-	void Visit( const CVarDecl* program ) override;
-	void Visit( const CVarDeclList* program ) override;
+	void Visit( const CMainClass* mainClass ) override;
+	void Visit( const CClassDeclList* classDeclList ) override;
+	void Visit( const CClassDecl* classDecl ) override;
+	void Visit( const CClassDeclDerived* classDeclDerived ) override;
+	void Visit( const CVarDecl* varDecl ) override;
+	void Visit( const CVarDeclList* varDeclList ) override;
 	void Visit( const CFormalList* list ) override;
 	void Visit( const CFormalParam* param ) override;
-	void Visit( const CMethodDecl* program ) override;
+	void Visit( const CMethodDecl* methodDecl ) override;
 	void Visit( const CMethodDeclList* methodList ) override;
-	void Visit( const CStandardType* program ) override;
-	void Visit( const CUserType* program ) override;
+	void Visit( const CStandardType* standartType ) override;
+	void Visit( const CUserType* userType ) override;
 	void Visit( const CStatementListStatement* statement ) override {}
 	void Visit( const CArrayAssignStatement* statement ) override {}
 	void Visit( const CAssignStatement* statement ) override {}
