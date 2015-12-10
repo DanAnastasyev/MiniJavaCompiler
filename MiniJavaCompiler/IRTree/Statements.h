@@ -29,6 +29,7 @@ namespace IRTree
 	class CJump : public IStm {
 	public:
 		CJump( std::shared_ptr<const IExpr> exp, const std::vector<Temp::CLabel>& labels );
+		CJump( std::shared_ptr<const Temp::CLabel> label );
 
 		std::shared_ptr<const IExpr> GetJumpExpr() const;
 		std::vector<Temp::CLabel> GetLabel() const;
@@ -37,22 +38,22 @@ namespace IRTree
 		std::vector<Temp::CLabel> labels;
 	};
 
-	class CCompJump : public IStm {
+	class CCondJump : public IStm {
 	public:
-		CCompJump( int op, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right, 
-			const Temp::CLabel& ifTrue, const Temp::CLabel& ifFalse );
+		CCondJump( IExpr::CJUMP binOp, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right, 
+			std::shared_ptr<const Temp::CLabel> ifTrueLabel, std::shared_ptr<const Temp::CLabel> ifFalseLabel );
 
-		std::shared_ptr<const IExpr> GetLeftExpr( ) const;
-		std::shared_ptr<const IExpr> GetRightExpr( ) const;
-		int GetBinOp() const;
+		std::shared_ptr<const IExpr> GetLeftExpr() const;
+		std::shared_ptr<const IExpr> GetRightExpr() const;
+		IExpr::CJUMP GetBinOp( ) const;
 		Temp::CLabel GetIfTrueLabel() const;
 		Temp::CLabel GetIfFalseLabel() const;
 	private:
 		std::shared_ptr<const IExpr> leftExpr;
 		std::shared_ptr<const IExpr> rightExpr;
-		int binOp;
-		Temp::CLabel ifTrue;
-		Temp::CLabel ifFalse;
+		IExpr::CJUMP binOp;
+		std::shared_ptr<const Temp::CLabel> ifTrueLabel;
+		std::shared_ptr<const Temp::CLabel> ifFalseLabel;
 	};
 
 	class CSeq : public IStm {
@@ -68,10 +69,10 @@ namespace IRTree
 
 	class CLabel : public IStm {
 	public:
-		CLabel( Temp::CLabel& label );
+		CLabel( std::shared_ptr<const Temp::CLabel> label );
 
 		Temp::CLabel GetLabel() const;
 	private:
-		Temp::CLabel label;
+		std::shared_ptr<const Temp::CLabel> label;
 	};
 }

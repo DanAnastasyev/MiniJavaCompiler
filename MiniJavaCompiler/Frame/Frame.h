@@ -29,22 +29,22 @@ namespace Frame {
 	// Реализация для переменных в регистре
 	class CInReg : public IAccess {
 	public:
-		CInReg( int offset );
+		CInReg();
 
 		const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const;
 	private:
-		int offset;
+		std::shared_ptr<Temp::CTemp> temp;
 	};
 
 	class CFrame {
 	public:
-		CFrame( const std::string& _name );
+		CFrame( const CSymbol* _name, int formalsCount, std::shared_ptr<const IRTree::IStm> _root );
 		CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, const SymbolsTable::CTable* table );
 
 		void AddStatements( std::shared_ptr<const IRTree::IStm> statements );
-		bool ContainsFormal( const std::string& name ) const;
-		void AddFormal( const std::string& name, std::shared_ptr<IAccess> formal );
-		std::shared_ptr<IAccess> GetFormal( const std::string& name ) const;
+		bool ContainsFormal( const CSymbol* name ) const;
+		void AddFormal( const CSymbol* name, std::shared_ptr<IAccess> formal );
+		std::shared_ptr<IAccess> GetVar( const CSymbol* name ) const;
 
 		std::shared_ptr<Temp::CTemp> GetFramePtr() const;
 		std::shared_ptr<Temp::CTemp> GetThisPtr() const;
@@ -52,11 +52,13 @@ namespace Frame {
 
 		static const int WORD_SIZE = 4;
 	private:
-		std::map<std::string, std::shared_ptr<IAccess>> formals;
-		//std::map<std::string, std::shared_ptr<IAccess>> temporires;
-		//std::map<std::string, std::shared_ptr<IAccess>> locals;
+		std::map<const CSymbol*, std::shared_ptr<IAccess>> formals;
+		std::map<const CSymbol*, std::shared_ptr<IAccess>> temporires;
+		std::map<const CSymbol*, std::shared_ptr<IAccess>> locals;
 
-		std::string frameName;
+		const CSymbol* frameName;
+
+		std::shared_ptr<const IRTree::IStm> root;
 
 		// Указатель на этот фрейм
 		std::shared_ptr<Temp::CTemp> framePtr;

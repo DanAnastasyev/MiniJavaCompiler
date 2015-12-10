@@ -282,8 +282,8 @@ void CPrettyPrinterVisitor::Visit( const CMethodExpression* expr )
 		expr->GetExp()->Accept( this );
 	}
 	std::cout << "." << expr->GetIdentifier()->GetString() << "(";
-	if( expr->GetExpList() != nullptr ) {
-		expr->GetExpList()->Accept( this );
+	if( expr->GetArgumentList() != nullptr ) {
+		expr->GetArgumentList()->Accept( this );
 	}
 	std::cout << ")";
 }

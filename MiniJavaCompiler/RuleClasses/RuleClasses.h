@@ -371,7 +371,7 @@ public:
 	void Accept( IVisitor*  visitor ) const override;
 
 	const IExp* GetExp() const;
-	const IExpList* GetExpList() const;
+	const IExpList* GetArgumentList() const;
 	const CSymbol* GetIdentifier() const;
 
 private:
@@ -439,7 +439,7 @@ class CNewExpression : public IExp, public CPositionStorage {
 public:
 	CNewExpression( const std::string& id, const CPosition& pos );
 
-	void Accept( IVisitor*  visitor ) const override;
+	void Accept( IVisitor* visitor ) const override;
 
 	const CSymbol* GetIdentifier() const;
 

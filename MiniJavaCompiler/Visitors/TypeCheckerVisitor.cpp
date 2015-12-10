@@ -397,9 +397,9 @@ void CTypeCheckerVisitor::Visit( const CMethodExpression* expr )
 		lastTypeValueStack.push_back( "int" );
 	} else {
 		SymbolsTable::CMethodInfo* usedMethod = usedClass->GetMethod( expr->GetIdentifier()->GetString() );
-		if( expr->GetExpList() != nullptr ) {
+		if( expr->GetArgumentList() != nullptr ) {
 			int typeValuePointer = lastTypeValueStack.size();
-			expr->GetExpList()->Accept( this );
+			expr->GetArgumentList()->Accept( this );
 			auto params = usedMethod->GetParams();
 			if( lastTypeValueStack.size() - typeValuePointer != params.size() ) {
 				errorStorage.PutError( std::string( "[Type check] Node type - CMethodExpression. " ) +

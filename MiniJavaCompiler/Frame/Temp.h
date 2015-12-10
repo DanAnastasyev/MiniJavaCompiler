@@ -27,15 +27,15 @@ namespace Temp {
 		CLabel();
 
 		// Создать метку с заданным именем
-		explicit CLabel( const CSymbol& label );
+		explicit CLabel( const CSymbol* label );
 
-		const std::string& Name() const
+		const CSymbol* Name() const
 		{
 			return name;
 		}
 
 	private:
 		static int nextUniqueId;
-		std::string name;
+		const CSymbol* name;
 	};
 }

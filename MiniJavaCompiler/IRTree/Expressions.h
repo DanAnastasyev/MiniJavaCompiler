@@ -74,18 +74,18 @@ namespace IRTree
 
 	class CCall : public IExpr {
 	public:
-		CCall( CExprPtr returnExpr, const std::vector<CStmPtr>& aguments );
+		CCall( const CSymbol* funcName, const std::vector<CExprPtr>& arguments );
 
-		const CExprPtr GetReturnExpr() const;
+		const CSymbol* GetFunctionName() const;
 		std::vector<CExprPtr> GetArguments() const;
 	private:
-		const CExprPtr returnExp;
+		const CSymbol* funcName;
 		std::vector<CExprPtr> arguments;
 	};
 
-	class CEseq : public IExpr {
+	class CESeq : public IExpr {
 	public:
-		CEseq( IStm* statement, CExprPtr expression );
+		CESeq( CStmPtr statement, CExprPtr expression );
 		const CStmPtr GetStatement() const;
 		const CExprPtr GetExpression() const;
 
