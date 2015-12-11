@@ -2,6 +2,7 @@
 #include "Visitors/SymbolTableBuilderVisitor.h"
 #include "Visitors/PrettyPrinterVisitor.h"
 #include "Visitors/TypeCheckerVisitor.h"
+#include "Visitors/IRBuilderVisitor.h"
 extern int yyparse( std::shared_ptr<IProgram>& );
 
 int main( int argc, char **argv )
@@ -29,5 +30,8 @@ int main( int argc, char **argv )
 		}
 		return 0;
 	}
+
+	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable( ) ) );
+	root->Accept( irBuilder.get() );
 	return 0;
 }

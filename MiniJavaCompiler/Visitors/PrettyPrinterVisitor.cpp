@@ -290,12 +290,12 @@ void CPrettyPrinterVisitor::Visit( const CMethodExpression* expr )
 
 void CPrettyPrinterVisitor::Visit( const CIntLiteralExpression* expr )
 {
-	std::cout << expr->GetValue()->GetString();
+	std::cout << expr->GetValue();
 }
 
 void CPrettyPrinterVisitor::Visit( const CBoolLiteralExpression* expr )
 {
-	std::cout << expr->GetValue()->GetString();
+	std::cout << expr->GetValue();
 }
 
 void CPrettyPrinterVisitor::Visit( const CIdentifierExpression* expr )

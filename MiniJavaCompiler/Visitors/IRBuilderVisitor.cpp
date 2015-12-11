@@ -1,12 +1,12 @@
 #include "Visitors/IRBuilderVisitor.h"
 #include "RuleClasses/RuleClasses.h"
 
-IRBuilderVisitor::IRBuilderVisitor( SymbolsTable::CTable* _table )
+CIRBuilderVisitor::CIRBuilderVisitor( SymbolsTable::CTable* _table )
 {
 	symbolsTable = _table;
 }
 
-void IRBuilderVisitor::Visit( const CProgram* program )
+void CIRBuilderVisitor::Visit( const CProgram* program )
 {
 	if( program->GetMainClass() != nullptr ) {
 		program->GetMainClass()->Accept( this );
@@ -16,10 +16,12 @@ void IRBuilderVisitor::Visit( const CProgram* program )
 	}
 }
 
-void IRBuilderVisitor::Visit( const CMainClass* mainClass )
+void CIRBuilderVisitor::Visit( const CMainClass* mainClass )
 {
 	curClass = symbolsTable->GetClass( mainClass->GetClassName()->GetString() );
 	curMethod = curClass->GetMethod( "main" );
+
+	frames.emplace_back( curClass, curMethod, symbolsTable );
 
 	std::shared_ptr<const IRTree::IStm> statements = nullptr;
 	if( mainClass->GetStatement() != nullptr ) {
@@ -28,10 +30,10 @@ void IRBuilderVisitor::Visit( const CMainClass* mainClass )
 		parsedStatements.pop();
 	}
 
-	frames.emplace_back( curMethod->GetName(), 0, statements );
+	frames.back().SetStatements( statements );
 }
 
-void IRBuilderVisitor::Visit( const CClassDeclList* classDeclList )
+void CIRBuilderVisitor::Visit( const CClassDeclList* classDeclList )
 {
 	if( classDeclList->GetClassDecl() != nullptr ) {
 		classDeclList->GetClassDecl()->Accept( this );
@@ -41,7 +43,7 @@ void IRBuilderVisitor::Visit( const CClassDeclList* classDeclList )
 	}
 }
 
-void IRBuilderVisitor::Visit( const CClassDecl* classDecl )
+void CIRBuilderVisitor::Visit( const CClassDecl* classDecl )
 {
 	curClass = symbolsTable->GetClass( classDecl->GetName()->GetString() );
 
@@ -51,7 +53,7 @@ void IRBuilderVisitor::Visit( const CClassDecl* classDecl )
 	curClass = nullptr;
 }
 
-void IRBuilderVisitor::Visit( const CClassDeclDerived* classDeclDerived )
+void CIRBuilderVisitor::Visit( const CClassDeclDerived* classDeclDerived )
 {
 	curClass = symbolsTable->GetClass( classDeclDerived->GetName()->GetString() );
 
@@ -60,15 +62,17 @@ void IRBuilderVisitor::Visit( const CClassDeclDerived* classDeclDerived )
 	}
 }
 
-void IRBuilderVisitor::Visit( const CVarDecl* varDecl )
+void CIRBuilderVisitor::Visit( const CVarDecl* varDecl )
 {}
 
-void IRBuilderVisitor::Visit( const CVarDeclList* varDeclList )
+void CIRBuilderVisitor::Visit( const CVarDeclList* varDeclList )
 {}
 
-void IRBuilderVisitor::Visit( const CMethodDecl* methodDecl )
+void CIRBuilderVisitor::Visit( const CMethodDecl* methodDecl )
 {
 	curMethod = curClass->GetMethod( methodDecl->GetName()->GetString() );
+
+	frames.emplace_back( curClass, curMethod, symbolsTable );
 
 	std::shared_ptr<const IRTree::IStm> statements;
 	if( methodDecl->GetStatementList() != nullptr ) {
@@ -76,8 +80,6 @@ void IRBuilderVisitor::Visit( const CMethodDecl* methodDecl )
 		statements = parsedStatements.top();
 		parsedStatements.pop();
 	}
-
-	frames.emplace_back( curMethod->GetName(), curMethod->GetParams().size(), nullptr );
 
 	methodDecl->GetReturnExpression()->Accept( this );
 	std::shared_ptr<const IRTree::IExpr> returnExp = parsedExpressions.top();
@@ -93,23 +95,23 @@ void IRBuilderVisitor::Visit( const CMethodDecl* methodDecl )
 		methodStm = std::shared_ptr<const IRTree::IStm>( new IRTree::CSeq( statements, moveResult ) );
 	}
 
-	frames.back().AddStatements( methodStm );
+	frames.back().SetStatements( methodStm );
 }
 
-void IRBuilderVisitor::Visit( const CStandardType* type )
+void CIRBuilderVisitor::Visit( const CStandardType* type )
 {}
 
-void IRBuilderVisitor::Visit( const CUserType* type )
+void CIRBuilderVisitor::Visit( const CUserType* type )
 {}
 
-void IRBuilderVisitor::Visit( const CStatementListStatement* statement )
+void CIRBuilderVisitor::Visit( const CStatementListStatement* statement )
 {
 	if( statement->GetStatementList() != nullptr ) {
 		statement->GetStatementList()->Accept( this );
 	}
 }
 
-void IRBuilderVisitor::Visit( const CArrayAssignStatement* statement )
+void CIRBuilderVisitor::Visit( const CArrayAssignStatement* statement )
 {
 	// left[i] = right
 	// left - переменная на фрейме
@@ -130,10 +132,10 @@ void IRBuilderVisitor::Visit( const CArrayAssignStatement* statement )
 	IRTree::CExprPtr right = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	parsedExpressions.emplace( new IRTree::CMove( left, right ) );
+	parsedStatements.emplace( new IRTree::CMove( left, right ) );
 }
 
-void IRBuilderVisitor::Visit( const CAssignStatement* statement )
+void CIRBuilderVisitor::Visit( const CAssignStatement* statement )
 {
 	// left = right
 	// left - переменная на фрейме
@@ -144,10 +146,10 @@ void IRBuilderVisitor::Visit( const CAssignStatement* statement )
 	IRTree::CExprPtr right = parsedExpressions.top( );
 	parsedExpressions.pop();
 
-	parsedExpressions.emplace( new IRTree::CMove( left, right ) );
+	parsedStatements.emplace( new IRTree::CMove( left, right ) );
 }
 
-void IRBuilderVisitor::Visit( const CIfStatement* ifStatement )
+void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 {
 	ifStatement->GetCondition()->Accept( this );
 	IRTree::CExprPtr condition = parsedExpressions.top();
@@ -156,13 +158,13 @@ void IRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 	IRTree::CStmPtr trueStatement, falseStatement;
 	if( ifStatement->GetIfTrueStatement() != nullptr ) {
 		ifStatement->GetIfTrueStatement()->Accept( this );
-		trueStatement = parsedStatements.top( );
-		parsedStatements.pop( );
+		trueStatement = parsedStatements.top();
+		parsedStatements.pop();
 	}
 	if( ifStatement->GetIfFalseStatement() != nullptr ) {
 		ifStatement->GetIfFalseStatement()->Accept( this );
-		falseStatement = parsedStatements.top( );
-		parsedStatements.pop( );
+		falseStatement = parsedStatements.top();
+		parsedStatements.pop();
 	}
 
 	// Создаем метки для true, false и выхода из if
@@ -185,7 +187,7 @@ void IRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 		IRTree::CExprPtr( new IRTree::CConst(1) ), trueLabel, falseLabel ) ), trueStatement) ) );
 }
 
-void IRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
+void CIRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
 {
 	whileStatement->GetBodyCycle()->Accept( this );
 	IRTree::CStmPtr bodyCycleStatement = parsedStatements.top();
@@ -215,16 +217,16 @@ void IRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
 		IRTree::CStmPtr( new IRTree::CLabel( doneLabel ) ) ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CPrintStatement* printStatement )
+void CIRBuilderVisitor::Visit( const CPrintStatement* printStatement )
 {
 	printStatement->GetExpression()->Accept( this );
 	IRTree::CExprPtr expr = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	parsedExpressions.emplace( new IRTree::CCall( CSymbol::GetSymbol( "@print" ), { expr } ) );
+	parsedStatements.emplace( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "$print" ), { expr } ) ) ));
 }
 
-void IRBuilderVisitor::Visit( const CBinOpExpression* expr )
+void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
 {
 	expr->GetLeftExp()->Accept( this );
 	std::shared_ptr<const IRTree::IExpr> left = parsedExpressions.top();
@@ -260,7 +262,7 @@ void IRBuilderVisitor::Visit( const CBinOpExpression* expr )
 	parsedExpressions.emplace( new IRTree::CMem( IRTree::CExprPtr( binOp ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CIndexExpression* expr )
+void CIRBuilderVisitor::Visit( const CIndexExpression* expr )
 {
 	expr->GetExp()->Accept( this );
 	IRTree::CExprPtr array = parsedExpressions.top();
@@ -277,7 +279,7 @@ void IRBuilderVisitor::Visit( const CIndexExpression* expr )
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CMem( IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, array, offset ) ) ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CLenghtExpression* expr )
+void CIRBuilderVisitor::Visit( const CLenghtExpression* expr )
 {
 	expr->GetExp()->Accept( this );
 	IRTree::CExprPtr arrayLen = parsedExpressions.top();
@@ -288,7 +290,7 @@ void IRBuilderVisitor::Visit( const CLenghtExpression* expr )
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CMove( lenght, arrayLen ) ), lenght ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CMethodExpression* expr )
+void CIRBuilderVisitor::Visit( const CMethodExpression* expr )
 {
 	expr->GetExp()->Accept( this );
 	IRTree::CExprPtr object = parsedExpressions.top();
@@ -311,74 +313,74 @@ void IRBuilderVisitor::Visit( const CMethodExpression* expr )
 		returnValue, IRTree::CExprPtr( new IRTree::CCall( expr->GetIdentifier(), arguments ) ) ) ), returnValue ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
+void CIRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
 {
 	parsedExpressions.emplace( IRTree::CExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CBoolLiteralExpression* expr )
+void CIRBuilderVisitor::Visit( const CBoolLiteralExpression* expr )
 {
 	parsedExpressions.emplace( IRTree::CExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CIdentifierExpression* expr )
+void CIRBuilderVisitor::Visit( const CIdentifierExpression* expr )
 {
 	parsedExpressions.emplace( frames.back().GetVar( expr->GetIdentifier() )->GetExp( frames.back().GetFramePtr() ) );
 }
 
-void IRBuilderVisitor::Visit( const CThisExpression* expr )
+void CIRBuilderVisitor::Visit( const CThisExpression* expr )
 {
 	parsedExpressions.emplace( new IRTree::CTemp( frames.back().GetThisPtr() ) );
 }
 
-void IRBuilderVisitor::Visit( const CNewIntArrayExpression* expr )
+void CIRBuilderVisitor::Visit( const CNewIntArrayExpression* expr )
 {
 	expr->GetExp()->Accept( this );
 	IRTree::CExprPtr arraySize = parsedExpressions.top();
 	parsedStatements.pop();
 
 	// (len + 1) * wordSize
-	IRTree::CExprPtr allocationSize = IRTree::CExprPtr( new IRTree::CExprPtr( new IRTree::CMem( 
-		IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::MUL,
+	IRTree::CExprPtr allocationSize( new IRTree::CMem( IRTree::CExprPtr( 
+		new IRTree::CBinop( IRTree::IExpr::MUL,
 		IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, arraySize, IRTree::CExprPtr( new IRTree::CConst( 1 ) ) ) ),
-		IRTree::CExprPtr( new IRTree::CConst(frames.back().WORD_SIZE) ) ) ) ) ) );
+		IRTree::CExprPtr( new IRTree::CConst(frames.back().WORD_SIZE) ) ) ) ) );
 
 	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>() ) );
 
-	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "@malloc" ), { allocationSize } ) );
+	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "$malloc" ), { allocationSize } ) );
 	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
 	// TODO: как сделать по-нормальному
-	IRTree::CStmPtr clearMemory( new IRTree::CCall( CSymbol::GetSymbol( "@memset" ),
-		{ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize } ) );
+	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "$memset" ),
+		{ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize } ) ) ) );
 	IRTree::CStmPtr moveSize( new IRTree::CMove( temp, arraySize ) );
 
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
 		allocateMemory, IRTree::CStmPtr( new IRTree::CSeq( clearMemory, moveSize ) ) ) ), temp ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CNewExpression* expr )
+void CIRBuilderVisitor::Visit( const CNewExpression* expr )
 {
 	SymbolsTable::CClassInfo* object = symbolsTable->GetClass( expr->GetIdentifier()->GetString() );
 	int objectSize = object->GerVars().size();
 
-	IRTree::CExprPtr allocationSize = IRTree::CExprPtr( new IRTree::CExprPtr( new IRTree::CMem(
+	IRTree::CExprPtr allocationSize( new IRTree::CMem(
 		IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::MUL,
-		IRTree::CExprPtr( IRTree::CExprPtr( new IRTree::CConst( objectSize ) ) ),
-		IRTree::CExprPtr( new IRTree::CConst( frames.back().WORD_SIZE ) ) ) ) ) ) );
+		IRTree::CExprPtr( new IRTree::CConst( objectSize ) ),
+		IRTree::CExprPtr( new IRTree::CConst( frames.back().WORD_SIZE ) ) ) ) ) );
 
 	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>() ) );
 
-	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "@malloc" ), { allocationSize } ) );
+	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "$malloc" ), { allocationSize } ) );
 	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
 	// TODO: как сделать по-нормальному
-	IRTree::CStmPtr clearMemory( new IRTree::CCall( CSymbol::GetSymbol( "@memset" ),
-		{ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize } ) );
+	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "$memset" ),
+		{ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize } ) ) ) );
 
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
 		allocateMemory, clearMemory ) ), temp ) ) );
 }
 
-void IRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
+void CIRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
 {
 	expr->GetRightExp()->Accept( this );
 	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
@@ -397,39 +399,73 @@ void IRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
 	parsedExpressions.emplace(binOp);
 }
 
-void IRBuilderVisitor::Visit( const CBracesExpression* expr )
+void CIRBuilderVisitor::Visit( const CBracesExpression* expr )
 {
-	expr->GetExp()->Accept( this );
+	if( expr->GetExp() != nullptr ) {
+		expr->GetExp()->Accept( this );
+	}
 }
 
-void IRBuilderVisitor::Visit( const CExpressionList* exprList )
+void CIRBuilderVisitor::Visit( const CExpressionList* exprList )
 {
-	exprList->GetExp()->Accept( this );
-	exprList->GetExpList()->Accept( this );
+	// Просто укладываем всё на стек последовательно
+	if( exprList->GetExp() != nullptr ) {
+		exprList->GetExp()->Accept( this );
+	}
+	if( exprList->GetExpList() != nullptr ) {
+		exprList->GetExpList()->Accept( this );
+	}
 }
 
-void IRBuilderVisitor::Visit( const CStatementList* stmtList )
+void CIRBuilderVisitor::Visit( const CExpressionRest* expr )
 {
+	if( expr->GetExp() != nullptr ) {
+		expr->GetExp()->Accept( this );
+	}
+}
+
+void CIRBuilderVisitor::Visit( const CStatementList* stmtList )
+{
+	int parsedStatementsCount = parsedStatements.size();
 	stmtList->GetStatement()->Accept( this );
-	stmtList->GetStatementList()->Accept( this );
+
+	// Если распарсили не statement, а expression
+	if( parsedStatementsCount + 1 != parsedStatements.size() ) {
+		IRTree::CExprPtr exp = parsedExpressions.top();
+		parsedExpressions.pop();
+
+		parsedStatements.emplace( new IRTree::CExpr( exp ) );
+	}
+
+	// Объединяем в SEQ последовательность, если есть еще элементы листа
+	if( stmtList->GetStatementList() != nullptr ) {
+		stmtList->GetStatementList( )->Accept( this );
+
+		IRTree::CStmPtr parsedListRest = parsedStatements.top();
+		parsedStatements.pop();
+
+		// Statement, который прошли в stmtList->GetStatement()
+		IRTree::CStmPtr parsedStm = parsedStatements.top( );
+		parsedStatements.pop();
+
+		parsedStatements.emplace( new IRTree::CSeq( parsedStm, parsedListRest ) );
+	}
 }
 
-void IRBuilderVisitor::Visit( const CExpressionRest* expr )
+void CIRBuilderVisitor::Visit( const CMethodDeclList* methodList )
 {
-	expr->GetExp()->Accept( this );
+	if( methodList->GetMethodDecl() != nullptr ) {
+		methodList->GetMethodDecl()->Accept( this );
+	}
+	if( methodList->GetMethodDeclList() != nullptr ) {
+		methodList->GetMethodDeclList()->Accept( this );
+	}
 }
 
-void IRBuilderVisitor::Visit( const CMethodDeclList* methodList )
-{
-	methodList->GetMethodDecl()->Accept( this );
-	methodList->GetMethodDeclList()->Accept( this );
-}
-
-void IRBuilderVisitor::Visit( const CFormalList* list )
+void CIRBuilderVisitor::Visit( const CFormalList* list )
 {
 }
 
-void IRBuilderVisitor::Visit( const CFormalParam* list )
+void CIRBuilderVisitor::Visit( const CFormalParam* formal )
 {
-	list->GetType()->Accept( this );
 }

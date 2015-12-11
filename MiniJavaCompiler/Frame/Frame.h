@@ -38,12 +38,9 @@ namespace Frame {
 
 	class CFrame {
 	public:
-		CFrame( const CSymbol* _name, int formalsCount, std::shared_ptr<const IRTree::IStm> _root );
 		CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, const SymbolsTable::CTable* table );
 
-		void AddStatements( std::shared_ptr<const IRTree::IStm> statements );
-		bool ContainsFormal( const CSymbol* name ) const;
-		void AddFormal( const CSymbol* name, std::shared_ptr<IAccess> formal );
+		void SetStatements( std::shared_ptr<const IRTree::IStm> statements );
 		std::shared_ptr<IAccess> GetVar( const CSymbol* name ) const;
 
 		std::shared_ptr<Temp::CTemp> GetFramePtr() const;
@@ -52,9 +49,8 @@ namespace Frame {
 
 		static const int WORD_SIZE = 4;
 	private:
-		std::map<const CSymbol*, std::shared_ptr<IAccess>> formals;
-		std::map<const CSymbol*, std::shared_ptr<IAccess>> temporires;
-		std::map<const CSymbol*, std::shared_ptr<IAccess>> locals;
+		std::map<std::string, std::shared_ptr<IAccess>> formals;
+		std::map<std::string, std::shared_ptr<IAccess>> locals;
 
 		const CSymbol* frameName;
 

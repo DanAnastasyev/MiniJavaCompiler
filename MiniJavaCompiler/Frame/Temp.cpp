@@ -5,22 +5,22 @@ namespace Temp {
 
 	CLabel::CLabel()
 	{
-		name = std::to_string( nextUniqueId++ );
+		name = CSymbol::GetSymbol( std::to_string( nextUniqueId++ ) );
 	}
 
-	CLabel::CLabel( const CSymbol& label ) :
-		name( label.GetString() )
+	CLabel::CLabel( const CSymbol* label ) :
+		name( label )
 	{}
 
 	int CTemp::nextUniqueId = 0;
 
 	CTemp::CTemp()
 	{
-		name = std::to_string( nextUniqueId++ );
+		name = CSymbol::GetSymbol( std::to_string( nextUniqueId++ ) );
 	}
 
-	CTemp::CTemp( const CSymbol& symbol ) :
-		name( symbol.GetString() )
+	CTemp::CTemp( const CSymbol* symbol ) :
+		name( symbol )
 	{}
 
 }

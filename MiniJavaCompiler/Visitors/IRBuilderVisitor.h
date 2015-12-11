@@ -7,9 +7,9 @@
 
 #include <stack>
 
-class IRBuilderVisitor : public IVisitor {
+class CIRBuilderVisitor : public IVisitor {
 public:
-	IRBuilderVisitor( SymbolsTable::CTable* table );
+	CIRBuilderVisitor( SymbolsTable::CTable* table );
 
 	void Visit( const CProgram* program ) override;
 	void Visit( const CMainClass* mainClass ) override;

@@ -169,6 +169,11 @@ namespace SymbolsTable {
 		return params;
 	}
 
+	std::vector<std::shared_ptr<CVarInfo>> CMethodInfo::GetLocals() const
+	{
+		return locals;
+	}
+
 	std::string CVarInfo::GetName() const
 	{
 		return varName;

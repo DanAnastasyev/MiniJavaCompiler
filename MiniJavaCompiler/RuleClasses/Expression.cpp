@@ -13,7 +13,7 @@ CBinOpExpression::BinOp CBinOpExpression::GetBinOp() const
 	return binOp;
 }
 
-const IExp* CBinOpExpression::GetRightExp() const
+const IExp* CBinOpExpression::GetLeftExp() const
 {
 	return leftExp.get();
 }

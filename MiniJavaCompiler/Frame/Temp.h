@@ -11,13 +11,13 @@ namespace Temp {
 		CTemp();
 
 		// Новая переменная с заданным именем
-		explicit CTemp( const CSymbol& _symbol );
+		explicit CTemp( const CSymbol* _symbol );
 		
-		const std::string& GetName() const;
+		const CSymbol* GetName() const;
 	private:
 		// Счётчик для создания уникальных имён
 		static int nextUniqueId;
-		std::string name;
+		const CSymbol* name;
 	};
 
 	// Метка - точка перехода в коде

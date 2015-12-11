@@ -10,7 +10,7 @@ namespace IRTree
 
 	class IStm {
 	public:
-		virtual ~IStm() = 0;
+		virtual ~IStm() {};
 	};
 
 	typedef std::shared_ptr<const IStm> CStmPtr;
@@ -26,32 +26,41 @@ namespace IRTree
 		std::shared_ptr<const IExpr> srcExpr;
 	};
 
+	class CExpr : public IStm {
+	public:
+		CExpr( std::shared_ptr<const IExpr> exp );
+
+		std::shared_ptr<const IExpr> GetExp( ) const;
+	private:
+		std::shared_ptr<const IExpr> exp;
+	};
+
 	class CJump : public IStm {
 	public:
-		CJump( std::shared_ptr<const IExpr> exp, const std::vector<Temp::CLabel>& labels );
+		CJump( std::shared_ptr<const IExpr> exp, const std::vector<std::shared_ptr<const Temp::CLabel>>& labels );
 		CJump( std::shared_ptr<const Temp::CLabel> label );
 
 		std::shared_ptr<const IExpr> GetJumpExpr() const;
-		std::vector<Temp::CLabel> GetLabel() const;
+		std::vector<std::shared_ptr<const Temp::CLabel>> GetLabels() const;
 	private:
 		std::shared_ptr<const IExpr> jmpExpr;
-		std::vector<Temp::CLabel> labels;
+		std::vector<std::shared_ptr<const Temp::CLabel>> labels;
 	};
 
 	class CCondJump : public IStm {
 	public:
-		CCondJump( IExpr::CJUMP binOp, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right, 
+		CCondJump( int binOp, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right, 
 			std::shared_ptr<const Temp::CLabel> ifTrueLabel, std::shared_ptr<const Temp::CLabel> ifFalseLabel );
 
 		std::shared_ptr<const IExpr> GetLeftExpr() const;
 		std::shared_ptr<const IExpr> GetRightExpr() const;
-		IExpr::CJUMP GetBinOp( ) const;
+		int GetBinOp( ) const;
 		Temp::CLabel GetIfTrueLabel() const;
 		Temp::CLabel GetIfFalseLabel() const;
 	private:
 		std::shared_ptr<const IExpr> leftExpr;
 		std::shared_ptr<const IExpr> rightExpr;
-		IExpr::CJUMP binOp;
+		int binOp;
 		std::shared_ptr<const Temp::CLabel> ifTrueLabel;
 		std::shared_ptr<const Temp::CLabel> ifFalseLabel;
 	};

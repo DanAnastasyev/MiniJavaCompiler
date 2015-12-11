@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <memory>
 #include <string>
@@ -33,6 +35,7 @@ namespace SymbolsTable {
 		CVarInfo* GetVar( const std::string& varName ) const;
 		CVarInfo* GetReturnType() const;
 		std::vector<std::shared_ptr<CVarInfo>> GetParams() const;
+		std::vector<std::shared_ptr<CVarInfo>> GetLocals() const;
 	private:
 		std::string methodName;
 		std::shared_ptr<CVarInfo> returnType;

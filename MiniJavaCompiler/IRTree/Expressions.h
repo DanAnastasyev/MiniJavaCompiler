@@ -19,7 +19,7 @@ namespace IRTree
 			EQ, NE, LT, GT, LE, GE, ULT, ULE, UGT, UGE
 		};
 
-		virtual ~IExpr() = 0;
+		virtual ~IExpr() {};
 	};
 
 	typedef std::shared_ptr<const IExpr> CExprPtr;
@@ -35,17 +35,16 @@ namespace IRTree
 
 	class CName : public IExpr {
 	public:
-		CName( const std::string& name );
-		std::string GetName() const;
-
+		CName( std::shared_ptr<const Temp::CLabel> name );
+		std::shared_ptr<const Temp::CLabel> GetName() const;
 	private:
-		std::string name;
+		std::shared_ptr<const Temp::CLabel> name;
 	};
 
 	class CTemp : public IExpr {
 	public:
 		CTemp( const std::shared_ptr<Temp::CTemp> temp );
-		Temp::CTemp GetTemp() const;
+		std::shared_ptr<Temp::CTemp> GetTemp( ) const;
 
 	private:
 		std::shared_ptr<Temp::CTemp> temp;
