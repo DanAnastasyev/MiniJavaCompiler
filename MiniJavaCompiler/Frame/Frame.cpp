@@ -16,7 +16,9 @@ namespace Frame {
 	}
 
 	CInReg::CInReg()
-	{}
+	{
+		temp = std::make_shared<Temp::CTemp>();
+	}
 
 	const IRTree::CExprPtr CInReg::GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const
 	{
@@ -26,7 +28,7 @@ namespace Frame {
 	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, 
 		const SymbolsTable::CTable* table )
 	{
-		frameName = CSymbol::GetSymbol( classInfo->GetName() + "$" + methodInfo->GetName() );
+		frameName = CSymbol::GetSymbol( classInfo->GetName() + "__" + methodInfo->GetName() );
 		do {
 			for( auto var : classInfo->GerVars() ) {
 				locals[var->GetName()] = std::shared_ptr<IAccess>( new CInReg() );
@@ -39,6 +41,10 @@ namespace Frame {
 		for( auto var : methodInfo->GetParams() ) {
 			formals[var->GetName()] = std::shared_ptr<IAccess>( new CInReg( ) );
 		}
+
+		framePtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol(frameName->GetString() + "__FP") );
+		thisPtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString( ) + "__TP" ) );
+		returnPtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString( ) + "__RP" ) );
 	}
 
 	void CFrame::SetStatements( std::shared_ptr<const IRTree::IStm> statements )
@@ -70,6 +76,16 @@ namespace Frame {
 	std::shared_ptr<Temp::CTemp> CFrame::GetReturnPtr() const
 	{
 		return returnPtr;
+	}
+
+	const CSymbol* CFrame::GetName() const
+	{
+		return frameName;
+	}
+
+	std::shared_ptr<const IRTree::IStm> CFrame::GetRootStm() const
+	{
+		return root;
 	}
 
 }

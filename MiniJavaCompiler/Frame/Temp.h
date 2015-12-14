@@ -29,10 +29,7 @@ namespace Temp {
 		// Создать метку с заданным именем
 		explicit CLabel( const CSymbol* label );
 
-		const CSymbol* Name() const
-		{
-			return name;
-		}
+		const CSymbol* GetName() const;
 
 	private:
 		static int nextUniqueId;

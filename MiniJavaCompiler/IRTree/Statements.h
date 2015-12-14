@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Frame\Temp.h"
+#include "Visitors/Visitor.h"
 
 namespace IRTree
 {
@@ -10,7 +11,9 @@ namespace IRTree
 
 	class IStm {
 	public:
-		virtual ~IStm() {};
+		virtual ~IStm() {}
+
+		virtual void Accept( IIRTreeVisitor* visitor ) const = 0;
 	};
 
 	typedef std::shared_ptr<const IStm> CStmPtr;
@@ -21,6 +24,8 @@ namespace IRTree
 
 		std::shared_ptr<const IExpr> GetDestExpr( ) const;
 		std::shared_ptr<const IExpr> GetSrcExpr( ) const;
+
+		void Accept( IIRTreeVisitor* visitor ) const override;
 	private:
 		std::shared_ptr<const IExpr> destExpr;
 		std::shared_ptr<const IExpr> srcExpr;
@@ -31,6 +36,8 @@ namespace IRTree
 		CExpr( std::shared_ptr<const IExpr> exp );
 
 		std::shared_ptr<const IExpr> GetExp( ) const;
+
+		void Accept( IIRTreeVisitor* visitor ) const override;
 	private:
 		std::shared_ptr<const IExpr> exp;
 	};
@@ -42,6 +49,8 @@ namespace IRTree
 
 		std::shared_ptr<const IExpr> GetJumpExpr() const;
 		std::vector<std::shared_ptr<const Temp::CLabel>> GetLabels() const;
+
+		void Accept( IIRTreeVisitor* visitor ) const override;
 	private:
 		std::shared_ptr<const IExpr> jmpExpr;
 		std::vector<std::shared_ptr<const Temp::CLabel>> labels;
@@ -55,8 +64,10 @@ namespace IRTree
 		std::shared_ptr<const IExpr> GetLeftExpr() const;
 		std::shared_ptr<const IExpr> GetRightExpr() const;
 		int GetBinOp( ) const;
-		Temp::CLabel GetIfTrueLabel() const;
-		Temp::CLabel GetIfFalseLabel() const;
+		std::shared_ptr<const Temp::CLabel> GetIfTrueLabel( ) const;
+		std::shared_ptr<const Temp::CLabel> GetIfFalseLabel( ) const;
+
+		void Accept( IIRTreeVisitor* visitor ) const override;
 	private:
 		std::shared_ptr<const IExpr> leftExpr;
 		std::shared_ptr<const IExpr> rightExpr;
@@ -71,6 +82,8 @@ namespace IRTree
 
 		std::shared_ptr<const IStm> GetLeftStm() const;
 		std::shared_ptr<const IStm> GetRightStm() const;
+
+		void Accept( IIRTreeVisitor* visitor ) const override;
 	private:
 		std::shared_ptr<const IStm> leftStm;
 		std::shared_ptr<const IStm> rightStm;
@@ -80,7 +93,9 @@ namespace IRTree
 	public:
 		CLabel( std::shared_ptr<const Temp::CLabel> label );
 
-		Temp::CLabel GetLabel() const;
+		std::shared_ptr<const Temp::CLabel> GetLabel( ) const;
+
+		void Accept( IIRTreeVisitor* visitor ) const override;
 	private:
 		std::shared_ptr<const Temp::CLabel> label;
 	};

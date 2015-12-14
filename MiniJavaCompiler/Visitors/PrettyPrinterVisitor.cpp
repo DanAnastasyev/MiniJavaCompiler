@@ -228,8 +228,8 @@ void CPrettyPrinterVisitor::Visit( const CPrintStatement* statement )
 
 void CPrettyPrinterVisitor::Visit( const CBinOpExpression* expr )
 {
-	if( expr->GetRightExp() != nullptr ) {
-		expr->GetRightExp()->Accept( this );
+	if( expr->GetLeftExp() != nullptr ) {
+		expr->GetLeftExp()->Accept( this );
 	}
 	switch( expr->GetBinOp() ) {
 	case CBinOpExpression::BinOp::AND:

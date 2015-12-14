@@ -12,6 +12,11 @@ namespace Temp {
 		name( label )
 	{}
 
+	const CSymbol* CLabel::GetName() const
+	{
+		return name;
+	}
+
 	int CTemp::nextUniqueId = 0;
 
 	CTemp::CTemp()
@@ -22,5 +27,10 @@ namespace Temp {
 	CTemp::CTemp( const CSymbol* symbol ) :
 		name( symbol )
 	{}
+
+	const CSymbol* CTemp::GetName() const
+	{
+		return name;
+	}
 
 }

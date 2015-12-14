@@ -8,9 +8,34 @@ namespace IRTree
 		srcExpr( src )
 	{}
 
+	std::shared_ptr<const IExpr> CMove::GetDestExpr() const
+	{
+		return destExpr;
+	}
+
+	std::shared_ptr<const IExpr> CMove::GetSrcExpr() const
+	{
+		return srcExpr;
+	}
+
+	void CMove::Accept( IIRTreeVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
+
 	CExpr::CExpr( std::shared_ptr<const IExpr> _exp ) :
 		exp( _exp )
 	{}
+
+	std::shared_ptr<const IExpr> CExpr::GetExp() const
+	{
+		return exp;
+	}
+
+	void CExpr::Accept( IIRTreeVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
 
 	CJump::CJump( std::shared_ptr<const IExpr> _exp, const std::vector<std::shared_ptr<const Temp::CLabel>>& _labels ) :
 		jmpExpr( _exp ),
@@ -24,6 +49,21 @@ namespace IRTree
 
 
 
+	std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
+	{
+		return jmpExpr;
+	}
+
+	std::vector<std::shared_ptr<const Temp::CLabel>> CJump::GetLabels() const
+	{
+		return labels;
+	}
+
+	void CJump::Accept( IIRTreeVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
+
 	CCondJump::CCondJump( int _binOp, std::shared_ptr<const IExpr> _left, std::shared_ptr<const IExpr> _right,
 		std::shared_ptr<const Temp::CLabel> _ifTrueLabel, std::shared_ptr<const Temp::CLabel> _ifFalseLabel ) :
 		binOp( _binOp ),
@@ -33,13 +73,68 @@ namespace IRTree
 		ifFalseLabel( _ifFalseLabel )
 	{}
 
+	std::shared_ptr<const IExpr> CCondJump::GetLeftExpr() const
+	{
+		return leftExpr;
+	}
+
+	std::shared_ptr<const IExpr> CCondJump::GetRightExpr() const
+	{
+		return rightExpr;
+	}
+
+	int CCondJump::GetBinOp() const
+	{
+		return binOp;
+	}
+
+	std::shared_ptr<const Temp::CLabel> CCondJump::GetIfTrueLabel( ) const
+	{
+		return ifTrueLabel;
+	}
+
+	std::shared_ptr<const Temp::CLabel> CCondJump::GetIfFalseLabel() const
+	{
+		return ifFalseLabel;
+	}
+
+	void CCondJump::Accept( IIRTreeVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
+
 	CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right ) :
 		leftStm( left ),
 		rightStm( right )
 	{}
 
+	std::shared_ptr<const IStm> CSeq::GetLeftStm() const
+	{
+		return leftStm;
+	}
+
+	std::shared_ptr<const IStm> CSeq::GetRightStm() const
+	{
+		return rightStm;
+	}
+
+	void CSeq::Accept( IIRTreeVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
+
 	CLabel::CLabel( std::shared_ptr<const Temp::CLabel> _label ) :
 		label( _label )
 	{}
+
+	std::shared_ptr<const Temp::CLabel> CLabel::GetLabel() const
+	{
+		return label;
+	}
+
+	void CLabel::Accept( IIRTreeVisitor* visitor ) const
+	{
+		visitor->Visit( this );
+	}
 
 }

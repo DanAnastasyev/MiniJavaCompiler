@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Frame">
       <UniqueIdentifier>{e6fa3341-9ec4-4b5d-a397-d72397d42fce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphviz">
+      <UniqueIdentifier>{5cf8e561-2089-429e-b019-f1a5b27fe47f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -122,6 +125,12 @@
     <ClCompile Include="Visitors\IRBuilderVisitor.cpp">
       <Filter>Source Files\Visitors</Filter>
     </ClCompile>
+    <ClCompile Include="graphviz\Digrapg.cpp">
+      <Filter>Source Files\graphviz</Filter>
+    </ClCompile>
+    <ClCompile Include="graphviz\IRTreeToDigraphConverter.cpp">
+      <Filter>Source Files\graphviz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -177,6 +186,12 @@
     </ClInclude>
     <ClInclude Include="Visitors\IRBuilderVisitor.h">
       <Filter>Source Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphviz\Digrapg.h">
+      <Filter>Source Files\graphviz</Filter>
+    </ClInclude>
+    <ClInclude Include="graphviz\IRTreeToDigraphConverter.h">
+      <Filter>Source Files\graphviz</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

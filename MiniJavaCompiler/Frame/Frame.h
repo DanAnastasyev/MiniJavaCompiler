@@ -47,6 +47,10 @@ namespace Frame {
 		std::shared_ptr<Temp::CTemp> GetThisPtr() const;
 		std::shared_ptr<Temp::CTemp> GetReturnPtr() const;
 
+		const CSymbol* GetName() const;
+
+		std::shared_ptr<const IRTree::IStm> GetRootStm() const;
+
 		static const int WORD_SIZE = 4;
 	private:
 		std::map<std::string, std::shared_ptr<IAccess>> formals;

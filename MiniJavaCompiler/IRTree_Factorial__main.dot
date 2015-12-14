@@ -1,0 +1,20 @@
+digraph {
+temp_Factorial__main__RP__id_0 [ label="temp_Factorial__main__RP" ]; 
+const_10__id_1 [ label="const_10" ]; 
+call__id_2 [ label="call" ]; 
+call__id_2 -> ComputeFac [ label="func"] ; 
+call__id_2 ->  const_10__id_1 [ label="args"] ; 
+move__id_3 [ label="move" ]; 
+move__id_3 -> temp_Factorial__main__RP__id_0 [ label="dest"] ; 
+move__id_3 -> call__id_2 [ label="src"] ; 
+temp_Factorial__main__RP__id_4 [ label="temp_Factorial__main__RP" ]; 
+eseq__id_5 [ label="eseq" ]; 
+eseq__id_5 -> temp_Factorial__main__RP__id_4 [ label="exp"] ; 
+eseq__id_5 -> move__id_3 [ label="stm"] ; 
+call__id_6 [ label="call" ]; 
+call__id_6 -> __print [ label="func"] ; 
+call__id_6 ->  eseq__id_5 [ label="args"] ; 
+exp__id_7 [ label="exp" ]; 
+exp__id_7 -> call__id_6 ; 
+
+}

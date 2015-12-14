@@ -46,6 +46,7 @@ public:
 	void Visit( const CFormalList* list ) override;
 	void Visit( const CFormalParam* list ) override;
 
+	std::vector<Frame::CFrame> GetFrames() const;
 private:
 	std::stack<std::shared_ptr<const IRTree::IExpr>> parsedExpressions;
 	std::stack<std::shared_ptr<const IRTree::IStm>> parsedStatements;
