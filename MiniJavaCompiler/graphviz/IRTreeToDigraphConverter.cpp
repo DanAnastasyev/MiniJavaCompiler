@@ -137,13 +137,27 @@ void CIRTreeToDigraphConverter::Visit( const CCall* node )
 {
 	string funcString = node->GetFunctionName()->GetString();
 	string argsString;
+	std::vector<string> nodes;
+	for( auto arg : node->GetArguments() ) {
+		arg->Accept( this );
+		nodes.push_back( lastNodeName );
+	}
+	nextNameWithId( "call" );
+	treeRepresentation.AddEdge( lastNodeName, funcString, "func" );
+	for( int i = 0; i < nodes.size(); ++i ) {
+		treeRepresentation.AddEdge( lastNodeName, nodes[i], "arg" );
+	}
+	//treeRepresentation.AddEdge( lastNodeName, argsString, "args" );
+/*
+	string funcString = node->GetFunctionName()->GetString();
+	string argsString;
 	for( auto arg : node->GetArguments() ) {
 		arg->Accept( this );
 		argsString += " " + lastNodeName;
 	}
 	nextNameWithId( "call" );
 	treeRepresentation.AddEdge( lastNodeName, funcString, "func" );
-	treeRepresentation.AddEdge( lastNodeName, argsString, "args" );
+	treeRepresentation.AddEdge( lastNodeName, argsString, "args" );*/
 }
 
 void CIRTreeToDigraphConverter::Visit( const CESeq* node )

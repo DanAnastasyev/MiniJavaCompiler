@@ -259,7 +259,7 @@ void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
 		break;
 	}
 
-	parsedExpressions.emplace( new IRTree::CMem( IRTree::CExprPtr( binOp ) ) );
+	parsedExpressions.emplace( IRTree::CExprPtr( binOp ) );
 }
 
 void CIRBuilderVisitor::Visit( const CIndexExpression* expr )
