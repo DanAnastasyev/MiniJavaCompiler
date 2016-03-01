@@ -18,6 +18,7 @@ namespace IRTree
 
 	typedef std::shared_ptr<const IStm> CStmPtr;
 
+	// Copy result src into dst
 	class CMove : public IStm {
 	public:
 		CMove( std::shared_ptr<const IExpr> dst, std::shared_ptr<const IExpr> src );
@@ -31,6 +32,7 @@ namespace IRTree
 		std::shared_ptr<const IExpr> srcExpr;
 	};
 
+	// Calculate exp and forget about result
 	class CExpr : public IStm {
 	public:
 		CExpr( std::shared_ptr<const IExpr> exp );
@@ -42,6 +44,7 @@ namespace IRTree
 		std::shared_ptr<const IExpr> exp;
 	};
 
+	// Jump to label
 	class CJump : public IStm {
 	public:
 		CJump( std::shared_ptr<const IExpr> exp, const std::vector<std::shared_ptr<const Temp::CLabel>>& labels );
@@ -56,6 +59,7 @@ namespace IRTree
 		std::vector<std::shared_ptr<const Temp::CLabel>> labels;
 	};
 
+	// Jump with condition
 	class CCondJump : public IStm {
 	public:
 		CCondJump( int binOp, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right, 
@@ -76,6 +80,7 @@ namespace IRTree
 		std::shared_ptr<const Temp::CLabel> ifFalseLabel;
 	};
 
+	// Calculate left than right sequentially
 	class CSeq : public IStm {
 	public:
 		CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right );
@@ -89,6 +94,7 @@ namespace IRTree
 		std::shared_ptr<const IStm> rightStm;
 	};
 
+	// Jump wil lead here every time
 	class CLabel : public IStm {
 	public:
 		CLabel( std::shared_ptr<const Temp::CLabel> label );

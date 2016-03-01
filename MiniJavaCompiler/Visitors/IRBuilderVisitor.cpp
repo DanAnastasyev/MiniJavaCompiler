@@ -155,6 +155,12 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 	IRTree::CExprPtr condition = parsedExpressions.top();
 	parsedExpressions.pop();
 
+	// Создаем метки для true, false и выхода из if
+	// Создаем метки со сгенерированным названием	
+	std::shared_ptr<const Temp::CLabel> trueLabel(new Temp::CLabel());
+	std::shared_ptr<const Temp::CLabel> falseLabel(new Temp::CLabel());
+	std::shared_ptr<const Temp::CLabel> joinLabel(new Temp::CLabel());
+
 	IRTree::CStmPtr trueStatement, falseStatement;
 	if( ifStatement->GetIfTrueStatement() != nullptr ) {
 		ifStatement->GetIfTrueStatement()->Accept( this );
@@ -167,24 +173,23 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 		parsedStatements.pop();
 	}
 
-	// Создаем метки для true, false и выхода из if
-	// Создаем метки со сгенерированным названием
-	std::shared_ptr<const Temp::CLabel> trueLabel( new Temp::CLabel() );
-	std::shared_ptr<const Temp::CLabel> falseLabel( new Temp::CLabel( ) );
-	std::shared_ptr<const Temp::CLabel> joinLabel( new Temp::CLabel( ) );
+	//IRTree::CStmPtr trueBranch = IRTree::CStmPtr(new IRTree::CSeq(new IRTree::CLabel(trueLabel), new IRTree::CSeq(trueStatement), new IRTree::CJump(joinLabel)));
 
-	// false = SEQ( LABEL(f), SEQ(S2, LABEL(join)) )
-	falseStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel(falseLabel) ),
-		IRTree::CStmPtr( new IRTree::CSeq( falseStatement, IRTree::CStmPtr( new IRTree::CLabel( joinLabel ) ) ) ) ) );
+	IRTree::CJump* endifJump = new IRTree::CJump(joinLabel);
 
-	// true = SEQ( LABEL(t), SEQ( S1, SEQ( JUMP, SEQ(LABEL(f)) ) ) )
+	falseStatement = IRTree::CStmPtr(new IRTree::CSeq(IRTree::CStmPtr(new IRTree::CLabel(falseLabel)),
+		IRTree::CStmPtr(new IRTree::CSeq(falseStatement,IRTree::CStmPtr(endifJump)))));
+
 	trueStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( trueLabel ) ),
 		IRTree::CStmPtr( new IRTree::CSeq( trueStatement, 
-		IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CJump(joinLabel) ), falseStatement ) ) ) ) ) );
+		IRTree::CStmPtr(endifJump) ) ) ) );
+
+	IRTree::CStmPtr bothStatement = IRTree::CStmPtr(new IRTree::CSeq(trueStatement, IRTree::CStmPtr(new IRTree::CSeq(falseStatement
+		, IRTree::CStmPtr(new IRTree::CLabel(joinLabel))))));
 
 	// SEQ( CCONDJUMP( eq, e, 1, t, f ), true )
 	parsedStatements.push( IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CCondJump( IRTree::IExpr::EQ, condition, 
-		IRTree::CExprPtr( new IRTree::CConst(1) ), trueLabel, falseLabel ) ), trueStatement) ) );
+		IRTree::CExprPtr( new IRTree::CConst(1) ), trueLabel, falseLabel ) ), bothStatement) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
@@ -222,8 +227,7 @@ void CIRBuilderVisitor::Visit( const CPrintStatement* printStatement )
 	printStatement->GetExpression()->Accept( this );
 	IRTree::CExprPtr expr = parsedExpressions.top();
 	parsedExpressions.pop();
-
-	parsedStatements.emplace( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "__print" ), { expr } ) ) ));
+	parsedStatements.emplace( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "name_println" ), { expr } ) ) ));
 }
 
 void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
@@ -297,6 +301,7 @@ void CIRBuilderVisitor::Visit( const CMethodExpression* expr )
 	parsedExpressions.pop();
 
 	std::vector<IRTree::CExprPtr> arguments;
+	arguments.push_back(object);
 	if( expr->GetArgumentList() != nullptr ) {
 		int expresionsStackSize = parsedExpressions.size();
 		expr->GetArgumentList()->Accept( this );
@@ -363,18 +368,14 @@ void CIRBuilderVisitor::Visit( const CNewExpression* expr )
 	SymbolsTable::CClassInfo* object = symbolsTable->GetClass( expr->GetIdentifier()->GetString() );
 	int objectSize = object->GerVars().size();
 
-	IRTree::CExprPtr allocationSize( new IRTree::CMem(
-		IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::MUL,
-		IRTree::CExprPtr( new IRTree::CConst( objectSize ) ),
-		IRTree::CExprPtr( new IRTree::CConst( frames.back().WORD_SIZE ) ) ) ) ) );
+	IRTree::CExprPtr allocationSize(new IRTree::CConst(objectSize * frames.back().WORD_SIZE));
 
 	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
-
 	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "__malloc" ), { allocationSize } ) );
 	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
 	// TODO: как сделать по-нормальному
 	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "__memset" ),
-		{ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize } ) ) ) );
+		{ temp, IRTree::CExprPtr(new IRTree::CConst(0)) } ) ) ) );
 
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
 		allocateMemory, clearMemory ) ), temp ) ) );

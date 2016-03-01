@@ -26,6 +26,7 @@ namespace IRTree
 
 	typedef std::shared_ptr<const IExpr> CExprPtr;
 
+	// Const expression
 	class CConst : public IExpr {
 	public:
 		CConst( int value );
@@ -36,6 +37,7 @@ namespace IRTree
 		int value;
 	};
 
+	// Name for jumps
 	class CName : public IExpr {
 	public:
 		CName( std::shared_ptr<const Temp::CLabel> name );
@@ -46,6 +48,7 @@ namespace IRTree
 		std::shared_ptr<const Temp::CLabel> name;
 	};
 
+	// Temprorary variable
 	class CTemp : public IExpr {
 	public:
 		CTemp( const std::shared_ptr<Temp::CTemp> temp );
@@ -56,6 +59,7 @@ namespace IRTree
 		std::shared_ptr<Temp::CTemp> temp;
 	};
 
+	// Binary operator
 	class CBinop : public IExpr {
 	public:
 		CBinop( BINOP binop, CExprPtr left, CExprPtr right );
@@ -71,6 +75,7 @@ namespace IRTree
 		const CExprPtr right;
 	};
 
+	// Reading memory with address returned by expression
 	class CMem : public IExpr {
 	public:
 		CMem( CExprPtr mem );
@@ -81,6 +86,8 @@ namespace IRTree
 		const CExprPtr mem;
 	};
 
+
+	// Method call with args 
 	class CCall : public IExpr {
 	public:
 		CCall( const CSymbol* funcName, const std::vector<CExprPtr>& arguments );
@@ -94,6 +101,7 @@ namespace IRTree
 		std::vector<CExprPtr> arguments;
 	};
 
+	// Do statement than process and return expression
 	class CESeq : public IExpr {
 	public:
 		CESeq( CStmPtr statement, CExprPtr expression );
