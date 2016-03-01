@@ -173,21 +173,18 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 		parsedStatements.pop();
 	}
 
-	//IRTree::CStmPtr trueBranch = IRTree::CStmPtr(new IRTree::CSeq(new IRTree::CLabel(trueLabel), new IRTree::CSeq(trueStatement), new IRTree::CJump(joinLabel)));
+	IRTree::CStmPtr endifJump = IRTree::CStmPtr(new IRTree::CJump(joinLabel));
+	falseStatement = IRTree::CStmPtr(new IRTree::CSeq(IRTree::CStmPtr(new IRTree::CLabel(falseLabel)), IRTree::CStmPtr(new IRTree::CSeq(falseStatement, endifJump))));
+	trueStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( trueLabel ) ), IRTree::CStmPtr( new IRTree::CSeq( trueStatement, endifJump ) ) ) );
+	IRTree::CStmPtr bothStatement;
 
-	IRTree::CJump* endifJump = new IRTree::CJump(joinLabel);
+	if (ifStatement->GetIfFalseStatement() != nullptr) {
+		bothStatement = IRTree::CStmPtr(new IRTree::CSeq(trueStatement, IRTree::CStmPtr(new IRTree::CSeq(falseStatement, IRTree::CStmPtr(new IRTree::CLabel(joinLabel))))));
+	} else {
+		// TODO: check this
+		bothStatement = IRTree::CStmPtr(new IRTree::CSeq(trueStatement, IRTree::CStmPtr(new IRTree::CLabel(joinLabel))));
+	}
 
-	falseStatement = IRTree::CStmPtr(new IRTree::CSeq(IRTree::CStmPtr(new IRTree::CLabel(falseLabel)),
-		IRTree::CStmPtr(new IRTree::CSeq(falseStatement,IRTree::CStmPtr(endifJump)))));
-
-	trueStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( trueLabel ) ),
-		IRTree::CStmPtr( new IRTree::CSeq( trueStatement, 
-		IRTree::CStmPtr(endifJump) ) ) ) );
-
-	IRTree::CStmPtr bothStatement = IRTree::CStmPtr(new IRTree::CSeq(trueStatement, IRTree::CStmPtr(new IRTree::CSeq(falseStatement
-		, IRTree::CStmPtr(new IRTree::CLabel(joinLabel))))));
-
-	// SEQ( CCONDJUMP( eq, e, 1, t, f ), true )
 	parsedStatements.push( IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CCondJump( IRTree::IExpr::EQ, condition, 
 		IRTree::CExprPtr( new IRTree::CConst(1) ), trueLabel, falseLabel ) ), bothStatement) ) );
 }
