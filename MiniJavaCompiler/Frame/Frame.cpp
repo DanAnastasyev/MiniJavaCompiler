@@ -6,23 +6,33 @@ namespace Frame {
 		offset( _offset )
 	{}
 
-	const IRTree::CExprPtr CInFrame::GetExp( const std::shared_ptr<Temp::CTemp> framePtr ) const
+	const IRTree::CExprPtr CInFrame::GetExp( const Frame::CFrame& framePtr ) const
 	{
-		int machineOffset = offset * CFrame::WORD_SIZE;
-
-		return IRTree::CExprPtr( new IRTree::CMem( std::shared_ptr<const IRTree::IExpr>( new IRTree::CBinop( IRTree::CBinop::PLUS,
-			std::shared_ptr<const IRTree::IExpr>( new IRTree::CTemp( framePtr ) ),
-			IRTree::CExprPtr( new IRTree::CConst( machineOffset ) ) ) ) ) );
+		return IRTree::CExprPtr( new IRTree::CMem( std::shared_ptr<const IRTree::IExpr>( 
+			new IRTree::CBinop( IRTree::CBinop::MINUS,
+			std::shared_ptr<const IRTree::IExpr>( new IRTree::CTemp( framePtr.GetFramePtr() ) ),
+			IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL, 
+			IRTree::CExprPtr( new IRTree::CConst( offset + 1 ) ), IRTree::CExprPtr( new IRTree::CConst( framePtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
-	CInReg::CInReg()
+	const IRTree::CExprPtr CInObject::GetExp( const Frame::CFrame& frameRegPtr ) const
 	{
-		temp = std::make_shared<Temp::CTemp>();
+		return IRTree::CExprPtr( new IRTree::CMem(
+			IRTree::CExprPtr( new IRTree::CBinop(
+			IRTree::CBinop::PLUS, IRTree::CExprPtr( new IRTree::CTemp( frameRegPtr.GetThisPtr() ) ),
+			IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL,
+			IRTree::CExprPtr( new IRTree::CConst( offset ) ), 
+			IRTree::CExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
-	const IRTree::CExprPtr CInReg::GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const
+	const IRTree::CExprPtr CFormalParamInStack::GetExp( const Frame::CFrame& frameRegPtr ) const
 	{
-		return IRTree::CExprPtr( new IRTree::CTemp( temp ) );
+		return IRTree::CExprPtr( new IRTree::CMem(
+			IRTree::CExprPtr( new IRTree::CBinop(
+			IRTree::CBinop::PLUS, IRTree::CExprPtr( new IRTree::CTemp( frameRegPtr.GetFramePtr() ) ),
+			IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL,
+			IRTree::CExprPtr( new IRTree::CConst( offset ) ),
+			IRTree::CExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
 	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, 
@@ -30,16 +40,19 @@ namespace Frame {
 	{
 		frameName = CSymbol::GetSymbol( classInfo->GetName() + "__" + methodInfo->GetName() );
 		do {
-			for( auto var : classInfo->GerVars() ) {
-				locals[var->GetName()] = std::shared_ptr<IAccess>( new CInReg() );
+			// Поля класса
+			for( int i = 0; i < classInfo->GerVars().size(); ++i ) {
+				locals[classInfo->GerVars()[i]->GetName()] = std::shared_ptr<IAccess>( new CInObject( i ) );
 			}
 		} while( classInfo->GetBaseClass() != NULL );
 
-		for( auto var : methodInfo->GetLocals() ) {
-			locals[var->GetName()] = std::shared_ptr<IAccess>( new CInReg( ) );
+		// Локальные переменные метода
+		for( int i = 0; i < methodInfo->GetLocals().size(); ++i ) {
+			locals[methodInfo->GetLocals()[i]->GetName()] = std::shared_ptr<IAccess>( new CInFrame( i ) );
 		}
-		for( auto var : methodInfo->GetParams() ) {
-			formals[var->GetName()] = std::shared_ptr<IAccess>( new CInReg( ) );
+		// Параметры метода
+		for( int i = 0; i < methodInfo->GetParams().size(); ++i ) {
+			formals[methodInfo->GetParams()[i]->GetName()] = std::shared_ptr<IAccess>( new CFormalParamInStack( i ) );
 		}
 
 		framePtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol(frameName->GetString() + "__FP") );

@@ -9,32 +9,7 @@
 #include <memory>
 
 namespace Frame {
-	// Интерфейс получения поддерева для переменной
-	class IAccess {
-	public:
-		virtual const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> framePtr ) const = 0;
-		virtual ~IAccess() {}
-	};
-
-	// Реализация для переменных на стеке
-	class CInFrame : public IAccess {
-	public:
-		CInFrame( int offset );
-
-		const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> framePtr ) const;
-	private:
-		int offset;
-	};
-
-	// Реализация для переменных в регистре
-	class CInReg : public IAccess {
-	public:
-		CInReg();
-
-		const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const;
-	private:
-		std::shared_ptr<Temp::CTemp> temp;
-	};
+	class IAccess;
 
 	class CFrame {
 	public:
@@ -66,5 +41,56 @@ namespace Frame {
 		std::shared_ptr<Temp::CTemp> thisPtr;
 		// Указатель на возвращаемое значение
 		std::shared_ptr<Temp::CTemp> returnPtr;
+	};
+
+
+	// Интерфейс получения поддерева для переменной
+	class IAccess {
+	public:
+		virtual const IRTree::CExprPtr GetExp( const Frame::CFrame& framePtr ) const = 0;
+		virtual ~IAccess() {}
+	};
+
+	// Реализация для переменных на стеке
+	class CInFrame : public IAccess {
+	public:
+		explicit CInFrame( int offset );
+
+		const IRTree::CExprPtr GetExp( const Frame::CFrame& framePtr ) const;
+	private:
+		const int offset;
+	};
+
+	// Реализация для переменных в регистре
+	//class CInReg : public IAccess {
+	//public:
+	//	explicit CInReg();
+
+	//	const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const;
+	//private:
+	//	std::shared_ptr<Temp::CTemp> temp;
+	//};
+
+	// Реализация для переменных в регистре
+	class CInObject : public IAccess {
+	public:
+		explicit CInObject( int _offset ) : offset( _offset ) {}
+
+		const IRTree::CExprPtr GetExp( const Frame::CFrame& frameRegPtr ) const;
+	private:
+		const int offset;
+	};
+
+	// Реализация для переменных в регистре
+	class CFormalParamInStack : public IAccess {
+	public:
+		explicit CFormalParamInStack( int _offset ) : offset( _offset ) {}
+
+		const IRTree::CExprPtr GetExp( const Frame::CFrame& frameRegPtr ) const;
+	private:
+		// Порядковый номер аргумента, переданного как формальный параметр функции
+		// Считать начинаем с 1
+		// 0 резервируется для this который мы договорились передавать через стек
+		const int offset;
 	};
 }

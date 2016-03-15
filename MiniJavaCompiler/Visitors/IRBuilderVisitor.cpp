@@ -115,7 +115,7 @@ void CIRBuilderVisitor::Visit( const CArrayAssignStatement* statement )
 {
 	// left[i] = right
 	// left - переменная на фрейме
-	IRTree::CExprPtr left( frames.back().GetVar( statement->GetArrayName() )->GetExp( frames.back().GetFramePtr() ) );
+	IRTree::CExprPtr left( frames.back().GetVar( statement->GetArrayName() )->GetExp( frames.back() ) );
 	
 	// i - индекс в массиве. Вычисляем offset
 	statement->GetElementNumber()->Accept( this );
@@ -139,11 +139,11 @@ void CIRBuilderVisitor::Visit( const CAssignStatement* statement )
 {
 	// left = right
 	// left - переменная на фрейме
-	IRTree::CExprPtr left( frames.back( ).GetVar( statement->GetLeftPart( ) )->GetExp( frames.back( ).GetFramePtr( ) ) );
+	IRTree::CExprPtr left( frames.back().GetVar( statement->GetLeftPart() )->GetExp( frames.back() ) );
 
 	// Парсим right
 	statement->GetRightPart()->Accept( this );
-	IRTree::CExprPtr right = parsedExpressions.top( );
+	IRTree::CExprPtr right = parsedExpressions.top();
 	parsedExpressions.pop();
 
 	parsedStatements.emplace( new IRTree::CMove( left, right ) );
@@ -266,7 +266,7 @@ void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
 void CIRBuilderVisitor::Visit( const CIndexExpression* expr )
 {
 	expr->GetExp()->Accept( this );
-	IRTree::CExprPtr array = parsedExpressions.top();
+	IRTree::CExprPtr array( new IRTree::CMem( parsedExpressions.top() ) );
 	parsedExpressions.pop();
 
 	expr->GetIndexExp()->Accept( this );
@@ -327,7 +327,7 @@ void CIRBuilderVisitor::Visit( const CBoolLiteralExpression* expr )
 
 void CIRBuilderVisitor::Visit( const CIdentifierExpression* expr )
 {
-	parsedExpressions.emplace( frames.back().GetVar( expr->GetIdentifier() )->GetExp( frames.back().GetFramePtr() ) );
+	parsedExpressions.emplace( frames.back().GetVar( expr->GetIdentifier() )->GetExp( frames.back() ) );
 }
 
 void CIRBuilderVisitor::Visit( const CThisExpression* expr )
