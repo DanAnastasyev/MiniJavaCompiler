@@ -138,7 +138,8 @@ void CIRTreeToDigraphConverter::Visit( const CCall* node )
 	string funcString = node->GetFunctionName()->GetString();
 	string argsString;
 	std::vector<string> nodes;
-	for( auto arg : node->GetArguments() ) {
+	auto args = node->GetArguments();
+	for( auto arg = args->GetHead(); arg != nullptr; args = args->GetTail(), arg = args->GetHead() ) {
 		arg->Accept( this );
 		nodes.push_back( lastNodeName );
 	}

@@ -1,5 +1,6 @@
 #include "IRTree/Statements.h"
 #include "Expressions.h"
+#include <memory>
 
 namespace IRTree
 {
@@ -23,6 +24,24 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
+	IRTree::CExprList* CMove::Kids()
+	{
+		if( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ) != 0 ) {
+			return new CExprList( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ), std::make_shared<const CExprList>( srcExpr, nullptr ) );
+		} else {
+			return new CExprList( srcExpr, nullptr );
+		}
+	}
+
+	IRTree::IStm* CMove::Build( CExprList* kids )
+	{
+		if( std::dynamic_pointer_cast< const IRTree::CMem >( destExpr ) != 0 ) {
+			return new IRTree::CMove( std::dynamic_pointer_cast<const IRTree::CMem>( kids->GetHead() ), kids->GetTail()->GetHead() );
+		} else {
+			return new IRTree::CMove( destExpr, kids->GetHead() );
+		}
+	}
+
 	CExpr::CExpr( std::shared_ptr<const IExpr> _exp ) :
 		exp( _exp )
 	{}
@@ -37,6 +56,16 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
+	IRTree::CExprList* CExpr::Kids()
+	{
+		return new IRTree::CExprList( exp, nullptr );
+	}
+
+	IRTree::IStm* CExpr::Build( CExprList* kids )
+	{
+		return new IRTree::CExpr( kids->GetHead() );
+	}
+
 	CJump::CJump( std::shared_ptr<const IExpr> _exp, const std::vector<std::shared_ptr<const Temp::CLabel>>& _labels ) :
 		jmpExpr( _exp ),
 		labels( _labels )
@@ -46,8 +75,6 @@ namespace IRTree
 		jmpExpr( new CName(label) ),
 		labels( {label} )
 	{}
-
-
 
 	std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
 	{
@@ -62,6 +89,16 @@ namespace IRTree
 	void CJump::Accept( IIRTreeVisitor* visitor ) const
 	{
 		visitor->Visit( this );
+	}
+
+	IRTree::CExprList* CJump::Kids()
+	{
+		return new IRTree::CExprList( jmpExpr, nullptr );
+	}
+
+	IRTree::IStm* CJump::Build( CExprList* kids )
+	{
+		return new IRTree::CJump( kids->GetHead(), labels );
 	}
 
 	CCondJump::CCondJump( int _binOp, std::shared_ptr<const IExpr> _left, std::shared_ptr<const IExpr> _right,
@@ -102,6 +139,17 @@ namespace IRTree
 	{
 		visitor->Visit( this );
 	}
+	
+
+	IRTree::CExprList* CCondJump::Kids()
+	{
+		return new IRTree::CExprList( leftExpr, std::make_shared<const CExprList>( rightExpr, nullptr ) );
+	}
+
+	IRTree::IStm* CCondJump::Build( CExprList* kids )
+	{
+		return new IRTree::CCondJump( binOp, kids->GetHead(), kids->GetTail()->GetHead(), ifTrueLabel, ifFalseLabel );
+	}
 
 	CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right ) :
 		leftStm( left ),
@@ -123,6 +171,17 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
+
+	IRTree::CExprList* CSeq::Kids()
+	{
+		throw std::logic_error( "Kids() not applicable to SEQ" );
+	}
+
+	IRTree::IStm* CSeq::Build( CExprList* kids )
+	{
+		throw std::logic_error( "Build() not applicable to SEQ" );
+	}
+
 	CLabel::CLabel( std::shared_ptr<const Temp::CLabel> _label ) :
 		label( _label )
 	{}
@@ -135,6 +194,30 @@ namespace IRTree
 	void CLabel::Accept( IIRTreeVisitor* visitor ) const
 	{
 		visitor->Visit( this );
+	}
+
+	IRTree::CExprList* CLabel::Kids()
+	{
+		return nullptr;
+	}
+
+	IRTree::IStm* CLabel::Build( CExprList* kids )
+	{
+		return this;
+	}
+
+	CStmList::CStmList( std::shared_ptr<const IStm> _head, std::shared_ptr<const CStmList> _tail ) :
+		head(_head), tail( _tail )
+	{}
+
+	std::shared_ptr<const IStm> CStmList::GetHead() const
+	{
+		return head;
+	}
+
+	std::shared_ptr<const CStmList> CStmList::GetTail() const
+	{
+		return tail;
 	}
 
 }

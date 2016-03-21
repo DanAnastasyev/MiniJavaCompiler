@@ -48,6 +48,8 @@ public:
 
 	std::vector<Frame::CFrame> GetFrames() const;
 private:
+	std::shared_ptr<const IRTree::CExprList> convertVectorToExprList( const std::vector<std::shared_ptr<const IRTree::IExpr>>& args );
+
 	std::stack<std::shared_ptr<const IRTree::IExpr>> parsedExpressions;
 	std::stack<std::shared_ptr<const IRTree::IStm>> parsedStatements;
 

@@ -2,18 +2,22 @@
 #include <vector>
 #include <memory>
 
-#include "Frame\Temp.h"
+#include "Frame/Temp.h"
 #include "Visitors/Visitor.h"
 
 namespace IRTree
 {
 	class IExpr;
+	class CExprList;
 
 	class IStm {
 	public:
 		virtual ~IStm() {}
 
 		virtual void Accept( IIRTreeVisitor* visitor ) const = 0;
+
+		virtual CExprList* Kids() = 0;
+		virtual IStm* Build( CExprList* kids ) = 0;
 	};
 
 	typedef std::shared_ptr<const IStm> CStmPtr;
@@ -27,6 +31,11 @@ namespace IRTree
 		std::shared_ptr<const IExpr> GetSrcExpr( ) const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
+
+		virtual CExprList* Kids() override;
+
+		virtual IStm* Build( CExprList* kids ) override;
+
 	private:
 		std::shared_ptr<const IExpr> destExpr;
 		std::shared_ptr<const IExpr> srcExpr;
@@ -40,6 +49,11 @@ namespace IRTree
 		std::shared_ptr<const IExpr> GetExp( ) const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
+
+		virtual CExprList* Kids() override;
+
+		virtual IStm* Build( CExprList* kids ) override;
+
 	private:
 		std::shared_ptr<const IExpr> exp;
 	};
@@ -54,6 +68,11 @@ namespace IRTree
 		std::vector<std::shared_ptr<const Temp::CLabel>> GetLabels() const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
+
+		virtual CExprList* Kids() override;
+
+		virtual IStm* Build( CExprList* kids ) override;
+
 	private:
 		std::shared_ptr<const IExpr> jmpExpr;
 		std::vector<std::shared_ptr<const Temp::CLabel>> labels;
@@ -72,6 +91,11 @@ namespace IRTree
 		std::shared_ptr<const Temp::CLabel> GetIfFalseLabel( ) const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
+
+		virtual CExprList* Kids() override;
+
+		virtual IStm* Build( CExprList* kids ) override;
+
 	private:
 		std::shared_ptr<const IExpr> leftExpr;
 		std::shared_ptr<const IExpr> rightExpr;
@@ -89,6 +113,11 @@ namespace IRTree
 		std::shared_ptr<const IStm> GetRightStm() const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
+
+		virtual CExprList* Kids() override;
+
+		virtual IStm* Build( CExprList* kids ) override;
+
 	private:
 		std::shared_ptr<const IStm> leftStm;
 		std::shared_ptr<const IStm> rightStm;
@@ -102,7 +131,23 @@ namespace IRTree
 		std::shared_ptr<const Temp::CLabel> GetLabel( ) const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
+
+		virtual CExprList* Kids() override;
+
+		virtual IStm* Build( CExprList* kids ) override;
+
 	private:
 		std::shared_ptr<const Temp::CLabel> label;
+	};
+
+	class CStmList {
+	public:
+		CStmList( std::shared_ptr<const IStm> head, std::shared_ptr<const CStmList> tail );
+		
+		std::shared_ptr<const IStm> GetHead() const;
+		std::shared_ptr<const CStmList> GetTail() const;
+	private:
+		std::shared_ptr<const IStm> head;
+		std::shared_ptr<const CStmList> tail;
 	};
 }

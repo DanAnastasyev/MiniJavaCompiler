@@ -224,7 +224,9 @@ void CIRBuilderVisitor::Visit( const CPrintStatement* printStatement )
 	printStatement->GetExpression()->Accept( this );
 	IRTree::CExprPtr expr = parsedExpressions.top();
 	parsedExpressions.pop();
-	parsedStatements.emplace( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "name_println" ), { expr } ) ) ));
+	parsedStatements.emplace( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( 
+		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "name_println" ) ) ) ),
+		convertVectorToExprList( { expr } ) ) ) ));
 }
 
 void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
@@ -312,7 +314,8 @@ void CIRBuilderVisitor::Visit( const CMethodExpression* expr )
 	IRTree::CExprPtr returnValue( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( frames.back().GetReturnPtr() ) ) );
 
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CMove(
-		returnValue, IRTree::CExprPtr( new IRTree::CCall( expr->GetIdentifier(), arguments ) ) ) ), returnValue ) ) );
+		returnValue, IRTree::CExprPtr( new IRTree::CCall( IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( expr->GetIdentifier() ) ) ), 
+		convertVectorToExprList( arguments ) ) ) ) ), returnValue ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
@@ -349,11 +352,15 @@ void CIRBuilderVisitor::Visit( const CNewIntArrayExpression* expr )
 
 	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
 
-	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "__malloc" ), { allocationSize } ) );
+	IRTree::CExprPtr mallocCall( new IRTree::CCall( 
+		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
+		convertVectorToExprList( { allocationSize } ) ) );
 	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
+
 	// TODO: как сделать по-нормальному
-	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "__memset" ),
-		{ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize } ) ) ) );
+	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( IRTree::CExprPtr( 
+		new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__memset" ) ) ) ),
+		convertVectorToExprList({ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize }) ) ) ) );
 	IRTree::CStmPtr moveSize( new IRTree::CMove( temp, arraySize ) );
 
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
@@ -368,11 +375,14 @@ void CIRBuilderVisitor::Visit( const CNewExpression* expr )
 	IRTree::CExprPtr allocationSize(new IRTree::CConst(objectSize * frames.back().WORD_SIZE));
 
 	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
-	IRTree::CExprPtr mallocCall( new IRTree::CCall( CSymbol::GetSymbol( "__malloc" ), { allocationSize } ) );
+	IRTree::CExprPtr mallocCall( new IRTree::CCall( 
+		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
+		convertVectorToExprList( { allocationSize } ) ) );
 	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
 	// TODO: как сделать по-нормальному
-	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( CSymbol::GetSymbol( "__memset" ),
-		{ temp, IRTree::CExprPtr(new IRTree::CConst(0)) } ) ) ) );
+	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( 
+		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__memset" ) ) ) ),
+		convertVectorToExprList({ temp, IRTree::CExprPtr( new IRTree::CConst( 0 ) ) }) ) ) ) );
 
 	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
 		allocateMemory, clearMemory ) ), temp ) ) );
@@ -471,4 +481,17 @@ void CIRBuilderVisitor::Visit( const CFormalParam* formal )
 std::vector<Frame::CFrame> CIRBuilderVisitor::GetFrames() const
 {
 	return frames;
+}
+std::shared_ptr<const IRTree::CExprList> CIRBuilderVisitor::convertVectorToExprList( const std::vector<std::shared_ptr<const IRTree::IExpr>>& _arguments )
+{
+	std::shared_ptr<const IRTree::CExprList> arguments;
+	if( _arguments.empty() ) {
+		arguments = std::make_shared<const IRTree::CExprList>( nullptr, nullptr );
+	} else {
+		arguments = std::make_shared<const IRTree::CExprList>( _arguments.back(), nullptr );
+		for( int i = _arguments.size() - 2; i >= 0; ++i ) {
+			arguments = std::make_shared<const IRTree::CExprList>( _arguments[i], arguments );
+		}
+	}
+	return arguments;
 }
