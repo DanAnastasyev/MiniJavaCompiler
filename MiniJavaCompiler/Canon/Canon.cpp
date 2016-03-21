@@ -1,15 +1,26 @@
 #include <Canon/Canon.h>
 
-bool CCanon::isCommute( const IRTree::IStm* a, const IRTree::IExpr* b )
+bool CCanon::isCommute( std::shared_ptr<const IRTree::IStm> a, std::shared_ptr<const IRTree::IStm> b )
 {
 	return isNop( a )
-		|| dynamic_cast<const IRTree::CName*>( b ) != 0
-		|| dynamic_cast<const IRTree::CConst*>( b ) != 0;
+		|| std::dynamic_pointer_cast<const IRTree::CName>( b ) != 0
+		|| std::dynamic_pointer_cast<const IRTree::CName>( b ) != 0;
 }
 
-bool CCanon::isNop( const IRTree::IStm* a )
+bool CCanon::isNop( std::shared_ptr<const IRTree::IStm> a )
 {
-	const IRTree::CExpr* exp = dynamic_cast<const IRTree::CExpr*>( a );
-	return exp != 0 && std::dynamic_pointer_cast<const IRTree::CConst*>( exp->GetExp() ) != 0;
+	auto exp = std::dynamic_pointer_cast<const IRTree::CExpr>( a );
+	return exp != 0 && std::dynamic_pointer_cast<const IRTree::CConst>( exp->GetExp() ) != 0;
+}
+
+std::shared_ptr<const IRTree::IStm> CCanon::createSeq( std::shared_ptr<const IRTree::IStm> firstStm, std::shared_ptr<const IRTree::IStm> secondStm )
+{
+	if( isNop( firstStm ) ) {
+		return secondStm;
+	}
+	if( isNop( secondStm ) ) {
+		return firstStm;
+	}
+	return std::make_shared<IRTree::CSeq>( firstStm, secondStm );
 }
 

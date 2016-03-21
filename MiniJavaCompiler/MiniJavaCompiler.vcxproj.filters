@@ -43,6 +43,9 @@
     <Filter Include="Source Files\graphviz">
       <UniqueIdentifier>{5cf8e561-2089-429e-b019-f1a5b27fe47f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Canon">
+      <UniqueIdentifier>{d1a81cb1-bad5-4f13-9dad-09738f53ece1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -131,6 +134,9 @@
     <ClCompile Include="graphviz\IRTreeToDigraphConverter.cpp">
       <Filter>Source Files\graphviz</Filter>
     </ClCompile>
+    <ClCompile Include="Canon\Canon.cpp">
+      <Filter>Source Files\Canon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -192,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="graphviz\IRTreeToDigraphConverter.h">
       <Filter>Source Files\graphviz</Filter>
+    </ClInclude>
+    <ClInclude Include="Canon\Canon.h">
+      <Filter>Source Files\Canon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

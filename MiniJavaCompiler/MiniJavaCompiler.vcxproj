@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="BuildOutputs\lexer.cpp" />
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
+    <ClCompile Include="Canon\Canon.cpp" />
     <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="Frame\Frame.cpp" />
     <ClCompile Include="Frame\Temp.cpp" />
@@ -56,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
+    <ClInclude Include="Canon\Canon.h" />
     <ClInclude Include="ErrorStorage.h" />
     <ClInclude Include="Frame\Frame.h" />
     <ClInclude Include="Frame\Temp.h" />

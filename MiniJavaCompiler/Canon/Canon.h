@@ -8,9 +8,9 @@ public:
 
 private:
 	// ќпределение коммутативности узлов
-	static bool isCommute( const IRTree::IStm* a, const IRTree::IExpr* b );
+	static bool isCommute( std::shared_ptr<const IRTree::IStm> a, std::shared_ptr<const IRTree::IStm> b );
 	// явл€етс€ ли это экспрешеном с константным значением
-	static bool isNop( const IRTree::IStm* a );
+	static bool isNop( std::shared_ptr<const IRTree::IStm> a );
 
-	static IRTree::IStm createSeq( const IRTree::IStm* firstStm, const IRTree::IStm* secondStm );
+	static std::shared_ptr<const IRTree::IStm> createSeq( std::shared_ptr<const IRTree::IStm> firstStm, std::shared_ptr<const IRTree::IStm> secondStm );
 };

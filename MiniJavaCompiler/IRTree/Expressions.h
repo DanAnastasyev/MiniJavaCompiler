@@ -23,8 +23,8 @@ namespace IRTree
 
 		virtual void Accept( IIRTreeVisitor* visitor ) const = 0;
 
-		virtual CExprList* Kids();
-		virtual IExpr* Build( CExprList* kids );
+		virtual CExprList* Kids() = 0;
+		virtual IExpr* Build( CExprList* kids ) = 0;
 	};
 
 	typedef std::shared_ptr<const IExpr> CExprPtr;
