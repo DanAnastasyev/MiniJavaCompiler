@@ -126,7 +126,7 @@ void CIRBuilderVisitor::Visit( const CArrayAssignStatement* statement )
 	
 	// left = MEM( +( MEM(left), BINOP(MUL, i, CONST(W)) ) )
 	left = IRTree::CExprPtr( new IRTree::CMem( IRTree::CExprPtr(
-		IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::PLUS, IRTree::CExprPtr( new IRTree::CMem( left ) ), offset ) ) ) ) );
+		IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::PLUS, IRTree::CExprPtr( left ), offset ) ) ) ) );
 
 	statement->GetRightPart()->Accept( this );
 	IRTree::CExprPtr right = parsedExpressions.top();
@@ -269,7 +269,7 @@ void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
 void CIRBuilderVisitor::Visit( const CIndexExpression* expr )
 {
 	expr->GetExp()->Accept( this );
-	IRTree::CExprPtr array( new IRTree::CMem( parsedExpressions.top() ) );
+	IRTree::CExprPtr array(  parsedExpressions.top() );
 	parsedExpressions.pop();
 
 	expr->GetIndexExp()->Accept( this );
