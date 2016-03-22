@@ -39,18 +39,14 @@ void CIRTreeToDigraphConverter::Visit( const CJump* node )
 
 void CIRTreeToDigraphConverter::Visit( const CCondJump* node )
 {
-	node->GetRightExpr()->Accept( this );
-	string rightString = lastNodeName;
-	node->GetLeftExpr()->Accept( this );
+	node->GetExpr()->Accept( this );
 	string leftString = lastNodeName;
 
 	nextNameWithId( "CondJump" );
 	
-	treeRepresentation.AddEdge( lastNodeName, leftString, "left" );
-	treeRepresentation.AddEdge( lastNodeName, "binop_Eq", "binop_Eq" );
-	treeRepresentation.AddEdge( lastNodeName, rightString, "right" );
-	treeRepresentation.AddEdge( lastNodeName, node->GetIfTrueLabel()->GetName()->GetString(), "iftrue" );
-	treeRepresentation.AddEdge( lastNodeName, node->GetIfFalseLabel()->GetName()->GetString(), "iffalse" );
+	treeRepresentation.AddEdge( lastNodeName, leftString, "expr" );
+	treeRepresentation.AddEdge( lastNodeName, "to label_" + node->GetIfTrueLabel()->GetName()->GetString(), "iftrue" );
+	treeRepresentation.AddEdge( lastNodeName, "to label_" + node->GetIfFalseLabel()->GetName()->GetString( ), "iffalse" );
 }
 
 void CIRTreeToDigraphConverter::Visit( const CSeq* node )
@@ -96,30 +92,34 @@ void CIRTreeToDigraphConverter::Visit( const CBinop* node )
 	string rightString = lastNodeName;
 	//graphviz отказывается работать с символами типа + *
 	switch( node->GetBinOp() ) {
-	case IRTree::IExpr::MUL:
+		case IExpr::MUL:
 			nextNameWithId( "binop__Mul" );
 			break;
-	case IRTree::IExpr::PLUS:
+		case IExpr::PLUS:
 			nextNameWithId( "binop__Plus" );
 			break;
-	case IRTree::IExpr::DIV:
+		case IExpr::DIV:
 			nextNameWithId( "binop__Division" );
 			break;
-	case IRTree::IExpr::MINUS:
+		case IExpr::MINUS:
 			nextNameWithId( "binop__Minus" );
 			break;
-	case IRTree::IExpr::XOR:
+		case IExpr::XOR:
 			nextNameWithId( "binop__Xor" );
 			break;
-	case IRTree::IExpr::LESS:
+		case IExpr::LESS:
 			nextNameWithId( "binop__Less" );
 			break;
-	case IRTree::IExpr::GT:
+		case IExpr::GT:
 			nextNameWithId( "binop__Greater" );
 			break;
-	case IRTree::IExpr::AND:
+		case IExpr::AND:
 			nextNameWithId( "binop__And" );
 			break;
+		case IExpr::OR:
+			nextNameWithId( "binop__Or" );
+			break;
+		default: break;
 	}
 	treeRepresentation.AddEdge( lastNodeName, rightString, "right" );
 	treeRepresentation.AddEdge( lastNodeName, leftString, "left" );

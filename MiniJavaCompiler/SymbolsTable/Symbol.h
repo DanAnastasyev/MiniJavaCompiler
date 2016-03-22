@@ -16,7 +16,9 @@ public:
 		}
 	}
 
-	const std::string& GetString() const { return string_key; };
+	const std::string& GetString() const {
+		return string_key;
+	};
 private:
 	CSymbol(const std::string& s) : string_key(s) {};
 	const std::string string_key;

@@ -157,9 +157,9 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 
 	// Создаем метки для true, false и выхода из if
 	// Создаем метки со сгенерированным названием	
-	std::shared_ptr<const Temp::CLabel> trueLabel(new Temp::CLabel());
-	std::shared_ptr<const Temp::CLabel> falseLabel(new Temp::CLabel());
-	std::shared_ptr<const Temp::CLabel> joinLabel(new Temp::CLabel());
+	std::shared_ptr<const Temp::CLabel> trueLabel( new Temp::CLabel() );
+	std::shared_ptr<const Temp::CLabel> falseLabel( new Temp::CLabel() );
+	std::shared_ptr<const Temp::CLabel> joinLabel( new Temp::CLabel() );
 
 	IRTree::CStmPtr trueStatement, falseStatement;
 	if( ifStatement->GetIfTrueStatement() != nullptr ) {
@@ -173,20 +173,21 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 		parsedStatements.pop();
 	}
 
-	IRTree::CStmPtr endifJump = IRTree::CStmPtr(new IRTree::CJump(joinLabel));
-	falseStatement = IRTree::CStmPtr(new IRTree::CSeq(IRTree::CStmPtr(new IRTree::CLabel(falseLabel)), IRTree::CStmPtr(new IRTree::CSeq(falseStatement, endifJump))));
+	IRTree::CStmPtr endifJump = IRTree::CStmPtr( new IRTree::CJump( joinLabel ) );
+	falseStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( falseLabel ) ), IRTree::CStmPtr( new IRTree::CSeq( falseStatement, endifJump ) ) ) );
 	trueStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( trueLabel ) ), IRTree::CStmPtr( new IRTree::CSeq( trueStatement, endifJump ) ) ) );
 	IRTree::CStmPtr bothStatement;
 
-	if (ifStatement->GetIfFalseStatement() != nullptr) {
-		bothStatement = IRTree::CStmPtr(new IRTree::CSeq(trueStatement, IRTree::CStmPtr(new IRTree::CSeq(falseStatement, IRTree::CStmPtr(new IRTree::CLabel(joinLabel))))));
+	if( ifStatement->GetIfFalseStatement() != nullptr ) {
+		bothStatement = IRTree::CStmPtr( new IRTree::CSeq( trueStatement, IRTree::CStmPtr(
+			new IRTree::CSeq( falseStatement, IRTree::CStmPtr( new IRTree::CLabel( joinLabel ) ) ) ) ) );
 	} else {
 		// TODO: check this
-		bothStatement = IRTree::CStmPtr(new IRTree::CSeq(trueStatement, IRTree::CStmPtr(new IRTree::CLabel(joinLabel))));
+		bothStatement = IRTree::CStmPtr( new IRTree::CSeq( trueStatement, IRTree::CStmPtr( new IRTree::CLabel( joinLabel ) ) ) );
 	}
 
-	parsedStatements.push( IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CCondJump( IRTree::IExpr::EQ, condition, 
-		IRTree::CExprPtr( new IRTree::CConst(1) ), trueLabel, falseLabel ) ), bothStatement) ) );
+	parsedStatements.push( IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr(
+		new IRTree::CCondJump( condition, trueLabel, falseLabel ) ), bothStatement ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
@@ -210,7 +211,7 @@ void CIRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
 
 	// SEQ( CCONDJUMP(eq, condition, 1, nextStepLabel, doneLabel), bodyCycleStatement )
 	IRTree::CStmPtr conditionStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr(
-		new IRTree::CCondJump( IRTree::IExpr::EQ, condition, IRTree::CExprPtr( new IRTree::CConst( 1 ) ), nextStepLabel, doneLabel ) ), 
+		new IRTree::CCondJump( condition, nextStepLabel, doneLabel ) ), 
 		bodyCycleStatement ) );
 
 	// SEQ( SEQ( LABEL(testLabel, condition) ), doneLabel )
@@ -482,14 +483,17 @@ std::vector<Frame::CFrame> CIRBuilderVisitor::GetFrames() const
 {
 	return frames;
 }
-std::shared_ptr<const IRTree::CExprList> CIRBuilderVisitor::convertVectorToExprList( const std::vector<std::shared_ptr<const IRTree::IExpr>>& _arguments )
+std::shared_ptr<const IRTree::CExprList> CIRBuilderVisitor::convertVectorToExprList(
+	const std::vector<std::shared_ptr<const IRTree::IExpr>>& _arguments )
 {
 	std::shared_ptr<const IRTree::CExprList> arguments;
 	if( _arguments.empty() ) {
 		arguments = std::make_shared<const IRTree::CExprList>( nullptr, nullptr );
 	} else {
-		arguments = std::make_shared<const IRTree::CExprList>( _arguments.back(), nullptr );
-		for( int i = _arguments.size() - 2; i >= 0; ++i ) {
+		arguments = std::make_shared<const IRTree::CExprList>(
+			_arguments.back(),
+			std::make_shared<const IRTree::CExprList>( nullptr, nullptr ) );
+		for( int i = _arguments.size() - 2; i >= 0; --i ) {
 			arguments = std::make_shared<const IRTree::CExprList>( _arguments[i], arguments );
 		}
 	}

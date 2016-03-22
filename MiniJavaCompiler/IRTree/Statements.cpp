@@ -42,13 +42,13 @@ namespace IRTree
 		}
 	}
 
-	CExpr::CExpr( std::shared_ptr<const IExpr> _exp ) :
-		exp( _exp )
+	CExpr::CExpr( std::shared_ptr<const IExpr> _expr ) :
+		expr( _expr )
 	{}
 
 	std::shared_ptr<const IExpr> CExpr::GetExp() const
 	{
-		return exp;
+		return expr;
 	}
 
 	void CExpr::Accept( IIRTreeVisitor* visitor ) const
@@ -58,7 +58,7 @@ namespace IRTree
 
 	IRTree::CExprList* CExpr::Kids()
 	{
-		return new IRTree::CExprList( exp, nullptr );
+		return new IRTree::CExprList( expr, nullptr );
 	}
 
 	IRTree::IStm* CExpr::Build( CExprList* kids )
@@ -101,28 +101,18 @@ namespace IRTree
 		return new IRTree::CJump( kids->GetHead(), labels );
 	}
 
-	CCondJump::CCondJump( int _binOp, std::shared_ptr<const IExpr> _left, std::shared_ptr<const IExpr> _right,
-		std::shared_ptr<const Temp::CLabel> _ifTrueLabel, std::shared_ptr<const Temp::CLabel> _ifFalseLabel ) :
-		binOp( _binOp ),
-		leftExpr( _left ),
-		rightExpr( _right ),
+	CCondJump::CCondJump(
+		std::shared_ptr<const IExpr> _expr,
+		std::shared_ptr<const Temp::CLabel> _ifTrueLabel,
+		std::shared_ptr<const Temp::CLabel> _ifFalseLabel ) :
+		expr( _expr ),
 		ifTrueLabel( _ifTrueLabel ),
 		ifFalseLabel( _ifFalseLabel )
 	{}
 
-	std::shared_ptr<const IExpr> CCondJump::GetLeftExpr() const
+	std::shared_ptr<const IExpr> CCondJump::GetExpr() const
 	{
-		return leftExpr;
-	}
-
-	std::shared_ptr<const IExpr> CCondJump::GetRightExpr() const
-	{
-		return rightExpr;
-	}
-
-	int CCondJump::GetBinOp() const
-	{
-		return binOp;
+		return expr;
 	}
 
 	std::shared_ptr<const Temp::CLabel> CCondJump::GetIfTrueLabel( ) const
@@ -139,16 +129,14 @@ namespace IRTree
 	{
 		visitor->Visit( this );
 	}
-	
 
-	IRTree::CExprList* CCondJump::Kids()
-	{
-		return new IRTree::CExprList( leftExpr, std::make_shared<const CExprList>( rightExpr, nullptr ) );
+	CExprList* CCondJump::Kids() {
+		return new IRTree::CExprList( expr, nullptr );
 	}
 
 	IRTree::IStm* CCondJump::Build( CExprList* kids )
 	{
-		return new IRTree::CCondJump( binOp, kids->GetHead(), kids->GetTail()->GetHead(), ifTrueLabel, ifFalseLabel );
+		return new IRTree::CCondJump( expr, ifTrueLabel, ifFalseLabel );
 	}
 
 	CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right ) :

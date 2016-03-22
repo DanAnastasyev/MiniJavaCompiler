@@ -44,7 +44,7 @@ namespace IRTree
 	// Calculate exp and forget about result
 	class CExpr : public IStm {
 	public:
-		CExpr( std::shared_ptr<const IExpr> exp );
+		CExpr( std::shared_ptr<const IExpr> expr );
 
 		std::shared_ptr<const IExpr> GetExp( ) const;
 
@@ -55,7 +55,7 @@ namespace IRTree
 		virtual IStm* Build( CExprList* kids ) override;
 
 	private:
-		std::shared_ptr<const IExpr> exp;
+		std::shared_ptr<const IExpr> expr;
 	};
 
 	// Jump to label
@@ -81,12 +81,10 @@ namespace IRTree
 	// Jump with condition
 	class CCondJump : public IStm {
 	public:
-		CCondJump( int binOp, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right, 
+		CCondJump( std::shared_ptr<const IExpr> expr,
 			std::shared_ptr<const Temp::CLabel> ifTrueLabel, std::shared_ptr<const Temp::CLabel> ifFalseLabel );
 
-		std::shared_ptr<const IExpr> GetLeftExpr() const;
-		std::shared_ptr<const IExpr> GetRightExpr() const;
-		int GetBinOp( ) const;
+		std::shared_ptr<const IExpr> GetExpr() const;
 		std::shared_ptr<const Temp::CLabel> GetIfTrueLabel( ) const;
 		std::shared_ptr<const Temp::CLabel> GetIfFalseLabel( ) const;
 
@@ -97,9 +95,9 @@ namespace IRTree
 		virtual IStm* Build( CExprList* kids ) override;
 
 	private:
-		std::shared_ptr<const IExpr> leftExpr;
-		std::shared_ptr<const IExpr> rightExpr;
-		int binOp;
+		std::shared_ptr<const IExpr> expr;
+//		std::shared_ptr<const IExpr> rightExpr;
+//		int binOp;
 		std::shared_ptr<const Temp::CLabel> ifTrueLabel;
 		std::shared_ptr<const Temp::CLabel> ifFalseLabel;
 	};
