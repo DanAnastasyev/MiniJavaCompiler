@@ -45,8 +45,8 @@ void CIRTreeToDigraphConverter::Visit( const CCondJump* node )
 	nextNameWithId( "CondJump" );
 	
 	treeRepresentation.AddEdge( lastNodeName, leftString, "expr" );
-	treeRepresentation.AddEdge( lastNodeName, "to label_" + node->GetIfTrueLabel()->GetName()->GetString(), "iftrue" );
-	treeRepresentation.AddEdge( lastNodeName, "to label_" + node->GetIfFalseLabel()->GetName()->GetString( ), "iffalse" );
+	treeRepresentation.AddEdge( lastNodeName, "to_label_" + node->GetIfTrueLabel()->GetName()->GetString(), "iftrue" );
+	treeRepresentation.AddEdge( lastNodeName, "to_label_" + node->GetIfFalseLabel()->GetName()->GetString( ), "iffalse" );
 }
 
 void CIRTreeToDigraphConverter::Visit( const CSeq* node )

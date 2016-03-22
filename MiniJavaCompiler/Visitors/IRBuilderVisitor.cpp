@@ -312,11 +312,8 @@ void CIRBuilderVisitor::Visit( const CMethodExpression* expr )
 		}
 	}
 
-	IRTree::CExprPtr returnValue( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( frames.back().GetReturnPtr() ) ) );
-
-	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CMove(
-		returnValue, IRTree::CExprPtr( new IRTree::CCall( IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( expr->GetIdentifier() ) ) ), 
-		convertVectorToExprList( arguments ) ) ) ) ), returnValue ) ) );
+	parsedExpressions.push(IRTree::CExprPtr(new IRTree::CCall(IRTree::CExprPtr(new IRTree::CName(std::make_shared<const Temp::CLabel>(expr->GetIdentifier()))),
+		convertVectorToExprList(arguments))));
 }
 
 void CIRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
