@@ -1,11 +1,10 @@
 #include "IRTree/Expressions.h"
 
-namespace IRTree
-{
-
+namespace IRTree {
 	CConst::CConst( int _value ) :
 		value( _value )
-	{}
+	{
+	}
 
 	int CConst::GetValue() const
 	{
@@ -17,19 +16,20 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CConst::Kids()
+	CExprList* CConst::Kids() const
 	{
 		return nullptr;
 	}
 
-	IRTree::IExpr* CConst::Build( CExprList* kids )
+	IExpr* CConst::Build(const CExprList* kids) const
 	{
-		return this;
+		return new CConst( value );
 	}
 
 	CName::CName( std::shared_ptr<const Temp::CLabel> _name ) :
 		name( _name )
-	{}
+	{
+	}
 
 	std::shared_ptr<const Temp::CLabel> CName::GetName() const
 	{
@@ -41,19 +41,20 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CName::Kids()
+	CExprList* CName::Kids() const
 	{
 		return nullptr;
 	}
 
-	IRTree::IExpr* CName::Build( CExprList* kids )
+	IExpr* CName::Build(const CExprList* kids) const
 	{
-		return this;
+		return new CName( name );
 	}
 
 	CTemp::CTemp( const std::shared_ptr<Temp::CTemp> _temp ) :
 		temp( _temp )
-	{}
+	{
+	}
 
 	std::shared_ptr<Temp::CTemp> CTemp::GetTemp() const
 	{
@@ -65,33 +66,34 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CTemp::Kids()
+	IRTree::CExprList* CTemp::Kids() const
 	{
 		return nullptr;
 	}
 
-	IRTree::IExpr* CTemp::Build( CExprList* kids )
+	IRTree::IExpr* CTemp::Build(const CExprList* kids) const
 	{
-		return this;
+		return new CTemp( temp );
 	}
 
-	CBinop::CBinop( BINOP _binop, CExprPtr _left, CExprPtr _right ) :
+	CBinop::CBinop( BINOP _binop, IExprPtr _left, IExprPtr _right ) :
 		binop( _binop ),
 		left( _left ),
 		right( _right )
-	{}
+	{
+	}
 
-	IExpr::BINOP CBinop::GetBinOp( ) const
+	IExpr::BINOP CBinop::GetBinOp() const
 	{
 		return binop;
 	}
 
-	const CExprPtr CBinop::GetLeft() const
+	std::shared_ptr<const IExpr> CBinop::GetLeft() const
 	{
 		return left;
 	}
 
-	const CExprPtr CBinop::GetRight() const
+	std::shared_ptr<const IExpr> CBinop::GetRight() const
 	{
 		return right;
 	}
@@ -101,21 +103,22 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CBinop::Kids()
+	CExprList* CBinop::Kids() const
 	{
 		return new IRTree::CExprList( left, std::make_shared<IRTree::CExprList>( right, nullptr ) );
 	}
 
-	IRTree::IExpr* CBinop::Build( CExprList* kids )
+	IExpr* CBinop::Build(const CExprList* kids) const
 	{
 		return new CBinop( binop, kids->GetHead(), kids->GetTail()->GetHead() );
 	}
 
-	CMem::CMem( CExprPtr _mem ) :
+	CMem::CMem( IExprPtr _mem ) :
 		mem( _mem )
-	{}
+	{
+	}
 
-	const CExprPtr CMem::GetMem() const
+	std::shared_ptr<const IExpr> CMem::GetMem() const
 	{
 		return mem;
 	}
@@ -125,27 +128,28 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CMem::Kids()
+	CExprList* CMem::Kids() const
 	{
 		return new IRTree::CExprList( mem, nullptr );
 	}
 
-	IRTree::IExpr* CMem::Build( CExprList* kids )
+	IExpr* CMem::Build(const CExprList* kids) const
 	{
 		return new CMem( kids->GetHead() );
 	}
 
-	CCall::CCall( CExprPtr _funcName, const std::shared_ptr<const CExprList> _arguments ) :
+	CCall::CCall( IExprPtr _funcName, const std::shared_ptr<const CExprList> _arguments ) :
 		funcName( _funcName ),
 		arguments( _arguments )
-	{}
+	{
+	}
 
 	const CSymbol* CCall::GetFunctionName() const
 	{
-		return std::dynamic_pointer_cast<const CName>( funcName )->GetName()->GetName();
+		return std::dynamic_pointer_cast<const CName>(funcName)->GetName()->GetName();
 	}
 
-	const std::shared_ptr<const IRTree::CExprList> CCall::GetArguments() const
+	const std::shared_ptr<const CExprList>& CCall::GetArguments() const
 	{
 		return arguments;
 	}
@@ -155,27 +159,28 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CCall::Kids()
+	CExprList* CCall::Kids() const
 	{
 		return new IRTree::CExprList( funcName, arguments );
 	}
 
-	IRTree::IExpr* CCall::Build( CExprList* kids )
+	IExpr* CCall::Build(const CExprList* kids) const
 	{
 		return new CCall( kids->GetHead(), kids->GetTail() );
 	}
 
-	CESeq::CESeq( CStmPtr _statement, CExprPtr _expression ) :
+	CESeq::CESeq( IStmPtr _statement, IExprPtr _expression ) :
 		statement( _statement ),
 		expression( _expression )
-	{}
+	{
+	}
 
-	const CStmPtr CESeq::GetStatement() const
+	IStmPtr CESeq::GetStatement() const
 	{
 		return statement;
 	}
 
-	const CExprPtr CESeq::GetExpression() const
+	std::shared_ptr<const IExpr> CESeq::GetExpression() const
 	{
 		return expression;
 	}
@@ -185,19 +190,20 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CESeq::Kids()
+	CExprList* CESeq::Kids() const
 	{
 		throw std::logic_error( "Kids() not applicable to ESEQ" );
 	}
 
-	IRTree::IExpr* CESeq::Build( CExprList* kids )
+	IExpr* CESeq::Build(const CExprList* kids) const
 	{
 		throw std::logic_error( "Build() not applicable to ESEQ" );
 	}
 
 	CExprList::CExprList( std::shared_ptr<const IExpr> _head, std::shared_ptr<const CExprList> _tail ) :
 		head( _head ), tail( _tail )
-	{}
+	{
+	}
 
 	std::shared_ptr<const IExpr> CExprList::GetHead() const
 	{
@@ -208,5 +214,4 @@ namespace IRTree
 	{
 		return tail;
 	}
-
 }

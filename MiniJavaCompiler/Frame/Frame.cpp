@@ -6,33 +6,33 @@ namespace Frame {
 		offset( _offset )
 	{}
 
-	const IRTree::CExprPtr CInFrame::GetExp( const Frame::CFrame& framePtr ) const
+	const IRTree::IExprPtr CInFrame::GetExp( const Frame::CFrame& framePtr ) const
 	{
-		return IRTree::CExprPtr( new IRTree::CMem( std::shared_ptr<const IRTree::IExpr>( 
+		return IRTree::IExprPtr( new IRTree::CMem( std::shared_ptr<const IRTree::IExpr>( 
 			new IRTree::CBinop( IRTree::CBinop::MINUS,
 			std::shared_ptr<const IRTree::IExpr>( new IRTree::CTemp( framePtr.GetFramePtr() ) ),
-			IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL, 
-			IRTree::CExprPtr( new IRTree::CConst( offset + 1 ) ), IRTree::CExprPtr( new IRTree::CConst( framePtr.WORD_SIZE ) ) ) ) ) ) ) );
+			IRTree::IExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL, 
+			IRTree::IExprPtr( new IRTree::CConst( offset + 1 ) ), IRTree::IExprPtr( new IRTree::CConst( framePtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
-	const IRTree::CExprPtr CInObject::GetExp( const Frame::CFrame& frameRegPtr ) const
+	const IRTree::IExprPtr CInObject::GetExp( const Frame::CFrame& frameRegPtr ) const
 	{
-		return IRTree::CExprPtr( new IRTree::CMem(
-			IRTree::CExprPtr( new IRTree::CBinop(
-			IRTree::CBinop::PLUS, IRTree::CExprPtr( new IRTree::CTemp( frameRegPtr.GetThisPtr() ) ),
-			IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL,
-			IRTree::CExprPtr( new IRTree::CConst( offset ) ), 
-			IRTree::CExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
+		return IRTree::IExprPtr( new IRTree::CMem(
+			IRTree::IExprPtr( new IRTree::CBinop(
+			IRTree::CBinop::PLUS, IRTree::IExprPtr( new IRTree::CTemp( frameRegPtr.GetThisPtr() ) ),
+			IRTree::IExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL,
+			IRTree::IExprPtr( new IRTree::CConst( offset ) ), 
+			IRTree::IExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
-	const IRTree::CExprPtr CFormalParamInStack::GetExp( const Frame::CFrame& frameRegPtr ) const
+	const IRTree::IExprPtr CFormalParamInStack::GetExp( const Frame::CFrame& frameRegPtr ) const
 	{
-		return IRTree::CExprPtr( new IRTree::CMem(
-			IRTree::CExprPtr( new IRTree::CBinop(
-			IRTree::CBinop::PLUS, IRTree::CExprPtr( new IRTree::CTemp( frameRegPtr.GetFramePtr() ) ),
-			IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL,
-			IRTree::CExprPtr( new IRTree::CConst( offset ) ),
-			IRTree::CExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
+		return IRTree::IExprPtr( new IRTree::CMem(
+			IRTree::IExprPtr( new IRTree::CBinop(
+			IRTree::CBinop::PLUS, IRTree::IExprPtr( new IRTree::CTemp( frameRegPtr.GetFramePtr() ) ),
+			IRTree::IExprPtr( new IRTree::CBinop( IRTree::CBinop::MUL,
+			IRTree::IExprPtr( new IRTree::CConst( offset ) ),
+			IRTree::IExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
 	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, 

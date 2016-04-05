@@ -10,7 +10,6 @@ void CIRTreeToDigraphConverter::Visit( const CMove* node )
 {
 	node->GetDestExpr()->Accept( this );
 	string destString = lastNodeName;
-
 	node->GetSrcExpr()->Accept( this );
 	string srcString = lastNodeName;
 
@@ -139,7 +138,7 @@ void CIRTreeToDigraphConverter::Visit( const CCall* node )
 	string argsString;
 	std::vector<string> nodes;
 	auto args = node->GetArguments();
-	for( auto arg = args->GetHead(); arg != nullptr; args = args->GetTail(), arg = args->GetHead() ) {
+	for( auto arg = args->GetHead(); arg != nullptr; args = args->GetTail(), arg = (args != nullptr) ? args->GetHead() : nullptr ) {
 		arg->Accept( this );
 		nodes.push_back( lastNodeName );
 	}

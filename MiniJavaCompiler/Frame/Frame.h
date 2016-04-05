@@ -47,7 +47,7 @@ namespace Frame {
 	// Интерфейс получения поддерева для переменной
 	class IAccess {
 	public:
-		virtual const IRTree::CExprPtr GetExp( const Frame::CFrame& framePtr ) const = 0;
+		virtual const IRTree::IExprPtr GetExp( const Frame::CFrame& framePtr ) const = 0;
 		virtual ~IAccess() {}
 	};
 
@@ -56,7 +56,7 @@ namespace Frame {
 	public:
 		explicit CInFrame( int offset );
 
-		const IRTree::CExprPtr GetExp( const Frame::CFrame& framePtr ) const;
+		const IRTree::IExprPtr GetExp( const Frame::CFrame& framePtr ) const;
 	private:
 		const int offset;
 	};
@@ -66,7 +66,7 @@ namespace Frame {
 	//public:
 	//	explicit CInReg();
 
-	//	const IRTree::CExprPtr GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const;
+	//	const IRTree::IExprPtr GetExp( const std::shared_ptr<Temp::CTemp> frameRegPtr ) const;
 	//private:
 	//	std::shared_ptr<Temp::CTemp> temp;
 	//};
@@ -76,7 +76,7 @@ namespace Frame {
 	public:
 		explicit CInObject( int _offset ) : offset( _offset ) {}
 
-		const IRTree::CExprPtr GetExp( const Frame::CFrame& frameRegPtr ) const;
+		const IRTree::IExprPtr GetExp( const Frame::CFrame& frameRegPtr ) const;
 	private:
 		const int offset;
 	};
@@ -86,7 +86,7 @@ namespace Frame {
 	public:
 		explicit CFormalParamInStack( int _offset ) : offset( _offset ) {}
 
-		const IRTree::CExprPtr GetExp( const Frame::CFrame& frameRegPtr ) const;
+		const IRTree::IExprPtr GetExp( const Frame::CFrame& frameRegPtr ) const;
 	private:
 		// Порядковый номер аргумента, переданного как формальный параметр функции
 		// Считать начинаем с 1

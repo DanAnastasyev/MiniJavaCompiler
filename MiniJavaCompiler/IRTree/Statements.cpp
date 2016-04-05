@@ -24,18 +24,18 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CMove::Kids()
+	CExprList* CMove::Kids() const
 	{
-		if( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ) != 0 ) {
+		if( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ) != nullptr ) {
 			return new CExprList( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ), std::make_shared<const CExprList>( srcExpr, nullptr ) );
 		} else {
 			return new CExprList( srcExpr, nullptr );
 		}
 	}
 
-	IRTree::IStm* CMove::Build( CExprList* kids )
+	IStm* CMove::Build(const CExprList* kids) const
 	{
-		if( std::dynamic_pointer_cast< const IRTree::CMem >( destExpr ) != 0 ) {
+		if( std::dynamic_pointer_cast< const IRTree::CMem >( destExpr ) != nullptr ) {
 			return new IRTree::CMove( std::dynamic_pointer_cast<const IRTree::CMem>( kids->GetHead() ), kids->GetTail()->GetHead() );
 		} else {
 			return new IRTree::CMove( destExpr, kids->GetHead() );
@@ -56,12 +56,12 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CExpr::Kids()
+	CExprList* CExpr::Kids() const
 	{
 		return new IRTree::CExprList( expr, nullptr );
 	}
 
-	IRTree::IStm* CExpr::Build( CExprList* kids )
+	IStm* CExpr::Build(const CExprList* kids) const
 	{
 		return new IRTree::CExpr( kids->GetHead() );
 	}
@@ -91,12 +91,12 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CJump::Kids()
+	CExprList* CJump::Kids() const
 	{
 		return new IRTree::CExprList( jmpExpr, nullptr );
 	}
 
-	IRTree::IStm* CJump::Build( CExprList* kids )
+	IStm* CJump::Build(const CExprList* kids) const
 	{
 		return new IRTree::CJump( kids->GetHead(), labels );
 	}
@@ -130,11 +130,11 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	CExprList* CCondJump::Kids() {
+	CExprList* CCondJump::Kids() const {
 		return new IRTree::CExprList( expr, nullptr );
 	}
 
-	IRTree::IStm* CCondJump::Build( CExprList* kids )
+	IStm* CCondJump::Build(const CExprList* kids) const
 	{
 		return new IRTree::CCondJump( expr, ifTrueLabel, ifFalseLabel );
 	}
@@ -160,12 +160,12 @@ namespace IRTree
 	}
 
 
-	IRTree::CExprList* CSeq::Kids()
+	CExprList* CSeq::Kids() const
 	{
-		throw std::logic_error( "Kids() not applicable to SEQ" );
+		throw std::logic_error( "Kids() const not applicable to SEQ" );
 	}
 
-	IRTree::IStm* CSeq::Build( CExprList* kids )
+	IStm* CSeq::Build(const CExprList* kids) const
 	{
 		throw std::logic_error( "Build() not applicable to SEQ" );
 	}
@@ -184,14 +184,14 @@ namespace IRTree
 		visitor->Visit( this );
 	}
 
-	IRTree::CExprList* CLabel::Kids()
+	CExprList* CLabel::Kids() const
 	{
 		return nullptr;
 	}
 
-	IRTree::IStm* CLabel::Build( CExprList* kids )
+	IStm* CLabel::Build(const CExprList* kids) const
 	{
-		return this;
+		return new CLabel( label );
 	}
 
 	CStmList::CStmList( std::shared_ptr<const IStm> _head, std::shared_ptr<const CStmList> _tail ) :

@@ -115,21 +115,21 @@ void CIRBuilderVisitor::Visit( const CArrayAssignStatement* statement )
 {
 	// left[i] = right
 	// left - переменная на фрейме
-	IRTree::CExprPtr left( frames.back().GetVar( statement->GetArrayName() )->GetExp( frames.back() ) );
+	IRTree::IExprPtr left( frames.back().GetVar( statement->GetArrayName() )->GetExp( frames.back() ) );
 	
 	// i - индекс в массиве. Вычисляем offset
 	statement->GetElementNumber()->Accept( this );
-	IRTree::CExprPtr index = parsedExpressions.top( );
+	IRTree::IExprPtr index = parsedExpressions.top( );
 	parsedExpressions.pop();
-	IRTree::CExprPtr offset( new IRTree::CBinop( IRTree::IExpr::MUL, index, 
-		IRTree::CExprPtr( new IRTree::CConst( Frame::CFrame::WORD_SIZE ) ) ) );
+	IRTree::IExprPtr offset( new IRTree::CBinop( IRTree::IExpr::MUL, index, 
+		IRTree::IExprPtr( new IRTree::CConst( Frame::CFrame::WORD_SIZE ) ) ) );
 	
 	// left = MEM( +( MEM(left), BINOP(MUL, i, CONST(W)) ) )
-	left = IRTree::CExprPtr( new IRTree::CMem( IRTree::CExprPtr(
-		IRTree::CExprPtr( new IRTree::CBinop( IRTree::CBinop::PLUS, IRTree::CExprPtr( left ), offset ) ) ) ) );
+	left = IRTree::IExprPtr( new IRTree::CMem( IRTree::IExprPtr(
+		IRTree::IExprPtr( new IRTree::CBinop( IRTree::CBinop::PLUS, IRTree::IExprPtr( left ), offset ) ) ) ) );
 
 	statement->GetRightPart()->Accept( this );
-	IRTree::CExprPtr right = parsedExpressions.top();
+	IRTree::IExprPtr right = parsedExpressions.top();
 	parsedExpressions.pop();
 
 	parsedStatements.emplace( new IRTree::CMove( left, right ) );
@@ -139,11 +139,11 @@ void CIRBuilderVisitor::Visit( const CAssignStatement* statement )
 {
 	// left = right
 	// left - переменная на фрейме
-	IRTree::CExprPtr left( frames.back().GetVar( statement->GetLeftPart() )->GetExp( frames.back() ) );
+	IRTree::IExprPtr left( frames.back().GetVar( statement->GetLeftPart() )->GetExp( frames.back() ) );
 
 	// Парсим right
 	statement->GetRightPart()->Accept( this );
-	IRTree::CExprPtr right = parsedExpressions.top();
+	IRTree::IExprPtr right = parsedExpressions.top();
 	parsedExpressions.pop();
 
 	parsedStatements.emplace( new IRTree::CMove( left, right ) );
@@ -152,7 +152,7 @@ void CIRBuilderVisitor::Visit( const CAssignStatement* statement )
 void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 {
 	ifStatement->GetCondition()->Accept( this );
-	IRTree::CExprPtr condition = parsedExpressions.top();
+	IRTree::IExprPtr condition = parsedExpressions.top();
 	parsedExpressions.pop();
 
 	// Создаем метки для true, false и выхода из if
@@ -161,7 +161,7 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 	std::shared_ptr<const Temp::CLabel> falseLabel( new Temp::CLabel() );
 	std::shared_ptr<const Temp::CLabel> joinLabel( new Temp::CLabel() );
 
-	IRTree::CStmPtr trueStatement, falseStatement;
+	IRTree::IStmPtr trueStatement, falseStatement;
 	if( ifStatement->GetIfTrueStatement() != nullptr ) {
 		ifStatement->GetIfTrueStatement()->Accept( this );
 		trueStatement = parsedStatements.top();
@@ -173,31 +173,31 @@ void CIRBuilderVisitor::Visit( const CIfStatement* ifStatement )
 		parsedStatements.pop();
 	}
 
-	IRTree::CStmPtr endifJump = IRTree::CStmPtr( new IRTree::CJump( joinLabel ) );
-	falseStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( falseLabel ) ), IRTree::CStmPtr( new IRTree::CSeq( falseStatement, endifJump ) ) ) );
-	trueStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel( trueLabel ) ), IRTree::CStmPtr( new IRTree::CSeq( trueStatement, endifJump ) ) ) );
-	IRTree::CStmPtr bothStatement;
+	IRTree::IStmPtr endifJump = IRTree::IStmPtr( new IRTree::CJump( joinLabel ) );
+	falseStatement = IRTree::IStmPtr( new IRTree::CSeq( IRTree::IStmPtr( new IRTree::CLabel( falseLabel ) ), IRTree::IStmPtr( new IRTree::CSeq( falseStatement, endifJump ) ) ) );
+	trueStatement = IRTree::IStmPtr( new IRTree::CSeq( IRTree::IStmPtr( new IRTree::CLabel( trueLabel ) ), IRTree::IStmPtr( new IRTree::CSeq( trueStatement, endifJump ) ) ) );
+	IRTree::IStmPtr bothStatement;
 
 	if( ifStatement->GetIfFalseStatement() != nullptr ) {
-		bothStatement = IRTree::CStmPtr( new IRTree::CSeq( trueStatement, IRTree::CStmPtr(
-			new IRTree::CSeq( falseStatement, IRTree::CStmPtr( new IRTree::CLabel( joinLabel ) ) ) ) ) );
+		bothStatement = IRTree::IStmPtr( new IRTree::CSeq( trueStatement, IRTree::IStmPtr(
+			new IRTree::CSeq( falseStatement, IRTree::IStmPtr( new IRTree::CLabel( joinLabel ) ) ) ) ) );
 	} else {
 		// TODO: check this
-		bothStatement = IRTree::CStmPtr( new IRTree::CSeq( trueStatement, IRTree::CStmPtr( new IRTree::CLabel( joinLabel ) ) ) );
+		bothStatement = IRTree::IStmPtr( new IRTree::CSeq( trueStatement, IRTree::IStmPtr( new IRTree::CLabel( joinLabel ) ) ) );
 	}
 
-	parsedStatements.push( IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr(
+	parsedStatements.push( IRTree::IStmPtr( new IRTree::CSeq( IRTree::IStmPtr(
 		new IRTree::CCondJump( condition, trueLabel, falseLabel ) ), bothStatement ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
 {
 	whileStatement->GetBodyCycle()->Accept( this );
-	IRTree::CStmPtr bodyCycleStatement = parsedStatements.top();
+	IRTree::IStmPtr bodyCycleStatement = parsedStatements.top();
 	parsedStatements.pop();
 
 	whileStatement->GetCondition()->Accept( this );
-	IRTree::CExprPtr condition = parsedExpressions.top();
+	IRTree::IExprPtr condition = parsedExpressions.top();
 	parsedExpressions.pop();
 
 	std::shared_ptr<const Temp::CLabel> testLabel( new Temp::CLabel() );
@@ -205,28 +205,28 @@ void CIRBuilderVisitor::Visit( const CWhileStatement* whileStatement )
 	std::shared_ptr<const Temp::CLabel> doneLabel( new Temp::CLabel() );
 
 	// SEQ( SEQ( LABEL(nextStepLabel), body), JUMP(test) )
-	bodyCycleStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( 
-		new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CLabel(nextStepLabel) ), bodyCycleStatement ) ),
-		IRTree::CStmPtr( new IRTree::CJump( testLabel ) ) ) );
+	bodyCycleStatement = IRTree::IStmPtr( new IRTree::CSeq( IRTree::IStmPtr( 
+		new IRTree::CSeq( IRTree::IStmPtr( new IRTree::CLabel(nextStepLabel) ), bodyCycleStatement ) ),
+		IRTree::IStmPtr( new IRTree::CJump( testLabel ) ) ) );
 
 	// SEQ( CCONDJUMP(eq, condition, 1, nextStepLabel, doneLabel), bodyCycleStatement )
-	IRTree::CStmPtr conditionStatement = IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr(
+	IRTree::IStmPtr conditionStatement = IRTree::IStmPtr( new IRTree::CSeq( IRTree::IStmPtr(
 		new IRTree::CCondJump( condition, nextStepLabel, doneLabel ) ), 
 		bodyCycleStatement ) );
 
 	// SEQ( SEQ( LABEL(testLabel, condition) ), doneLabel )
-	parsedStatements.push( IRTree::CStmPtr( new IRTree::CSeq( IRTree::CStmPtr( new IRTree::CSeq(
-		IRTree::CStmPtr( new IRTree::CLabel( testLabel ) ), conditionStatement ) ),
-		IRTree::CStmPtr( new IRTree::CLabel( doneLabel ) ) ) ) );
+	parsedStatements.push( IRTree::IStmPtr( new IRTree::CSeq( IRTree::IStmPtr( new IRTree::CSeq(
+		IRTree::IStmPtr( new IRTree::CLabel( testLabel ) ), conditionStatement ) ),
+		IRTree::IStmPtr( new IRTree::CLabel( doneLabel ) ) ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CPrintStatement* printStatement )
 {
 	printStatement->GetExpression()->Accept( this );
-	IRTree::CExprPtr expr = parsedExpressions.top();
+	IRTree::IExprPtr expr = parsedExpressions.top();
 	parsedExpressions.pop();
-	parsedStatements.emplace( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( 
-		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "name_println" ) ) ) ),
+	parsedStatements.emplace( new IRTree::CExpr( IRTree::IExprPtr( new IRTree::CCall( 
+		IRTree::IExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "name_println" ) ) ) ),
 		convertVectorToExprList( { expr } ) ) ) ));
 }
 
@@ -240,7 +240,7 @@ void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
 	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	IRTree::CExprPtr binOp;
+	IRTree::IExprPtr binOp;
 	switch( expr->GetBinOp() )
 	{
 	case CBinOpExpression::AND:
@@ -263,44 +263,44 @@ void CIRBuilderVisitor::Visit( const CBinOpExpression* expr )
 		break;
 	}
 
-	parsedExpressions.emplace( IRTree::CExprPtr( binOp ) );
+	parsedExpressions.emplace( IRTree::IExprPtr( binOp ) );
 }
 
 void CIRBuilderVisitor::Visit( const CIndexExpression* expr )
 {
 	expr->GetExp()->Accept( this );
-	IRTree::CExprPtr array(  parsedExpressions.top() );
+	IRTree::IExprPtr array(  parsedExpressions.top() );
 	parsedExpressions.pop();
 
 	expr->GetIndexExp()->Accept( this );
-	IRTree::CExprPtr index = parsedExpressions.top();
+	IRTree::IExprPtr index = parsedExpressions.top();
 	parsedExpressions.pop();
 	// index смещен на 1, т.к. в первой ячейке лежит длина массива
-	index = IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, index, IRTree::CExprPtr( new IRTree::CConst( 1 ) ) ) );
+	index = IRTree::IExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, index, IRTree::IExprPtr( new IRTree::CConst( 1 ) ) ) );
 
-	IRTree::CExprPtr offset( new IRTree::CBinop( IRTree::IExpr::MUL, index, IRTree::CExprPtr( new IRTree::CConst( Frame::CFrame::WORD_SIZE ) ) ) );
+	IRTree::IExprPtr offset( new IRTree::CBinop( IRTree::IExpr::MUL, index, IRTree::IExprPtr( new IRTree::CConst( Frame::CFrame::WORD_SIZE ) ) ) );
 
-	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CMem( IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, array, offset ) ) ) ) );
+	parsedExpressions.push( IRTree::IExprPtr( new IRTree::CMem( IRTree::IExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, array, offset ) ) ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CLenghtExpression* expr )
 {
 	expr->GetExp()->Accept( this );
-	IRTree::CExprPtr arrayLen = parsedExpressions.top();
+	IRTree::IExprPtr arrayLen = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	IRTree::CExprPtr lenght( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
+	IRTree::IExprPtr lenght( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
 
-	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CMove( lenght, arrayLen ) ), lenght ) ) );
+	parsedExpressions.push( IRTree::IExprPtr( new IRTree::CESeq( IRTree::IStmPtr( new IRTree::CMove( lenght, arrayLen ) ), lenght ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CMethodExpression* expr )
 {
 	expr->GetExp()->Accept( this );
-	IRTree::CExprPtr object = parsedExpressions.top();
+	IRTree::IExprPtr object = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	std::vector<IRTree::CExprPtr> arguments;
+	std::vector<IRTree::IExprPtr> arguments;
 	arguments.push_back(object);
 	if( expr->GetArgumentList() != nullptr ) {
 		int expresionsStackSize = parsedExpressions.size();
@@ -312,18 +312,18 @@ void CIRBuilderVisitor::Visit( const CMethodExpression* expr )
 		}
 	}
 
-	parsedExpressions.push(IRTree::CExprPtr(new IRTree::CCall(IRTree::CExprPtr(new IRTree::CName(std::make_shared<const Temp::CLabel>(expr->GetIdentifier()))),
+	parsedExpressions.push(IRTree::IExprPtr(new IRTree::CCall(IRTree::IExprPtr(new IRTree::CName(std::make_shared<const Temp::CLabel>(expr->GetIdentifier()))),
 		convertVectorToExprList(arguments))));
 }
 
 void CIRBuilderVisitor::Visit( const CIntLiteralExpression* expr )
 {
-	parsedExpressions.emplace( IRTree::CExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
+	parsedExpressions.emplace( IRTree::IExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CBoolLiteralExpression* expr )
 {
-	parsedExpressions.emplace( IRTree::CExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
+	parsedExpressions.emplace( IRTree::IExprPtr( new IRTree::CConst( expr->GetValue() ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CIdentifierExpression* expr )
@@ -339,30 +339,30 @@ void CIRBuilderVisitor::Visit( const CThisExpression* expr )
 void CIRBuilderVisitor::Visit( const CNewIntArrayExpression* expr )
 {
 	expr->GetExp()->Accept( this );
-	IRTree::CExprPtr arraySize = parsedExpressions.top();
+	IRTree::IExprPtr arraySize = parsedExpressions.top();
 	parsedStatements.pop();
 
 	// (len + 1) * wordSize
-	IRTree::CExprPtr allocationSize( new IRTree::CMem( IRTree::CExprPtr( 
+	IRTree::IExprPtr allocationSize( new IRTree::CMem( IRTree::IExprPtr( 
 		new IRTree::CBinop( IRTree::IExpr::MUL,
-		IRTree::CExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, arraySize, IRTree::CExprPtr( new IRTree::CConst( 1 ) ) ) ),
-		IRTree::CExprPtr( new IRTree::CConst(frames.back().WORD_SIZE) ) ) ) ) );
+		IRTree::IExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, arraySize, IRTree::IExprPtr( new IRTree::CConst( 1 ) ) ) ),
+		IRTree::IExprPtr( new IRTree::CConst(frames.back().WORD_SIZE) ) ) ) ) );
 
-	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
+	IRTree::IExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
 
-	IRTree::CExprPtr mallocCall( new IRTree::CCall( 
-		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
+	IRTree::IExprPtr mallocCall( new IRTree::CCall( 
+		IRTree::IExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
 		convertVectorToExprList( { allocationSize } ) ) );
-	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
+	IRTree::IStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
 
 	// TODO: как сделать по-нормальному
-	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( IRTree::CExprPtr( 
+	IRTree::IStmPtr clearMemory( new IRTree::CExpr( IRTree::IExprPtr( new IRTree::CCall( IRTree::IExprPtr( 
 		new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__memset" ) ) ) ),
-		convertVectorToExprList({ IRTree::CExprPtr( new IRTree::CConst( 0 ) ), allocationSize }) ) ) ) );
-	IRTree::CStmPtr moveSize( new IRTree::CMove( temp, arraySize ) );
+		convertVectorToExprList({ IRTree::IExprPtr( new IRTree::CConst( 0 ) ), allocationSize }) ) ) ) );
+	IRTree::IStmPtr moveSize( new IRTree::CMove( temp, arraySize ) );
 
-	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
-		allocateMemory, IRTree::CStmPtr( new IRTree::CSeq( clearMemory, moveSize ) ) ) ), temp ) ) );
+	parsedExpressions.push( IRTree::IExprPtr( new IRTree::CESeq( IRTree::IStmPtr( new IRTree::CSeq(
+		allocateMemory, IRTree::IStmPtr( new IRTree::CSeq( clearMemory, moveSize ) ) ) ), temp ) ) );
 }
 
 void CIRBuilderVisitor::Visit( const CNewExpression* expr )
@@ -370,19 +370,19 @@ void CIRBuilderVisitor::Visit( const CNewExpression* expr )
 	SymbolsTable::CClassInfo* object = symbolsTable->GetClass( expr->GetIdentifier()->GetString() );
 	int objectSize = object->GerVars().size();
 
-	IRTree::CExprPtr allocationSize(new IRTree::CConst(objectSize * frames.back().WORD_SIZE));
+	IRTree::IExprPtr allocationSize(new IRTree::CConst(objectSize * frames.back().WORD_SIZE));
 
-	IRTree::CExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
-	IRTree::CExprPtr mallocCall( new IRTree::CCall( 
-		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
+	IRTree::IExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
+	IRTree::IExprPtr mallocCall( new IRTree::CCall( 
+		IRTree::IExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
 		convertVectorToExprList( { allocationSize } ) ) );
-	IRTree::CStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
+	IRTree::IStmPtr allocateMemory( new IRTree::CMove( temp, mallocCall ) );
 	// TODO: как сделать по-нормальному
-	IRTree::CStmPtr clearMemory( new IRTree::CExpr( IRTree::CExprPtr( new IRTree::CCall( 
-		IRTree::CExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__memset" ) ) ) ),
-		convertVectorToExprList({ temp, IRTree::CExprPtr( new IRTree::CConst( 0 ) ) }) ) ) ) );
+	IRTree::IStmPtr clearMemory( new IRTree::CExpr( IRTree::IExprPtr( new IRTree::CCall( 
+		IRTree::IExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__memset" ) ) ) ),
+		convertVectorToExprList({ temp, IRTree::IExprPtr( new IRTree::CConst( 0 ) ) }) ) ) ) );
 
-	parsedExpressions.push( IRTree::CExprPtr( new IRTree::CESeq( IRTree::CStmPtr( new IRTree::CSeq(
+	parsedExpressions.push( IRTree::IExprPtr( new IRTree::CESeq( IRTree::IStmPtr( new IRTree::CSeq(
 		allocateMemory, clearMemory ) ), temp ) ) );
 }
 
@@ -392,14 +392,14 @@ void CIRBuilderVisitor::Visit( const CUnaryOpExpression* expr )
 	std::shared_ptr<const IRTree::IExpr> right = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	IRTree::CExprPtr binOp;
+	IRTree::IExprPtr binOp;
 	if (expr->GetOperation() == CUnaryOpExpression::UnaryOp::MINUS) {
 		binOp = std::shared_ptr<const IRTree::IExpr>( 
-			new IRTree::CBinop( IRTree::IExpr::MINUS, IRTree::CExprPtr( new IRTree::CConst( 0 ) ), right ) );
+			new IRTree::CBinop( IRTree::IExpr::MINUS, IRTree::IExprPtr( new IRTree::CConst( 0 ) ), right ) );
 	} else {
 		// TODO: Check if it is true
 		binOp = std::shared_ptr<const IRTree::IExpr>( 
-			new IRTree::CBinop( IRTree::IExpr::XOR, IRTree::CExprPtr( new IRTree::CConst( 1 ) ), right ) );
+			new IRTree::CBinop( IRTree::IExpr::XOR, IRTree::IExprPtr( new IRTree::CConst( 1 ) ), right ) );
 	}
 
 	parsedExpressions.emplace(binOp);
@@ -437,7 +437,7 @@ void CIRBuilderVisitor::Visit( const CStatementList* stmtList )
 
 	// Если распарсили не statement, а expression
 	if( parsedStatementsCount + 1 != parsedStatements.size() ) {
-		IRTree::CExprPtr exp = parsedExpressions.top();
+		IRTree::IExprPtr exp = parsedExpressions.top();
 		parsedExpressions.pop();
 
 		parsedStatements.emplace( new IRTree::CExpr( exp ) );
@@ -447,11 +447,11 @@ void CIRBuilderVisitor::Visit( const CStatementList* stmtList )
 	if( stmtList->GetStatementList() != nullptr ) {
 		stmtList->GetStatementList( )->Accept( this );
 
-		IRTree::CStmPtr parsedListRest = parsedStatements.top();
+		IRTree::IStmPtr parsedListRest = parsedStatements.top();
 		parsedStatements.pop();
 
 		// Statement, который прошли в stmtList->GetStatement()
-		IRTree::CStmPtr parsedStm = parsedStatements.top( );
+		IRTree::IStmPtr parsedStm = parsedStatements.top( );
 		parsedStatements.pop();
 
 		parsedStatements.emplace( new IRTree::CSeq( parsedStm, parsedListRest ) );
@@ -481,15 +481,15 @@ std::vector<Frame::CFrame> CIRBuilderVisitor::GetFrames() const
 	return frames;
 }
 std::shared_ptr<const IRTree::CExprList> CIRBuilderVisitor::convertVectorToExprList(
-	const std::vector<std::shared_ptr<const IRTree::IExpr>>& _arguments )
+	const std::vector<std::shared_ptr<const IRTree::IExpr>>& _arguments ) const
 {
 	std::shared_ptr<const IRTree::CExprList> arguments;
 	if( _arguments.empty() ) {
-		arguments = std::make_shared<const IRTree::CExprList>( nullptr, nullptr );
+		arguments = nullptr;
 	} else {
 		arguments = std::make_shared<const IRTree::CExprList>(
 			_arguments.back(),
-			std::make_shared<const IRTree::CExprList>( nullptr, nullptr ) );
+			nullptr );
 		for( int i = _arguments.size() - 2; i >= 0; --i ) {
 			arguments = std::make_shared<const IRTree::CExprList>( _arguments[i], arguments );
 		}

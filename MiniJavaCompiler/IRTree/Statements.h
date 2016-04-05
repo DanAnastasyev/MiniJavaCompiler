@@ -16,25 +16,23 @@ namespace IRTree
 
 		virtual void Accept( IIRTreeVisitor* visitor ) const = 0;
 
-		virtual CExprList* Kids() = 0;
-		virtual IStm* Build( CExprList* kids ) = 0;
+		virtual CExprList* Kids() const = 0;
+		virtual IStm* Build(const CExprList* kids) const = 0;
 	};
-
-	typedef std::shared_ptr<const IStm> CStmPtr;
 
 	// Copy result src into dst
 	class CMove : public IStm {
 	public:
 		CMove( std::shared_ptr<const IExpr> dst, std::shared_ptr<const IExpr> src );
 
-		std::shared_ptr<const IExpr> GetDestExpr( ) const;
-		std::shared_ptr<const IExpr> GetSrcExpr( ) const;
+		std::shared_ptr<const IExpr> GetDestExpr() const;
+		std::shared_ptr<const IExpr> GetSrcExpr() const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
-		virtual CExprList* Kids() override;
+		virtual CExprList* Kids() const override;
 
-		virtual IStm* Build( CExprList* kids ) override;
+		virtual IStm* Build(const CExprList* kids) const override;
 
 	private:
 		std::shared_ptr<const IExpr> destExpr;
@@ -50,9 +48,9 @@ namespace IRTree
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
-		virtual CExprList* Kids() override;
+		virtual CExprList* Kids() const override;
 
-		virtual IStm* Build( CExprList* kids ) override;
+		virtual IStm* Build(const CExprList* kids) const override;
 
 	private:
 		std::shared_ptr<const IExpr> expr;
@@ -69,9 +67,9 @@ namespace IRTree
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
-		virtual CExprList* Kids() override;
+		virtual CExprList* Kids() const override;
 
-		virtual IStm* Build( CExprList* kids ) override;
+		virtual IStm* Build(const CExprList* kids) const override;
 
 	private:
 		std::shared_ptr<const IExpr> jmpExpr;
@@ -90,14 +88,12 @@ namespace IRTree
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
-		virtual CExprList* Kids() override;
+		virtual CExprList* Kids() const override;
 
-		virtual IStm* Build( CExprList* kids ) override;
+		virtual IStm* Build(const CExprList* kids) const override;
 
 	private:
 		std::shared_ptr<const IExpr> expr;
-//		std::shared_ptr<const IExpr> rightExpr;
-//		int binOp;
 		std::shared_ptr<const Temp::CLabel> ifTrueLabel;
 		std::shared_ptr<const Temp::CLabel> ifFalseLabel;
 	};
@@ -112,9 +108,9 @@ namespace IRTree
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
-		virtual CExprList* Kids() override;
+		virtual CExprList* Kids() const override;
 
-		virtual IStm* Build( CExprList* kids ) override;
+		virtual IStm* Build(const CExprList* kids) const override;
 
 	private:
 		std::shared_ptr<const IStm> leftStm;
@@ -130,9 +126,9 @@ namespace IRTree
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
-		virtual CExprList* Kids() override;
+		virtual CExprList* Kids() const override;
 
-		virtual IStm* Build( CExprList* kids ) override;
+		virtual IStm* Build(const CExprList* kids) const override;
 
 	private:
 		std::shared_ptr<const Temp::CLabel> label;
@@ -148,4 +144,14 @@ namespace IRTree
 		std::shared_ptr<const IStm> head;
 		std::shared_ptr<const CStmList> tail;
 	};
+
+	// typedefs:
+	typedef std::shared_ptr<const IStm> IStmPtr;
+	typedef std::shared_ptr<const CMove> CMovePtr;
+	typedef std::shared_ptr<const CExpr> CExprPtr;
+	typedef std::shared_ptr<const CJump> CJumpPtr;
+	typedef std::shared_ptr<const CCondJump> CCondJumpPtr;
+	typedef std::shared_ptr<const CSeq> CSeqPtr;
+	typedef std::shared_ptr<const CLabel> CLabelPtr;
+	typedef std::shared_ptr<const CStmList> CStmListPtr;
 }
