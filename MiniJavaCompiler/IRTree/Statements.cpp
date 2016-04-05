@@ -36,7 +36,7 @@ namespace IRTree
 	IStm* CMove::Build(const CExprList* kids) const
 	{
 		if( std::dynamic_pointer_cast< const IRTree::CMem >( destExpr ) != nullptr ) {
-			return new IRTree::CMove( std::dynamic_pointer_cast<const IRTree::CMem>( kids->GetHead() ), kids->GetTail()->GetHead() );
+			return new IRTree::CMove( std::make_shared<IRTree::CMem>( kids->GetHead() ), kids->GetTail()->GetHead() );
 		} else {
 			return new IRTree::CMove( destExpr, kids->GetHead() );
 		}

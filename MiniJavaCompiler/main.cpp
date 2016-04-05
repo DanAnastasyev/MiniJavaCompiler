@@ -41,8 +41,8 @@ int main( int argc, char **argv )
 		// Печатаем деревья для отдельной функции
 		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter(
 			new IRTree::CIRTreeToDigraphConverter(std::string("IRTree_") + frame.GetName()->GetString() + std::string(".dot")));
-		frame.GetRootStm()->Accept(irTreeToDigraphConverter.get());
-		irTreeToDigraphConverter->Flush();
+		//frame.GetRootStm()->Accept(irTreeToDigraphConverter.get());
+		//irTreeToDigraphConverter->Flush();
 
 		auto linearizedFrameStmList = CCanon::Linearize( frame.GetRootStm() );
 		for( auto linearizedFrameStm = linearizedFrameStmList->GetHead(); 
