@@ -208,4 +208,9 @@ namespace IRTree
 		return tail;
 	}
 
+	void CStmList::SetTail( std::shared_ptr<const CStmList> _tail )
+	{
+		tail = _tail;
+	}
+
 }

@@ -140,6 +140,9 @@ namespace IRTree
 		
 		std::shared_ptr<const IStm> GetHead() const;
 		std::shared_ptr<const CStmList> GetTail() const;
+
+		void SetTail( std::shared_ptr<const CStmList> tail );
+
 	private:
 		std::shared_ptr<const IStm> head;
 		std::shared_ptr<const CStmList> tail;

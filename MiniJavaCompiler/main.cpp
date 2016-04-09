@@ -34,7 +34,7 @@ int main( int argc, char **argv )
 		return 0;
 	}
 
-	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable( ) ) );
+	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( irBuilder.get() );
 
 	for (const auto& frame : irBuilder->GetFrames()) {
