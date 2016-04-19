@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Windows.h>
 
 #include "Visitors/SymbolTableBuilderVisitor.h"
 #include "Visitors/PrettyPrinterVisitor.h"
@@ -40,11 +39,7 @@ int main( int argc, char **argv )
 	root->Accept( irBuilder.get() );
 
 	for (const auto& frame : irBuilder->GetFrames()) {
-		std::string name = frame.GetName()->GetString();
-		std::wstring outputFilename =
-			std::wstring( L"output/IRTree_" ) +
-			std::wstring( name.begin(), name.end() ) +
-			std::wstring( L".dot" );
+		std::string outputFilename = std::string( "output\\IRTree_" ) + frame.GetName()->GetString() + std::string( ".dot" );
 
 		// Ïå÷àòàåì äåğåâüÿ äëÿ îòäåëüíîé ôóíêöèè
 		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter(
@@ -63,13 +58,11 @@ int main( int argc, char **argv )
 		}
 		irTreeToDigraphConverter->Flush();
 
-		std::wstring transformedName =
-			std::wstring( L"output/IRTRee_" ) +
-			std::wstring( name.begin(), name.end() ) +
-			std::wstring( L".png" );
-		ShellExecute( nullptr, L"cmd.exe", (std::wstring( L"dot -Tpng " ) + outputFilename + L" " + transformedName).c_str(),
-			nullptr, L".", SW_SHOW );
-		ShellExecute( nullptr, L"open", transformedName.c_str(), nullptr, L".", SW_SHOW );
+		std::string format = "pdf";
+		std::string transformedName = std::string( "output\\IRTRee_" ) + frame.GetName()->GetString() + std::string( "." ) + format;
+		system( std::string("..\\externals\\dot\\dot.exe -T" + format + " " + outputFilename + " -o " + transformedName).c_str() );
+		// ×ÒÎÁÛ ÎÒÊËŞ×ÈÒÜ ÀÂÒÎÇÀÏÓÑÊ, ÇÀÊÎÌÌÅÍÒÈĞÎÂÀÒÜ ÑËÅÄÓŞÙÓŞ ÑÒĞÎ×ÊÓ
+		system( transformedName.c_str() );
 	}
 	
 	return 0;

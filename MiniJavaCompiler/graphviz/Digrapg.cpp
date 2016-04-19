@@ -3,7 +3,7 @@
 #include <ostream>
 #include <fstream>
 
-CDigraph::CDigraph( std::wstring _fileName )
+CDigraph::CDigraph( std::string _fileName )
 	: isFlushed( false ), fileName( _fileName ), data( "digraph {\n" )
 {
 
