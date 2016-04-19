@@ -31,8 +31,11 @@ void CIRTreeToDigraphConverter::Visit( const CExpr* node )
 void CIRTreeToDigraphConverter::Visit( const CJump* node )
 {
 	nextNameWithId( "jump" );
-	for( auto label : node->GetLabels() ) {
+	auto tail = node->GetTargets();
+	while( tail != nullptr ) {
+		auto label = tail->Head();
 		treeRepresentation.AddEdge( lastNodeName, label->GetName()->GetString(), "to_label" );
+		tail = tail->Tail();
 	}
 }
 
@@ -109,7 +112,7 @@ void CIRTreeToDigraphConverter::Visit( const CBinop* node )
 		case IExpr::LESS:
 			nextNameWithId( "binop__Less" );
 			break;
-		case IExpr::GT:
+		case IStm::GT:
 			nextNameWithId( "binop__Greater" );
 			break;
 		case IExpr::AND:

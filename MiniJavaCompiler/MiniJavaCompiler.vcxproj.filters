@@ -137,6 +137,12 @@
     <ClCompile Include="Canon\Canon.cpp">
       <Filter>Source Files\Canon</Filter>
     </ClCompile>
+    <ClCompile Include="Canon\TraceSchedule.cpp">
+      <Filter>Source Files\Canon</Filter>
+    </ClCompile>
+    <ClCompile Include="Canon\BasicBlocks.cpp">
+      <Filter>Source Files\Canon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -202,6 +208,12 @@
     <ClInclude Include="Canon\Canon.h">
       <Filter>Source Files\Canon</Filter>
     </ClInclude>
+    <ClInclude Include="Canon\TraceSchedule.h">
+      <Filter>Source Files\Canon</Filter>
+    </ClInclude>
+    <ClInclude Include="Canon\BasicBlocks.h">
+      <Filter>Source Files\Canon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output">
@@ -209,6 +221,9 @@
     </None>
     <None Include="example\Factorial.java">
       <Filter>Source Files\examples</Filter>
+    </None>
+    <None Include="Canon\traceSchedule.java">
+      <Filter>Source Files\Canon</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

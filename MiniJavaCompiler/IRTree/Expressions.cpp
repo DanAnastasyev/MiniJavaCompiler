@@ -21,7 +21,7 @@ namespace IRTree {
 		return nullptr;
 	}
 
-	IExpr* CConst::Build(const CExprList* kids) const
+	IExpr* CConst::Build( const CExprList* kids ) const
 	{
 		return new CConst( value );
 	}
@@ -46,7 +46,7 @@ namespace IRTree {
 		return nullptr;
 	}
 
-	IExpr* CName::Build(const CExprList* kids) const
+	IExpr* CName::Build( const CExprList* kids ) const
 	{
 		return new CName( name );
 	}
@@ -71,7 +71,7 @@ namespace IRTree {
 		return nullptr;
 	}
 
-	IRTree::IExpr* CTemp::Build(const CExprList* kids) const
+	IRTree::IExpr* CTemp::Build( const CExprList* kids ) const
 	{
 		return new CTemp( temp );
 	}
@@ -83,8 +83,7 @@ namespace IRTree {
 	{
 	}
 
-	IExpr::BINOP CBinop::GetBinOp() const
-	{
+	int CBinop::GetBinOp( ) const {
 		return binop;
 	}
 
@@ -108,9 +107,9 @@ namespace IRTree {
 		return new IRTree::CExprList( left, std::make_shared<IRTree::CExprList>( right, nullptr ) );
 	}
 
-	IExpr* CBinop::Build(const CExprList* kids) const
+	IExpr* CBinop::Build( const CExprList* kids ) const
 	{
-		return new CBinop( binop, kids->GetHead(), kids->GetTail()->GetHead() );
+		return new CBinop( BINOP(binop), kids->GetHead(), kids->GetTail()->GetHead() );
 	}
 
 	CMem::CMem( IExprPtr _mem ) :
@@ -133,7 +132,7 @@ namespace IRTree {
 		return new IRTree::CExprList( mem, nullptr );
 	}
 
-	IExpr* CMem::Build(const CExprList* kids) const
+	IExpr* CMem::Build( const CExprList* kids ) const
 	{
 		return new CMem( kids->GetHead() );
 	}
@@ -164,7 +163,7 @@ namespace IRTree {
 		return new IRTree::CExprList( funcName, arguments );
 	}
 
-	IExpr* CCall::Build(const CExprList* kids) const
+	IExpr* CCall::Build( const CExprList* kids ) const
 	{
 		return new CCall( kids->GetHead(), kids->GetTail() );
 	}
@@ -195,7 +194,7 @@ namespace IRTree {
 		throw std::logic_error( "Kids() not applicable to ESEQ" );
 	}
 
-	IExpr* CESeq::Build(const CExprList* kids) const
+	IExpr* CESeq::Build( const CExprList* kids ) const
 	{
 		throw std::logic_error( "Build() not applicable to ESEQ" );
 	}

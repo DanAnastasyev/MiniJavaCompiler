@@ -66,24 +66,26 @@ namespace IRTree
 		return new IRTree::CExpr( kids->GetHead() );
 	}
 
-	CJump::CJump( std::shared_ptr<const IExpr> _exp, const std::vector<std::shared_ptr<const Temp::CLabel>>& _labels ) :
-		jmpExpr( _exp ),
-		labels( _labels )
-	{}
+	CJump::CJump( std::shared_ptr<const IExpr> expr, std::shared_ptr<const Temp::CLabelList> _targets ) :
+		jmpExpr( expr ),
+		targets( _targets )
+	{
+	}
 
 	CJump::CJump( std::shared_ptr<const Temp::CLabel> label ) :
-		jmpExpr( new CName(label) ),
-		labels( {label} )
-	{}
+		jmpExpr( new CName( label ) ),
+		targets( label, nullptr )
+	{
+	}
 
-	std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
+std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
 	{
 		return jmpExpr;
 	}
 
-	std::vector<std::shared_ptr<const Temp::CLabel>> CJump::GetLabels() const
+	std::shared_ptr<const Temp::CLabelList> CJump::GetTargets() const
 	{
-		return labels;
+		return targets;
 	}
 
 	void CJump::Accept( IIRTreeVisitor* visitor ) const
@@ -98,7 +100,7 @@ namespace IRTree
 
 	IStm* CJump::Build(const CExprList* kids) const
 	{
-		return new IRTree::CJump( kids->GetHead(), labels );
+		return new IRTree::CJump( kids->GetHead(), targets );
 	}
 
 	CCondJump::CCondJump(
@@ -139,7 +141,24 @@ namespace IRTree
 		return new IRTree::CCondJump( expr, ifTrueLabel, ifFalseLabel );
 	}
 
-	CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right ) :
+	int CCondJump::NotRel( int binop )
+	{
+		switch( binop ) {
+			case EQ: return NE;
+			case NE: return EQ;
+			case LT: return GE;
+			case GT: return LE;
+			case LE: return GT;
+			case GE: return LT;
+			case ULT: return UGE;
+			case ULE: return UGT;
+			case UGT: return ULE;
+			case UGE: return ULT;
+			default: throw std::runtime_error( "Bad relop in CJUMP.NotRel()" );
+		}
+	}
+
+CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right ) :
 		leftStm( left ),
 		rightStm( right )
 	{}

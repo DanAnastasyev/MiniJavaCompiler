@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
+    <ProjectConfiguration Include="debug_v140|Win32">
+      <Configuration>debug_v140</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug_v120|Win32">
+      <Configuration>debug_v120</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
@@ -13,15 +17,20 @@
   <ItemGroup>
     <CustomBuild Include="lexer.l">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\externals\win_flex_bison\win_flex.exe --wincompat -o"$(ProjectDir)\BuildOutputs\lexer.cpp" lexer.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling flex</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">BuildOutputs\lexer.cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">$(SolutionDir)\externals\win_flex_bison\win_flex.exe --wincompat -o"$(ProjectDir)\BuildOutputs\lexer.cpp" lexer.l</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">$(SolutionDir)\externals\win_flex_bison\win_flex.exe --wincompat -o"$(ProjectDir)\BuildOutputs\lexer.cpp" lexer.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">compiling flex</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">compiling flex</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">BuildOutputs\lexer.cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">BuildOutputs\lexer.cpp</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildOutputs\lexer.cpp" />
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
+    <ClCompile Include="Canon\BasicBlocks.cpp" />
     <ClCompile Include="Canon\Canon.cpp" />
+    <ClCompile Include="Canon\TraceSchedule.cpp" />
     <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="Frame\Frame.cpp" />
     <ClCompile Include="Frame\Temp.cpp" />
@@ -50,14 +59,19 @@
   <ItemGroup>
     <CustomBuild Include="parser.y">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\externals\win_flex_bison\win_bison.exe -o"BuildOutputs\parser.tab.cpp" parser.y -v –d</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling bison</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\MiniJavaCompiler\BuildOutputs\parser.tab.cpp;BuildOutputs\parser.tab.hpp;BuildOutputs\parser.output</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">$(SolutionDir)\externals\win_flex_bison\win_bison.exe -o"BuildOutputs\parser.tab.cpp" parser.y -v –d</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">$(SolutionDir)\externals\win_flex_bison\win_bison.exe -o"BuildOutputs\parser.tab.cpp" parser.y -v –d</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">compiling bison</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">compiling bison</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">$(SolutionDir)\MiniJavaCompiler\BuildOutputs\parser.tab.cpp;BuildOutputs\parser.tab.hpp;BuildOutputs\parser.output</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">$(SolutionDir)\MiniJavaCompiler\BuildOutputs\parser.tab.cpp;BuildOutputs\parser.tab.hpp;BuildOutputs\parser.output</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
+    <ClInclude Include="Canon\BasicBlocks.h" />
     <ClInclude Include="Canon\Canon.h" />
+    <ClInclude Include="Canon\TraceSchedule.h" />
     <ClInclude Include="ErrorStorage.h" />
     <ClInclude Include="Frame\Frame.h" />
     <ClInclude Include="Frame\Temp.h" />
@@ -80,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output" />
+    <None Include="Canon\traceSchedule.java" />
     <None Include="example\Factorial.java" />
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +113,13 @@
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
@@ -107,27 +128,33 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_v120|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -142,6 +169,34 @@
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>mkdir ..\$(ConfigurationName)
+mkdir ..\$(ConfigurationName)\example
+mkdir ..\$(ConfigurationName)\output
+xcopy ..\MiniJavaCompiler\example ..\$(ConfigurationName)\example /d /e /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_v140|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>mkdir ..\$(ConfigurationName)
+mkdir ..\$(ConfigurationName)\example
+mkdir ..\$(ConfigurationName)\output
+xcopy ..\MiniJavaCompiler\example ..\$(ConfigurationName)\example /d /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -159,6 +214,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>mkdir ..\$(ConfigurationName)
+mkdir ..\$(ConfigurationName)\example
+mkdir ..\$(ConfigurationName)\output
+xcopy ..\MiniJavaCompiler\example ..\$(ConfigurationName)\example /d /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

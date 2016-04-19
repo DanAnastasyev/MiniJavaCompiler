@@ -1,6 +1,7 @@
 #pragma once
 
-#include <string>
+#include <memory>
+
 #include "SymbolsTable\Symbol.h"
 
 namespace Temp {
@@ -34,5 +35,17 @@ namespace Temp {
 	private:
 		static int nextUniqueId;
 		const CSymbol* name;
+	};
+
+	class CLabelList {
+	public:
+		explicit CLabelList( std::shared_ptr<const CLabel> head, std::shared_ptr<const CLabelList> tail = nullptr );
+
+		std::shared_ptr<const CLabel> Head() const;
+		std::shared_ptr<const CLabelList> Tail() const;
+
+	private:
+		std::shared_ptr<const CLabel> head;
+		std::shared_ptr<const CLabelList> tail;
 	};
 }

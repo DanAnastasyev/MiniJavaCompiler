@@ -7,12 +7,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MiniJavaCompiler", "MiniJav
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
+		debug_v140|Win32 = debug_v140|Win32
+		debug_v120|Win32 = debug_v120|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.Debug|Win32.Build.0 = Debug|Win32
+		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.debug_v140|Win32.ActiveCfg = debug_v140|Win32
+		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.debug_v140|Win32.Build.0 = debug_v140|Win32
+		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.debug_v120|Win32.ActiveCfg = debug_v120|Win32
+		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.debug_v120|Win32.Build.0 = debug_v120|Win32
 		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.Release|Win32.ActiveCfg = Release|Win32
 		{C1615CCA-B657-4752-8BB7-494CFDA881CC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

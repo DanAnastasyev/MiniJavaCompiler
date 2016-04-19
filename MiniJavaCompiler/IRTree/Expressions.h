@@ -12,9 +12,6 @@ namespace IRTree {
 		enum BINOP {
 			PLUS, MINUS, MUL, DIV, AND, OR, LESS, XOR
 		};
-		enum CJUMP {
-			EQ = 8, NE, LT, GT, LE, GE, ULT, ULE, UGT, UGE
-		};
 
 		virtual ~IExpr()
 		{
@@ -23,7 +20,7 @@ namespace IRTree {
 		virtual void Accept( IIRTreeVisitor* visitor ) const = 0;
 
 		virtual CExprList* Kids() const = 0;
-		virtual IExpr* Build(const CExprList* kids) const = 0;
+		virtual IExpr* Build( const CExprList* kids ) const = 0;
 	};
 
 	// Const expression
@@ -36,7 +33,7 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
 		int value;
@@ -52,7 +49,7 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
 		std::shared_ptr<const Temp::CLabel> name;
@@ -68,7 +65,7 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
 		std::shared_ptr<Temp::CTemp> temp;
@@ -79,7 +76,7 @@ namespace IRTree {
 	public:
 		CBinop( BINOP binop, std::shared_ptr<const IExpr> left, std::shared_ptr<const IExpr> right );
 
-		BINOP GetBinOp() const;
+		int GetBinOp() const;
 		std::shared_ptr<const IExpr> GetLeft() const;
 		std::shared_ptr<const IExpr> GetRight() const;
 
@@ -87,10 +84,10 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
-		BINOP binop;
+		int binop;
 		const std::shared_ptr<const IExpr> left;
 		const std::shared_ptr<const IExpr> right;
 	};
@@ -105,7 +102,7 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
 		const std::shared_ptr<const IExpr> mem;
@@ -123,7 +120,7 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
 		std::shared_ptr<const IExpr> funcName;
@@ -141,7 +138,7 @@ namespace IRTree {
 
 		virtual CExprList* Kids() const override;
 
-		virtual IExpr* Build(const CExprList* kids) const override;
+		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
 		const IStmPtr statement;

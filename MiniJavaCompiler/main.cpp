@@ -1,4 +1,6 @@
 #include <iostream>
+#include <Windows.h>
+
 #include "Visitors/SymbolTableBuilderVisitor.h"
 #include "Visitors/PrettyPrinterVisitor.h"
 #include "Visitors/TypeCheckerVisitor.h"
@@ -38,9 +40,16 @@ int main( int argc, char **argv )
 	root->Accept( irBuilder.get() );
 
 	for (const auto& frame : irBuilder->GetFrames()) {
+		std::string name = frame.GetName()->GetString();
+		std::wstring outputFilename =
+			std::wstring( L"output/IRTree_" ) +
+			std::wstring( name.begin(), name.end() ) +
+			std::wstring( L".dot" );
+
 		// Печатаем деревья для отдельной функции
 		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter(
-			new IRTree::CIRTreeToDigraphConverter(std::string("IRTree_") + frame.GetName()->GetString() + std::string(".dot")));
+			new IRTree::CIRTreeToDigraphConverter(outputFilename));
+		
 		//frame.GetRootStm()->Accept(irTreeToDigraphConverter.get());
 		//irTreeToDigraphConverter->Flush();
 
@@ -53,6 +62,14 @@ int main( int argc, char **argv )
 			linearizedFrameStm->Accept( irTreeToDigraphConverter.get() );
 		}
 		irTreeToDigraphConverter->Flush();
+
+		std::wstring transformedName =
+			std::wstring( L"output/IRTRee_" ) +
+			std::wstring( name.begin(), name.end() ) +
+			std::wstring( L".png" );
+		ShellExecute( nullptr, L"cmd.exe", (std::wstring( L"dot -Tpng " ) + outputFilename + L" " + transformedName).c_str(),
+			nullptr, L".", SW_SHOW );
+		ShellExecute( nullptr, L"open", transformedName.c_str(), nullptr, L".", SW_SHOW );
 	}
 	
 	return 0;

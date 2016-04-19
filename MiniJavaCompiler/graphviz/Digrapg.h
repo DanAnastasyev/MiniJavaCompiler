@@ -7,7 +7,7 @@
 class CDigraph {
 public:
 
-	CDigraph( std::string _fileName );
+	CDigraph( std::wstring _fileName );
 	~CDigraph();
 
 	void SetNodeLabel( std::string nodeName, std::string nodeLabel );
@@ -20,7 +20,7 @@ private:
 
 	bool isFlushed;
 	
-	std::string fileName;
+	std::wstring fileName;
 	std::string data;
 
 	void decorateName( std::string& stringToDecorate );
