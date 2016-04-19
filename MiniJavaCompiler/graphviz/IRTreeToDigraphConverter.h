@@ -1,7 +1,7 @@
 // ќписание: ѕреобразование дерева промежуточного представлени€ в dot формат
 
-#include "Digrapg.h"
-#include "../Visitors/Visitor.h"
+#include "Digraph.h"
+#include "Visitors/Visitor.h"
 
 namespace IRTree {
 

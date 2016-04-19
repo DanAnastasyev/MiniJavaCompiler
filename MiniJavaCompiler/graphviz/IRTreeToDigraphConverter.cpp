@@ -1,6 +1,6 @@
 ﻿#include "IRTreeToDigraphConverter.h"
-#include "../IRTree/Expressions.h"
-#include "../IRTree/Statements.h"
+#include "IRTree/Expressions.h"
+#include "IRTree/Statements.h"
 
 using namespace std;
 

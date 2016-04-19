@@ -7,7 +7,7 @@
 class CDigraph {
 public:
 
-	CDigraph( std::string _fileName );
+	explicit CDigraph( std::string _fileName );
 	~CDigraph();
 
 	void SetNodeLabel( std::string nodeName, std::string nodeLabel );
@@ -23,6 +23,6 @@ private:
 	std::string fileName;
 	std::string data;
 
-	void decorateName( std::string& stringToDecorate );
+	void decorateName( std::string& stringToDecorate ) const;
 
 };

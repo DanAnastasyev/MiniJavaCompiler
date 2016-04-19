@@ -1,4 +1,4 @@
-#include "Digrapg.h"
+#include "Digraph.h"
 
 #include <ostream>
 #include <fstream>
@@ -48,8 +48,7 @@ void CDigraph::SetNodeLabel( std::string nodeName, std::string nodeLabel )
 }
 
 
-void CDigraph::decorateName( std::string& stringToDecorate )
-{
+void CDigraph::decorateName( std::string& stringToDecorate ) const {
 	for( int i = 0; i < stringToDecorate.size(); i++ ) {
 		if( stringToDecorate[i] == '.' || stringToDecorate[i] == ':' || stringToDecorate[i] == '=' ) {
 			stringToDecorate[i] = '_';
