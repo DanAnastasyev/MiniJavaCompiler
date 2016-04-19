@@ -31,6 +31,6 @@ private:
 	CBlocksPtr blocks;
 	CDictionary table;
 	
-	IRTree::CStmListPtr getLast( IRTree::CStmListPtr block );
+	IRTree::CStmListPtr getLast( IRTree::CStmListPtr block ) const;
 	IRTree::CStmListPtr getNext();
 };

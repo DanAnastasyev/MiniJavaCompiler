@@ -128,9 +128,6 @@
     <ClCompile Include="Visitors\IRBuilderVisitor.cpp">
       <Filter>Source Files\Visitors</Filter>
     </ClCompile>
-    <ClCompile Include="graphviz\Digrapg.cpp">
-      <Filter>Source Files\graphviz</Filter>
-    </ClCompile>
     <ClCompile Include="graphviz\IRTreeToDigraphConverter.cpp">
       <Filter>Source Files\graphviz</Filter>
     </ClCompile>
@@ -142,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="Canon\BasicBlocks.cpp">
       <Filter>Source Files\Canon</Filter>
+    </ClCompile>
+    <ClCompile Include="graphviz\Digraph.cpp">
+      <Filter>Source Files\graphviz</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,9 +199,6 @@
     <ClInclude Include="Visitors\IRBuilderVisitor.h">
       <Filter>Source Files\Visitors</Filter>
     </ClInclude>
-    <ClInclude Include="graphviz\Digrapg.h">
-      <Filter>Source Files\graphviz</Filter>
-    </ClInclude>
     <ClInclude Include="graphviz\IRTreeToDigraphConverter.h">
       <Filter>Source Files\graphviz</Filter>
     </ClInclude>
@@ -213,6 +210,9 @@
     </ClInclude>
     <ClInclude Include="Canon\BasicBlocks.h">
       <Filter>Source Files\Canon</Filter>
+    </ClInclude>
+    <ClInclude Include="graphviz\Digraph.h">
+      <Filter>Source Files\graphviz</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

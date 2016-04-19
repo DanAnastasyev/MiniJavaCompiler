@@ -36,8 +36,7 @@ CTraceSchedule::CTraceSchedule( CBlocksPtr b ) :
 	table = nullptr;
 }
 
-CStmListPtr CTraceSchedule::getLast( CStmListPtr block )
-{
+CStmListPtr CTraceSchedule::getLast( CStmListPtr block ) const {
 	auto l = block;
 	while( l->GetTail()->GetTail() ) {
 		l = l->GetTail();
@@ -77,14 +76,14 @@ void CTraceSchedule::Trace( CStmListPtr list )
 					throw std::exception( "azaza" );
 				}
 				last->GetTail()->GetHead() = NEW( CCondJump,
-					NEW( CBinop, IExpr::BINOP(CCondJump::NotRel(expr->GetBinOp())), expr->GetLeft(), expr->GetRight() ),
+					NEW( CBinop, IExpr::BINOP( CCondJump::NotRel( expr->GetBinOp() ) ), expr->GetLeft(), expr->GetRight() ),
 					jump->GetIfFalseLabel(),
 					jump->GetIfTrueLabel() );
 				last->GetTail()->GetTail() = trueLabel;
 				list = trueLabel;
 			} else {
 				auto ff = NEW( Temp::CLabel );
-				
+
 				last->GetTail()->GetHead() = NEW( CCondJump, jump->GetExpr(), jump->GetIfTrueLabel(), ff );
 				last->GetTail()->GetTail() = NEW( CStmList,
 					NEW( CLabel, ff ),
@@ -97,7 +96,7 @@ void CTraceSchedule::Trace( CStmListPtr list )
 	}
 }
 
-IRTree::CStmListPtr CTraceSchedule::getNext()
+CStmListPtr CTraceSchedule::getNext()
 {
 	if( blocks == nullptr ) {
 		return NEW( CStmList, NEW( CLabel, blocks->GetDoneLabel() ), nullptr );

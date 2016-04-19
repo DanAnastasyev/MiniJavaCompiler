@@ -34,7 +34,7 @@
     <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="Frame\Frame.cpp" />
     <ClCompile Include="Frame\Temp.cpp" />
-    <ClCompile Include="graphviz\Digrapg.cpp" />
+    <ClCompile Include="graphviz\Digraph.cpp" />
     <ClCompile Include="graphviz\IRTreeToDigraphConverter.cpp" />
     <ClCompile Include="IRTree\Expressions.cpp" />
     <ClCompile Include="IRTree\Statements.cpp" />
@@ -76,7 +76,7 @@
     <ClInclude Include="Frame\Frame.h" />
     <ClInclude Include="Frame\Temp.h" />
     <ClInclude Include="grammar.h" />
-    <ClInclude Include="graphviz\Digrapg.h" />
+    <ClInclude Include="graphviz\Digraph.h" />
     <ClInclude Include="graphviz\IRTreeToDigraphConverter.h" />
     <ClInclude Include="IRTree\Expressions.h" />
     <ClInclude Include="IRTree\Statements.h" />

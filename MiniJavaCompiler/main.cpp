@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 
 #include "Visitors/SymbolTableBuilderVisitor.h"
 #include "Visitors/PrettyPrinterVisitor.h"
@@ -6,6 +7,7 @@
 #include "Visitors/IRBuilderVisitor.h"
 #include "graphviz/IRTreeToDigraphConverter.h"
 #include "Canon/Canon.h"
+#include <locale>
 
 extern int yyparse( std::shared_ptr<IProgram>& );
 
@@ -38,32 +40,32 @@ int main( int argc, char **argv )
 	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( irBuilder.get() );
 
-	for (const auto& frame : irBuilder->GetFrames()) {
+	for( const auto& frame : irBuilder->GetFrames() ) {
 		std::string outputFilename = std::string( "output\\IRTree_" ) + frame.GetName()->GetString() + std::string( ".dot" );
 
 		// Ïå÷àòàåì äåğåâüÿ äëÿ îòäåëüíîé ôóíêöèè
 		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter(
-			new IRTree::CIRTreeToDigraphConverter(outputFilename));
-		
+			new IRTree::CIRTreeToDigraphConverter( outputFilename ) );
+
 		//frame.GetRootStm()->Accept(irTreeToDigraphConverter.get());
 		//irTreeToDigraphConverter->Flush();
 
 		auto linearizedFrameStmList = CCanon::Linearize( frame.GetRootStm() );
-		for( auto linearizedFrameStm = linearizedFrameStmList->GetHead(); 
-			linearizedFrameStmList != nullptr; 
-			linearizedFrameStmList = linearizedFrameStmList->GetTail(), 
-			linearizedFrameStm = ( linearizedFrameStmList != nullptr ) ? linearizedFrameStmList->GetHead() : nullptr ) 
-		{
+		for( auto linearizedFrameStm = linearizedFrameStmList->GetHead();
+			linearizedFrameStmList != nullptr;
+			linearizedFrameStmList = linearizedFrameStmList->GetTail(),
+			linearizedFrameStm = (linearizedFrameStmList != nullptr) ? linearizedFrameStmList->GetHead() : nullptr ) {
 			linearizedFrameStm->Accept( irTreeToDigraphConverter.get() );
 		}
 		irTreeToDigraphConverter->Flush();
 
 		std::string format = "pdf";
 		std::string transformedName = std::string( "output\\IRTRee_" ) + frame.GetName()->GetString() + std::string( "." ) + format;
-		system( std::string("..\\externals\\dot\\dot.exe -T" + format + " " + outputFilename + " -o " + transformedName).c_str() );
-		// ×ÒÎÁÛ ÎÒÊËŞ×ÈÒÜ ÀÂÒÎÇÀÏÓÑÊ, ÇÀÊÎÌÌÅÍÒÈĞÎÂÀÒÜ ÑËÅÄÓŞÙÓŞ ÑÒĞÎ×ÊÓ
-		system( transformedName.c_str() );
+		system( std::string( "..\\externals\\dot\\dot.exe -T" + format + " " + outputFilename + " -o " + transformedName ).c_str() );
+		if( getch() == 0x20 ) {
+			system( transformedName.c_str() );
+		}
 	}
-	
+
 	return 0;
 }
