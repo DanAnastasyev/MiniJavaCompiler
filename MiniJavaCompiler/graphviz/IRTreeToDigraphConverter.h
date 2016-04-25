@@ -11,7 +11,7 @@ class IExpr;
 
 class CIRTreeToDigraphConverter : public IIRTreeVisitor {
 public:
-	explicit CIRTreeToDigraphConverter( std::string treeFileName ) : minId( 0 ), treeRepresentation( treeFileName ) {}
+	explicit CIRTreeToDigraphConverter() : minId( 0 ) {}
 
 	// ћетоды позвол€ют строить линейно св€занные деревь€
 	void LinkedVisit( const IStm* node );
@@ -43,10 +43,13 @@ public:
 
 	virtual void Visit( const CLabel* node ) override;
 
-	void Flush() { treeRepresentation.Flush(); }
+	void Flush( const std::string& filename )
+	{
+		treeRepresentation.Flush( filename );
+		treeRepresentation = CDigraph();
+	}
 
 private:
-
 	int minId;
 
 	std::string lastNodeName;

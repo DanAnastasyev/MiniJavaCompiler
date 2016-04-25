@@ -7,9 +7,53 @@
 #include "Visitors/IRBuilderVisitor.h"
 #include "graphviz/IRTreeToDigraphConverter.h"
 #include "Canon/Canon.h"
-#include <locale>
+#include "Canon/TraceSchedule.h"
 
 extern int yyparse( std::shared_ptr<IProgram>& );
+
+void autoOpen( const std::string& prefix, const std::string& format = "pdf" )
+{
+	std::cout << prefix << std::endl;
+	system( std::string( "..\\externals\\dot\\dot.exe -T" + format + " " + prefix + ".dot -o " + prefix + "." + format ).c_str() );
+	if( getch() == 0x20 ) {
+		system( (prefix + "." + format).c_str() );
+	}
+}
+
+void flushLinearized(
+	IRTree::CStmListPtr linearizedFrameStmList, 
+	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
+	const std::string& canonFilename )
+{
+	auto tail = linearizedFrameStmList;
+	for( auto stm = tail->GetHead( );
+		tail != nullptr;
+		tail = tail->GetTail( ),
+		stm = (tail != nullptr) ? tail->GetHead( ) : nullptr ) {
+		stm->Accept( irTreeToDigraphConverter.get( ) );
+	}
+	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
+}
+
+void flushTraced(
+	std::shared_ptr<CBasicBlocks> blocks,
+	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
+	const std::string& traceFilename)
+{
+	auto tail = blocks->GetBlocks( );
+	for( auto stmList = tail->GetHead( );
+		tail != nullptr;
+		tail = tail->GetTail( ),
+		stmList = (tail != nullptr) ? tail->GetHead( ) : nullptr ) {
+		for( auto stm = stmList->GetHead( );
+			stmList != nullptr;
+			stmList = stmList->GetTail( ),
+			stm = (stmList != nullptr) ? stmList->GetHead( ) : nullptr ) {
+			stm->Accept( irTreeToDigraphConverter.get( ) );
+		}
+	}
+	irTreeToDigraphConverter->Flush( traceFilename + ".dot" );
+}
 
 int main( int argc, char **argv )
 {
@@ -41,30 +85,27 @@ int main( int argc, char **argv )
 	root->Accept( irBuilder.get() );
 
 	for( const auto& frame : irBuilder->GetFrames() ) {
-		std::string outputFilename = std::string( "output\\IRTree_" ) + frame.GetName()->GetString() + std::string( ".dot" );
+		std::string format = "pdf";
+		std::string irTreeFilename = "output\\IRTree_" + frame.GetName( )->GetString( );
+		std::string canonFilename = "output\\Canon_" + frame.GetName( )->GetString( );
+		std::string traceFilename = "output\\Trace_" + frame.GetName( )->GetString( );
 
 		// Печатаем деревья для отдельной функции
-		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter(
-			new IRTree::CIRTreeToDigraphConverter( outputFilename ) );
+		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter( new IRTree::CIRTreeToDigraphConverter() );
 
-		//frame.GetRootStm()->Accept(irTreeToDigraphConverter.get());
-		//irTreeToDigraphConverter->Flush();
+		frame.GetRootStm()->Accept( irTreeToDigraphConverter.get() );
+		irTreeToDigraphConverter->Flush( irTreeFilename + ".dot" );
 
 		auto linearizedFrameStmList = CCanon::Linearize( frame.GetRootStm() );
-		for( auto linearizedFrameStm = linearizedFrameStmList->GetHead();
-			linearizedFrameStmList != nullptr;
-			linearizedFrameStmList = linearizedFrameStmList->GetTail(),
-			linearizedFrameStm = (linearizedFrameStmList != nullptr) ? linearizedFrameStmList->GetHead() : nullptr ) {
-			linearizedFrameStm->Accept( irTreeToDigraphConverter.get() );
-		}
-		irTreeToDigraphConverter->Flush();
+		flushLinearized( linearizedFrameStmList, irTreeToDigraphConverter, canonFilename );
 
-		std::string format = "pdf";
-		std::string transformedName = std::string( "output\\IRTRee_" ) + frame.GetName()->GetString() + std::string( "." ) + format;
-		system( std::string( "..\\externals\\dot\\dot.exe -T" + format + " " + outputFilename + " -o " + transformedName ).c_str() );
-		if( getch() == 0x20 ) {
-			system( transformedName.c_str() );
-		}
+		auto blocks = std::make_shared<CBasicBlocks>( linearizedFrameStmList );
+		CTraceSchedule schedule( blocks );
+		flushTraced( blocks, irTreeToDigraphConverter, traceFilename );
+
+		autoOpen( irTreeFilename );
+		autoOpen( canonFilename );
+		autoOpen( traceFilename );
 	}
 
 	return 0;

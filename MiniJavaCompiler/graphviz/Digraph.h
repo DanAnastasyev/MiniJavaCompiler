@@ -7,22 +7,16 @@
 class CDigraph {
 public:
 
-	explicit CDigraph( std::string _fileName );
-	~CDigraph();
+	explicit CDigraph();
 
 	void SetNodeLabel( std::string nodeName, std::string nodeLabel );
 
 	void AddEdge( std::string from, std::string to );
 	void AddEdge( std::string from, std::string to, std::string edgeName );
-	void Flush();
+	void Flush( const std::string& filename );
 
 private:
-
-	bool isFlushed;
-	
-	std::string fileName;
 	std::string data;
 
 	void decorateName( std::string& stringToDecorate ) const;
-
 };

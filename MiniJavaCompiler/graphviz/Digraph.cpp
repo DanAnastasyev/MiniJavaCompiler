@@ -3,17 +3,9 @@
 #include <ostream>
 #include <fstream>
 
-CDigraph::CDigraph( std::string _fileName )
-	: isFlushed( false ), fileName( _fileName ), data( "digraph {\n" )
+CDigraph::CDigraph() :
+	data( "digraph {\n" )
 {
-
-}
-
-CDigraph::~CDigraph()
-{
-	if( !isFlushed ) {
-		Flush();
-	}
 }
 
 void CDigraph::AddEdge( std::string from, std::string to )
@@ -31,13 +23,12 @@ void CDigraph::AddEdge( std::string from, std::string to, std::string edgeName )
 	data += from + " -> " + to + " [ label=\"" + edgeName + "\"] ; \n";
 }
 
-void CDigraph::Flush()
+void CDigraph::Flush( const std::string& filename )
 {
 	data += "\n}";
-	std::ofstream out( fileName );
+	std::ofstream out( filename );
 	out << data;
 	out.close();
-	isFlushed = true;
 }
 
 void CDigraph::SetNodeLabel( std::string nodeName, std::string nodeLabel )

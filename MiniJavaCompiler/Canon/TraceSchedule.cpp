@@ -6,6 +6,11 @@
 
 using namespace IRTree;
 
+CDictionary::CDictionary() :
+	internalMap( std::make_shared<std::unordered_map<Temp::CLabelPtr, CStmListPtr>>() )
+{
+}
+
 CStmListPtr CDictionary::Get( Temp::CLabelPtr key ) const
 {
 	return internalMap->at( key );
@@ -13,7 +18,7 @@ CStmListPtr CDictionary::Get( Temp::CLabelPtr key ) const
 
 void CDictionary::Put( Temp::CLabelPtr key, CStmListPtr value ) const
 {
-	internalMap->at( key ) = value;
+	(*internalMap)[key] = value;
 }
 
 void CDictionary::Remove( Temp::CLabelPtr key ) const
@@ -98,7 +103,7 @@ void CTraceSchedule::Trace( CStmListPtr list )
 
 CStmListPtr CTraceSchedule::getNext()
 {
-	if( blocks == nullptr ) {
+	if( blocks->GetBlocks() == nullptr ) {
 		return NEW( CStmList, NEW( CLabel, blocks->GetDoneLabel() ), nullptr );
 	}
 	auto stmList = blocks->GetBlocks()->GetHead();

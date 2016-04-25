@@ -10,6 +10,8 @@ namespace Temp {
 
 class CDictionary {
 public:
+	CDictionary();
+
 	IRTree::CStmListPtr Get( Temp::CLabelPtr key ) const;
 	void Put( Temp::CLabelPtr key, const IRTree::CStmListPtr value ) const;
 	void Remove( Temp::CLabelPtr key ) const;

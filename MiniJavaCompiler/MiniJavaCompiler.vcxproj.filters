@@ -225,6 +225,9 @@
     <None Include="Canon\traceSchedule.java">
       <Filter>Source Files\Canon</Filter>
     </None>
+    <None Include="Canon\basicBlocks.java">
+      <Filter>Source Files\Canon</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="example\BinarySearch.java.txt">

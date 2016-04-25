@@ -29,6 +29,7 @@ public:
 	std::shared_ptr<const Temp::CLabel> GetDoneLabel() const { return doneLabel; }
 
 	CStmListListPtr GetBlocks() const { return blocks; }
+
 private:
 	CStmListListPtr blocks;
 	std::shared_ptr<const Temp::CLabel> doneLabel;

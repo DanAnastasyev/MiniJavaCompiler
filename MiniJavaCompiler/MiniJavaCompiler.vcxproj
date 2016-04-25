@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output" />
+    <None Include="Canon\basicBlocks.java" />
     <None Include="Canon\traceSchedule.java" />
     <None Include="example\Factorial.java" />
   </ItemGroup>
