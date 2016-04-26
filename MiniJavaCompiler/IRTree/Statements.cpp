@@ -78,7 +78,7 @@ namespace IRTree
 	{
 	}
 
-	std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
+std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
 	{
 		return jmpExpr;
 	}

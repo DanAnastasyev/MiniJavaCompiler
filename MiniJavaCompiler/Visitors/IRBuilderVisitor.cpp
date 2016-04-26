@@ -289,7 +289,7 @@ void CIRBuilderVisitor::Visit( const CLenghtExpression* expr )
 	IRTree::IExprPtr arrayLen = parsedExpressions.top();
 	parsedExpressions.pop();
 
-	IRTree::IExprPtr lenght( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
+	IRTree::IExprPtr lenght( new IRTree::CTemp( std::make_shared<const Temp::CTemp>() ) );
 
 	parsedExpressions.push( IRTree::IExprPtr( new IRTree::CESeq( IRTree::IStmPtr( new IRTree::CMove( lenght, arrayLen ) ), lenght ) ) );
 }
@@ -348,7 +348,7 @@ void CIRBuilderVisitor::Visit( const CNewIntArrayExpression* expr )
 		IRTree::IExprPtr( new IRTree::CBinop( IRTree::IExpr::PLUS, arraySize, IRTree::IExprPtr( new IRTree::CConst( 1 ) ) ) ),
 		IRTree::IExprPtr( new IRTree::CConst(frames.back().WORD_SIZE) ) ) ) ) );
 
-	IRTree::IExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
+	IRTree::IExprPtr temp( new IRTree::CTemp( std::make_shared<const Temp::CTemp>() ) );
 
 	IRTree::IExprPtr mallocCall( new IRTree::CCall( 
 		IRTree::IExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
@@ -372,7 +372,7 @@ void CIRBuilderVisitor::Visit( const CNewExpression* expr )
 
 	IRTree::IExprPtr allocationSize(new IRTree::CConst(objectSize * frames.back().WORD_SIZE));
 
-	IRTree::IExprPtr temp( new IRTree::CTemp( std::shared_ptr<Temp::CTemp>( new Temp::CTemp() ) ) );
+	IRTree::IExprPtr temp( new IRTree::CTemp( std::make_shared<const Temp::CTemp>() ) );
 	IRTree::IExprPtr mallocCall( new IRTree::CCall( 
 		IRTree::IExprPtr( new IRTree::CName( std::make_shared<const Temp::CLabel>( CSymbol::GetSymbol( "__malloc" ) ) ) ),
 		convertVectorToExprList( { allocationSize } ) ) );

@@ -1,4 +1,5 @@
 #include "Frame\Frame.h"
+#include "CodeGeneration/CodeGeneration.h"
 
 namespace Frame {
 
@@ -101,4 +102,8 @@ namespace Frame {
 		return root;
 	}
 
+	std::shared_ptr<const Assembler::CBaseInstructionList> CFrame::generateCode( IRTree::IStmPtr stm )
+	{
+		return CCodeGeneration( this ).GenerateCode( stm );
+	}
 }

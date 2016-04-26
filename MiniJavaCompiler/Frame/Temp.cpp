@@ -17,12 +17,6 @@ namespace Temp {
 		return name;
 	}
 
-	CLabelList::CLabelList( std::shared_ptr<const CLabel> _head, std::shared_ptr<const CLabelList> _tail ) :
-		head( _head ),
-		tail( _tail )
-	{
-	}
-
 	std::shared_ptr<const CLabel> CLabelList::Head() const
 	{
 		return head;

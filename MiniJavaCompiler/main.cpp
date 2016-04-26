@@ -21,7 +21,7 @@ void autoOpen( const std::string& prefix, const std::string& format = "png" )
 }
 
 void flushLinearized(
-	IRTree::CStmListPtr linearizedFrameStmList,
+	IRTree::CStmListPtr linearizedFrameStmList, 
 	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
 	const std::string& canonFilename )
 {
@@ -29,8 +29,31 @@ void flushLinearized(
 	for( auto stm = tail->GetHead();
 		tail != nullptr;
 		tail = tail->GetTail(),
-		stm = (tail != nullptr) ? tail->GetHead() : nullptr ) {
+		stm = (tail != nullptr) ? tail->GetHead() : nullptr ) 
+	{
 		stm->Accept( irTreeToDigraphConverter.get() );
+	}
+	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
+}
+
+void flushBlocks(
+	std::shared_ptr<CBasicBlocks> blocksList,
+	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
+	const std::string& canonFilename )
+{
+	auto tail = blocksList->GetBlocks();
+	for( auto stmList = tail->GetHead();
+		tail != nullptr;
+		tail = tail->GetTail( ),
+		stmList = ( tail != nullptr ) ? tail->GetHead( ) : nullptr )
+	{
+		for( auto stm = stmList->GetHead( );
+			stmList != nullptr;
+			stmList = stmList->GetTail( ),
+			stm = ( stmList != nullptr ) ? stmList->GetHead( ) : nullptr ) 
+		{
+			stm->Accept( irTreeToDigraphConverter.get( ) );
+		}
 	}
 	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
 }
@@ -104,15 +127,15 @@ int main( int argc, char **argv )
 		flushLinearized( linearizedFrameStmList, irTreeToDigraphConverter, canonFilename );
 
 		auto blocks = std::make_shared<CBasicBlocks>( linearizedFrameStmList );
-		flushLinearized( blocks->allStms, irTreeToDigraphConverter, tmpFilename );
+		flushBlocks( blocks, irTreeToDigraphConverter, tmpFilename );
 		autoOpen( tmpFilename );
 
-//		CTraceSchedule schedule( blocks );
-		flushTraced( blocks, irTreeToDigraphConverter, traceFilename );
+		//CTraceSchedule schedule( blocks );
+		//flushTraced( blocks, irTreeToDigraphConverter, traceFilename );
 
-		autoOpen( irTreeFilename );
-		autoOpen( canonFilename );
-		autoOpen( traceFilename );
+		//autoOpen( irTreeFilename );
+		//autoOpen( canonFilename );
+		//autoOpen( traceFilename );
 	}
 
 	return 0;

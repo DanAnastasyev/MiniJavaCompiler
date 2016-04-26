@@ -51,12 +51,12 @@ namespace IRTree {
 		return new CName( name );
 	}
 
-	CTemp::CTemp( const std::shared_ptr<Temp::CTemp> _temp ) :
+	CTemp::CTemp( std::shared_ptr<const Temp::CTemp> _temp ) :
 		temp( _temp )
 	{
 	}
 
-	std::shared_ptr<Temp::CTemp> CTemp::GetTemp() const
+	std::shared_ptr<const Temp::CTemp> CTemp::GetTemp() const
 	{
 		return temp;
 	}

@@ -31,6 +31,7 @@
     <ClCompile Include="Canon\BasicBlocks.cpp" />
     <ClCompile Include="Canon\Canon.cpp" />
     <ClCompile Include="Canon\TraceSchedule.cpp" />
+    <ClCompile Include="CodeGeneration\CodeGeneration.cpp" />
     <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="Frame\Frame.cpp" />
     <ClCompile Include="Frame\Temp.cpp" />
@@ -68,10 +69,12 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assembler\BaseInstruction.h" />
     <ClInclude Include="BuildOutputs\parser.tab.hpp" />
     <ClInclude Include="Canon\BasicBlocks.h" />
     <ClInclude Include="Canon\Canon.h" />
     <ClInclude Include="Canon\TraceSchedule.h" />
+    <ClInclude Include="CodeGeneration\CodeGeneration.h" />
     <ClInclude Include="ErrorStorage.h" />
     <ClInclude Include="Frame\Frame.h" />
     <ClInclude Include="Frame\Temp.h" />
@@ -94,8 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BuildOutputs\parser.output" />
-    <None Include="Canon\basicBlocks.java" />
-    <None Include="Canon\traceSchedule.java" />
     <None Include="example\Factorial.java" />
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,10 @@
 #include <map>
 #include <memory>
 
+namespace Assembler {
+	class CBaseInstructionList;
+}
+
 namespace Frame {
 	class IAccess;
 
@@ -25,6 +29,8 @@ namespace Frame {
 		const CSymbol* GetName() const;
 
 		std::shared_ptr<const IRTree::IStm> GetRootStm() const;
+
+		std::shared_ptr<const Assembler::CBaseInstructionList> generateCode( IRTree::IStmPtr stm );
 
 		static const int WORD_SIZE = 4;
 	private:

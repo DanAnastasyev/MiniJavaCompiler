@@ -58,8 +58,8 @@ namespace IRTree {
 	// Temprorary variable
 	class CTemp : public IExpr {
 	public:
-		CTemp( const std::shared_ptr<Temp::CTemp> temp );
-		std::shared_ptr<Temp::CTemp> GetTemp() const;
+		CTemp( std::shared_ptr<const Temp::CTemp> temp );
+		std::shared_ptr<const Temp::CTemp> GetTemp() const;
 
 		void Accept( IIRTreeVisitor* visitor ) const override;
 
@@ -68,7 +68,7 @@ namespace IRTree {
 		virtual IExpr* Build( const CExprList* kids ) const override;
 
 	private:
-		std::shared_ptr<Temp::CTemp> temp;
+		std::shared_ptr<const Temp::CTemp> temp;
 	};
 
 	// Binary operator

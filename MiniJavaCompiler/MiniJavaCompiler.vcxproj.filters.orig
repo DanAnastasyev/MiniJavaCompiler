@@ -40,6 +40,18 @@
     <Filter Include="Source Files\Frame">
       <UniqueIdentifier>{e6fa3341-9ec4-4b5d-a397-d72397d42fce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphviz">
+      <UniqueIdentifier>{5cf8e561-2089-429e-b019-f1a5b27fe47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Canon">
+      <UniqueIdentifier>{d1a81cb1-bad5-4f13-9dad-09738f53ece1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CodeGeneration">
+      <UniqueIdentifier>{86f926d7-b1bc-414b-a321-a37e2afc20ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Assembler">
+      <UniqueIdentifier>{5001db04-9927-4e3a-9ecc-964582330ea8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -120,14 +132,29 @@
       <Filter>Source Files\Frame</Filter>
     </ClCompile>
     <ClCompile Include="Visitors\IRBuilderVisitor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Visitors</Filter>
     </ClCompile>
-    <ClCompile Include="IRTree\Expressions.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="graphviz\IRTreeToDigraphConverter.cpp">
+      <Filter>Source Files\graphviz</Filter>
     </ClCompile>
-    <ClCompile Include="IRTree\Statements.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Canon\Canon.cpp">
+      <Filter>Source Files\Canon</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
+    <ClCompile Include="Canon\TraceSchedule.cpp">
+      <Filter>Source Files\Canon</Filter>
+    </ClCompile>
+    <ClCompile Include="Canon\BasicBlocks.cpp">
+      <Filter>Source Files\Canon</Filter>
+    </ClCompile>
+    <ClCompile Include="graphviz\Digraph.cpp">
+      <Filter>Source Files\graphviz</Filter>
+    </ClCompile>
+=======
+    <ClCompile Include="Canon\BasicBlocks.cpp">
+      <Filter>Source Files\Canon</Filter>
+    </ClCompile>
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -169,25 +196,6 @@
     <ClInclude Include="RuleClasses\PositionStorage.h">
       <Filter>Source Files\RuleClasses</Filter>
     </ClInclude>
-<<<<<<< Updated upstream
-    <ClInclude Include="IRTree\Statements.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IRTree\Expressions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frame\IAccess.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Visitors\IRBuilderVisitor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frame\Label.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frame\Temp.h">
-      <Filter>Source Files</Filter>
-=======
     <ClInclude Include="IRTree\Expressions.h">
       <Filter>Source Files\IRTree</Filter>
     </ClInclude>
@@ -199,6 +207,34 @@
     </ClInclude>
     <ClInclude Include="Frame\Temp.h">
       <Filter>Source Files\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitors\IRBuilderVisitor.h">
+      <Filter>Source Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="graphviz\IRTreeToDigraphConverter.h">
+      <Filter>Source Files\graphviz</Filter>
+    </ClInclude>
+    <ClInclude Include="Canon\Canon.h">
+      <Filter>Source Files\Canon</Filter>
+    </ClInclude>
+<<<<<<< Updated upstream
+    <ClInclude Include="Canon\TraceSchedule.h">
+      <Filter>Source Files\Canon</Filter>
+    </ClInclude>
+    <ClInclude Include="Canon\BasicBlocks.h">
+      <Filter>Source Files\Canon</Filter>
+    </ClInclude>
+    <ClInclude Include="graphviz\Digraph.h">
+      <Filter>Source Files\graphviz</Filter>
+=======
+    <ClInclude Include="Canon\BasicBlocks.h">
+      <Filter>Source Files\Canon</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGeneration\CodeGeneration.h">
+      <Filter>Source Files\CodeGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="Assembler\BaseInstruction.h">
+      <Filter>Source Files\Assembler</Filter>
 >>>>>>> Stashed changes
     </ClInclude>
   </ItemGroup>
@@ -208,6 +244,9 @@
     </None>
     <None Include="example\Factorial.java">
       <Filter>Source Files\examples</Filter>
+    </None>
+    <None Include="Canon\traceSchedule.java">
+      <Filter>Source Files\Canon</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

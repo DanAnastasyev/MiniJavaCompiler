@@ -41,7 +41,8 @@ CTraceSchedule::CTraceSchedule( CBlocksPtr blocks ) :
 	table = nullptr;
 }
 
-CStmListPtr CTraceSchedule::getLast( CStmListPtr block ) const {
+CStmListPtr CTraceSchedule::getLast( CStmListPtr block ) const 
+{
 	auto l = block;
 	while( l->GetTail()->GetTail() ) {
 		l = l->GetTail();
