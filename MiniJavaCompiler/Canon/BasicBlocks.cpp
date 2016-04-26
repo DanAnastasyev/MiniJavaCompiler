@@ -14,7 +14,11 @@ CBasicBlocks::CBasicBlocks( CStmListPtr stmsList )
 
 void CBasicBlocks::addStm( IRTree::IStmPtr stm )
 {
-	lastStm = lastStm->GetTail() = NEW( CStmList, stm, nullptr );
+	if( allStms ) {
+		lastStm = lastStm->GetTail() = NEW( CStmList, stm, nullptr );
+	} else {
+		lastStm = allStms = NEW( CStmList, stm, nullptr );
+	}
 }
 
 void CBasicBlocks::doStms( CStmListPtr stmList )

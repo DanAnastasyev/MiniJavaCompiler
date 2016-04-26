@@ -31,11 +31,11 @@ void CDictionary::operator=(std::nullptr_t)
 	internalMap = nullptr;
 }
 
-CTraceSchedule::CTraceSchedule( CBlocksPtr b ) :
-	blocks( b )
+CTraceSchedule::CTraceSchedule( CBlocksPtr blocks ) :
+	blocks( blocks )
 {
-	for( auto l = b->GetBlocks(); l; l = l->GetTail() ) {
-		table.Put( CAST(l->GetHead()->GetHead(), CLabel)->GetLabel(), l->GetHead() );
+	for( auto list = blocks->GetBlocks(); list; list = list->GetTail() ) {
+		table.Put( CAST(list->GetHead()->GetHead(), CLabel)->GetLabel(), list->GetHead() );
 	}
 	stms = getNext();
 	table = nullptr;

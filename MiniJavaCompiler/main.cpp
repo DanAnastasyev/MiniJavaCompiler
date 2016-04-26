@@ -11,7 +11,7 @@
 
 extern int yyparse( std::shared_ptr<IProgram>& );
 
-void autoOpen( const std::string& prefix, const std::string& format = "pdf" )
+void autoOpen( const std::string& prefix, const std::string& format = "png" )
 {
 	std::cout << prefix << std::endl;
 	system( std::string( "..\\externals\\dot\\dot.exe -T" + format + " " + prefix + ".dot -o " + prefix + "." + format ).c_str() );
@@ -21,16 +21,16 @@ void autoOpen( const std::string& prefix, const std::string& format = "pdf" )
 }
 
 void flushLinearized(
-	IRTree::CStmListPtr linearizedFrameStmList, 
+	IRTree::CStmListPtr linearizedFrameStmList,
 	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
 	const std::string& canonFilename )
 {
 	auto tail = linearizedFrameStmList;
-	for( auto stm = tail->GetHead( );
+	for( auto stm = tail->GetHead();
 		tail != nullptr;
-		tail = tail->GetTail( ),
-		stm = (tail != nullptr) ? tail->GetHead( ) : nullptr ) {
-		stm->Accept( irTreeToDigraphConverter.get( ) );
+		tail = tail->GetTail(),
+		stm = (tail != nullptr) ? tail->GetHead() : nullptr ) {
+		stm->Accept( irTreeToDigraphConverter.get() );
 	}
 	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
 }
@@ -38,18 +38,18 @@ void flushLinearized(
 void flushTraced(
 	std::shared_ptr<CBasicBlocks> blocks,
 	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
-	const std::string& traceFilename)
+	const std::string& traceFilename )
 {
-	auto tail = blocks->GetBlocks( );
-	for( auto stmList = tail->GetHead( );
+	auto tail = blocks->GetBlocks();
+	for( auto stmList = tail->GetHead();
 		tail != nullptr;
-		tail = tail->GetTail( ),
-		stmList = (tail != nullptr) ? tail->GetHead( ) : nullptr ) {
-		for( auto stm = stmList->GetHead( );
+		tail = tail->GetTail(),
+		stmList = (tail != nullptr) ? tail->GetHead() : nullptr ) {
+		for( auto stm = stmList->GetHead();
 			stmList != nullptr;
-			stmList = stmList->GetTail( ),
-			stm = (stmList != nullptr) ? stmList->GetHead( ) : nullptr ) {
-			stm->Accept( irTreeToDigraphConverter.get( ) );
+			stmList = stmList->GetTail(),
+			stm = (stmList != nullptr) ? stmList->GetHead() : nullptr ) {
+			stm->Accept( irTreeToDigraphConverter.get() );
 		}
 	}
 	irTreeToDigraphConverter->Flush( traceFilename + ".dot" );
@@ -57,6 +57,9 @@ void flushTraced(
 
 int main( int argc, char **argv )
 {
+	if( argc <= 1 ) {
+		return 1;
+	}
 	freopen( argv[1], "r", stdin );
 	std::shared_ptr<IProgram> root;
 	yyparse( root );
@@ -86,9 +89,10 @@ int main( int argc, char **argv )
 
 	for( const auto& frame : irBuilder->GetFrames() ) {
 		std::string format = "pdf";
-		std::string irTreeFilename = "output\\IRTree_" + frame.GetName( )->GetString( );
-		std::string canonFilename = "output\\Canon_" + frame.GetName( )->GetString( );
-		std::string traceFilename = "output\\Trace_" + frame.GetName( )->GetString( );
+		std::string tmpFilename = "output\\TMP_" + frame.GetName()->GetString();
+		std::string irTreeFilename = "output\\IRTree_" + frame.GetName()->GetString();
+		std::string canonFilename = "output\\Canon_" + frame.GetName()->GetString();
+		std::string traceFilename = "output\\Trace_" + frame.GetName()->GetString();
 
 		// Печатаем деревья для отдельной функции
 		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter( new IRTree::CIRTreeToDigraphConverter() );
@@ -100,7 +104,10 @@ int main( int argc, char **argv )
 		flushLinearized( linearizedFrameStmList, irTreeToDigraphConverter, canonFilename );
 
 		auto blocks = std::make_shared<CBasicBlocks>( linearizedFrameStmList );
-		CTraceSchedule schedule( blocks );
+		flushLinearized( blocks->allStms, irTreeToDigraphConverter, tmpFilename );
+		autoOpen( tmpFilename );
+
+//		CTraceSchedule schedule( blocks );
 		flushTraced( blocks, irTreeToDigraphConverter, traceFilename );
 
 		autoOpen( irTreeFilename );

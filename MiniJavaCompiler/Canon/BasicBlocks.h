@@ -10,13 +10,11 @@ public:
 
 	IRTree::CStmListPtr GetHead() const { return head; }
 
-	std::shared_ptr<const CStmListList> GetTail() const	{ return tail; }
-
-	void SetTail( std::shared_ptr<const CStmListList> _tail ) { tail = _tail; }
+	std::shared_ptr<const CStmListList>& GetTail() const { return tail; }
 
 private:
 	IRTree::CStmListPtr head;
-	std::shared_ptr<const CStmListList> tail;
+	mutable std::shared_ptr<const CStmListList> tail;
 };
 typedef std::shared_ptr<const CStmListList> CStmListListPtr;
 
@@ -28,10 +26,12 @@ public:
 
 	std::shared_ptr<const Temp::CLabel> GetDoneLabel() const { return doneLabel; }
 
-	CStmListListPtr GetBlocks() const { return blocks; }
+	CStmListListPtr& GetBlocks() const { return blocks; }
+
+	IRTree::CStmListPtr allStms;
 
 private:
-	CStmListListPtr blocks;
+	mutable CStmListListPtr blocks;
 	std::shared_ptr<const Temp::CLabel> doneLabel;
 	CStmListListPtr lastBlock;
 	IRTree::CStmListPtr lastStm;

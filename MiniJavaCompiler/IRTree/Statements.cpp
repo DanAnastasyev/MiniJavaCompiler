@@ -74,11 +74,11 @@ namespace IRTree
 
 	CJump::CJump( std::shared_ptr<const Temp::CLabel> label ) :
 		jmpExpr( new CName( label ) ),
-		targets( label, nullptr )
+		targets( std::make_shared<Temp::CLabelList>( label, nullptr ) )
 	{
 	}
 
-std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
+	std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
 	{
 		return jmpExpr;
 	}
@@ -217,19 +217,13 @@ CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right 
 		head(_head), tail( _tail )
 	{}
 
-	std::shared_ptr<const IStm> CStmList::GetHead() const
+	std::shared_ptr<const IStm>& CStmList::GetHead() const
 	{
 		return head;
 	}
 
-	std::shared_ptr<const CStmList> CStmList::GetTail() const
+	std::shared_ptr<const CStmList>& CStmList::GetTail() const
 	{
 		return tail;
 	}
-
-	void CStmList::SetTail( std::shared_ptr<const CStmList> _tail )
-	{
-		tail = _tail;
-	}
-
 }
