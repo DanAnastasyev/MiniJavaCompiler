@@ -21,7 +21,7 @@ void autoOpen( const std::string& prefix, const std::string& format = "png" )
 }
 
 void flushLinearized(
-	IRTree::CStmListPtr linearizedFrameStmList, 
+	IRTree::CStmListPtr linearizedFrameStmList,
 	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
 	const std::string& canonFilename )
 {
@@ -29,8 +29,7 @@ void flushLinearized(
 	for( auto stm = tail->GetHead();
 		tail != nullptr;
 		tail = tail->GetTail(),
-		stm = (tail != nullptr) ? tail->GetHead() : nullptr ) 
-	{
+		stm = (tail != nullptr) ? tail->GetHead() : nullptr ) {
 		stm->Accept( irTreeToDigraphConverter.get() );
 	}
 	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
@@ -44,28 +43,6 @@ void flushBlocks(
 	auto tail = blocksList->GetBlocks();
 	for( auto stmList = tail->GetHead();
 		tail != nullptr;
-		tail = tail->GetTail( ),
-		stmList = ( tail != nullptr ) ? tail->GetHead( ) : nullptr )
-	{
-		for( auto stm = stmList->GetHead( );
-			stmList != nullptr;
-			stmList = stmList->GetTail( ),
-			stm = ( stmList != nullptr ) ? stmList->GetHead( ) : nullptr ) 
-		{
-			stm->Accept( irTreeToDigraphConverter.get( ) );
-		}
-	}
-	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
-}
-
-void flushTraced(
-	std::shared_ptr<CBasicBlocks> blocks,
-	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
-	const std::string& traceFilename )
-{
-	auto tail = blocks->GetBlocks();
-	for( auto stmList = tail->GetHead();
-		tail != nullptr;
 		tail = tail->GetTail(),
 		stmList = (tail != nullptr) ? tail->GetHead() : nullptr ) {
 		for( auto stm = stmList->GetHead();
@@ -74,6 +51,21 @@ void flushTraced(
 			stm = (stmList != nullptr) ? stmList->GetHead() : nullptr ) {
 			stm->Accept( irTreeToDigraphConverter.get() );
 		}
+	}
+	irTreeToDigraphConverter->Flush( canonFilename + ".dot" );
+}
+
+void flushTrace(
+	IRTree::CStmListPtr trace,
+	std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter,
+	const std::string& traceFilename )
+{
+	auto tail = trace;
+	for( auto stm = tail->GetHead();
+		tail != nullptr;
+		tail = tail->GetTail(),
+		stm = (tail != nullptr) ? tail->GetHead() : nullptr ) {
+		stm->Accept( irTreeToDigraphConverter.get() );
 	}
 	irTreeToDigraphConverter->Flush( traceFilename + ".dot" );
 }
@@ -130,7 +122,7 @@ int main( int argc, char **argv )
 		flushBlocks( blocks, irTreeToDigraphConverter, blocksFilename );
 
 		CTraceSchedule schedule( blocks );
-		flushLinearized( schedule.GetStms(), irTreeToDigraphConverter, traceFilename );
+		flushTrace( schedule.GetStms(), irTreeToDigraphConverter, traceFilename );
 
 //		autoOpen( irTreeFilename );
 //		autoOpen( canonFilename );
