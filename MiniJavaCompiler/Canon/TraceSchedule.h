@@ -28,6 +28,8 @@ public:
 
 	void Trace( IRTree::CStmListPtr l );
 
+	IRTree::CStmListPtr GetStms() const;
+
 private:
 	IRTree::CStmListPtr stms;
 	CBlocksPtr blocks;

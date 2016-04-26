@@ -1,12 +1,12 @@
 #pragma once
 
-#include "SymbolsTable\Symbol.h"
-#include "Frame\Temp.h"
-#include "IRTree\Expressions.h"
-#include "SymbolsTable\SymbolsTable.h"
-
 #include <map>
 #include <memory>
+
+#include "SymbolsTable/Symbol.h"
+#include "Frame/Temp.h"
+#include "IRTree/Expressions.h"
+#include "SymbolsTable/SymbolsTable.h"
 
 namespace Assembler {
 	class CBaseInstructionList;

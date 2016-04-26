@@ -1,4 +1,4 @@
-#include "Digraph.h"
+#include "graphviz/Digraph.h"
 
 #include <ostream>
 #include <fstream>

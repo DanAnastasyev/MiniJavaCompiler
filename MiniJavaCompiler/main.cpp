@@ -112,7 +112,7 @@ int main( int argc, char **argv )
 
 	for( const auto& frame : irBuilder->GetFrames() ) {
 		std::string format = "pdf";
-		std::string tmpFilename = "output\\TMP_" + frame.GetName()->GetString();
+		std::string blocksFilename = "output\\Blocks_" + frame.GetName()->GetString();
 		std::string irTreeFilename = "output\\IRTree_" + frame.GetName()->GetString();
 		std::string canonFilename = "output\\Canon_" + frame.GetName()->GetString();
 		std::string traceFilename = "output\\Trace_" + frame.GetName()->GetString();
@@ -127,15 +127,15 @@ int main( int argc, char **argv )
 		flushLinearized( linearizedFrameStmList, irTreeToDigraphConverter, canonFilename );
 
 		auto blocks = std::make_shared<CBasicBlocks>( linearizedFrameStmList );
-		flushBlocks( blocks, irTreeToDigraphConverter, tmpFilename );
-		autoOpen( tmpFilename );
+		flushBlocks( blocks, irTreeToDigraphConverter, blocksFilename );
 
-		//CTraceSchedule schedule( blocks );
-		//flushTraced( blocks, irTreeToDigraphConverter, traceFilename );
+		CTraceSchedule schedule( blocks );
+		flushLinearized( schedule.GetStms(), irTreeToDigraphConverter, traceFilename );
 
-		//autoOpen( irTreeFilename );
-		//autoOpen( canonFilename );
-		//autoOpen( traceFilename );
+//		autoOpen( irTreeFilename );
+//		autoOpen( canonFilename );
+//		autoOpen( blocksFilename );
+		autoOpen( traceFilename );
 	}
 
 	return 0;

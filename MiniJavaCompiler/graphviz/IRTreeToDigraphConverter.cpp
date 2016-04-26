@@ -1,4 +1,4 @@
-﻿#include "IRTreeToDigraphConverter.h"
+﻿#include "graphviz/IRTreeToDigraphConverter.h"
 #include "IRTree/Expressions.h"
 #include "IRTree/Statements.h"
 

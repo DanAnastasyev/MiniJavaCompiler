@@ -13,7 +13,12 @@ CDictionary::CDictionary() :
 
 CStmListPtr CDictionary::Get( Temp::CLabelPtr key ) const
 {
-	return internalMap->at( key );
+	try {
+		return internalMap->at( key );
+	} catch( ... ) {
+		// ignore this shit
+	}
+	return nullptr;
 }
 
 void CDictionary::Put( Temp::CLabelPtr key, CStmListPtr value ) const
@@ -102,6 +107,11 @@ void CTraceSchedule::Trace( CStmListPtr list )
 	}
 }
 
+CStmListPtr CTraceSchedule::GetStms() const
+{
+	return stms;
+}
+
 CStmListPtr CTraceSchedule::getNext()
 {
 	if( blocks->GetBlocks() == nullptr ) {
@@ -109,7 +119,7 @@ CStmListPtr CTraceSchedule::getNext()
 	}
 	auto stmList = blocks->GetBlocks()->GetHead();
 	auto label = CAST( stmList->GetHead(), CLabel );
-	if( table.Get( label->GetLabel() ) ) {
+	if( table.Get( label->GetLabel() ) != nullptr ) {
 		Trace( stmList );
 		return stmList;
 	}

@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include <SymbolsTable/Symbol.h>
-#include <memory>
+#include "SymbolsTable/Symbol.h"
 
 namespace Temp {
 	// Временная переменная
