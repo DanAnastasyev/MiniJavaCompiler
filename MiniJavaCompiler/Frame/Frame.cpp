@@ -102,8 +102,8 @@ namespace Frame {
 		return root;
 	}
 
-	std::shared_ptr<const Assembler::CBaseInstructionList> CFrame::generateCode( IRTree::IStmPtr stm )
+	Assembler::CBaseInstructionList* CFrame::GenerateCode( IRTree::CStmListPtr stmList ) const
 	{
-		return CCodeGeneration( this ).GenerateCode( stm );
+		return CCodeGeneration( this ).GenerateCode( stmList );
 	}
 }

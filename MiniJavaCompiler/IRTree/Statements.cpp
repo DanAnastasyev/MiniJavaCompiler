@@ -144,18 +144,23 @@ std::shared_ptr<const IExpr> CJump::GetJumpExpr() const
 	int CCondJump::NotRel( int binop )
 	{
 		switch( binop ) {
-			case EQ: return NE;
-			case NE: return EQ;
-			case LT: return GE;
-			case GT: return LE;
-			case LE: return GT;
-			case GE: return LT;
-			case ULT: return UGE;
-			case ULE: return UGT;
-			case UGT: return ULE;
-			case UGE: return ULT;
-			default: throw std::runtime_error( "Bad relop in CJUMP.NotRel()" );
+			case IExpr::LESS: return IExpr::GE;
+			case IExpr::GE: return IExpr::LESS;
+			case IExpr::XOR: return IExpr::XOR;
 		}
+		//switch( binop ) {
+		//	case EQ: return NE;
+		//	case NE: return EQ;
+		//	case LT: return GE;
+		//	case GT: return LE;
+		//	case LE: return GT;
+		//	case GE: return LT;
+		//	case ULT: return UGE;
+		//	case ULE: return UGT;
+		//	case UGT: return ULE;
+		//	case UGE: return ULT;
+		//	default: throw std::runtime_error( "Bad relop in CJUMP.NotRel()" );
+		//}
 	}
 
 CSeq::CSeq( std::shared_ptr<const IStm> left, std::shared_ptr<const IStm> right ) :

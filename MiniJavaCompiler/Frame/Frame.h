@@ -30,7 +30,7 @@ namespace Frame {
 
 		std::shared_ptr<const IRTree::IStm> GetRootStm() const;
 
-		std::shared_ptr<const Assembler::CBaseInstructionList> generateCode( IRTree::IStmPtr stm );
+		Assembler::CBaseInstructionList* GenerateCode( IRTree::CStmListPtr stmList ) const;
 
 		static const int WORD_SIZE = 4;
 	private:

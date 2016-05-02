@@ -4,9 +4,12 @@
 
 class CCodeGeneration {
 public:
-	CCodeGeneration( const Frame::CFrame* _frame ) : frame( _frame ) {}
+	CCodeGeneration( const Frame::CFrame* _frame ) : 
+		frame( _frame ), instructList( nullptr ), last( nullptr )
+	{
+	}
 
-	std::shared_ptr<const Assembler::CBaseInstructionList> GenerateCode( IRTree::IStmPtr stm );
+	Assembler::CBaseInstructionList* GenerateCode( IRTree::CStmListPtr stmList );
 private:
 	const Frame::CFrame* frame;
 	Assembler::CBaseInstructionList* instructList;
@@ -29,4 +32,6 @@ private:
 	std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CNamePtr expr );
 	std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CCallPtr expr );
 	std::shared_ptr<const Temp::CTemp> munchExp( IRTree::IExprPtr expr );
+
+	std::shared_ptr<const Temp::CTempList> munchArgs( std::shared_ptr<const IRTree::CExprList> args );
 };

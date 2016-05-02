@@ -10,7 +10,7 @@ namespace IRTree {
 	class IExpr {
 	public:
 		enum BINOP {
-			PLUS, MINUS, MUL, DIV, AND, OR, LESS, XOR
+			PLUS, MINUS, MUL, DIV, AND, OR, LESS, GE, XOR
 		};
 
 		virtual ~IExpr()
