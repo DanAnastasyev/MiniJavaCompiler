@@ -42,7 +42,7 @@ namespace Assembler {
 			if (label != nullptr) {
 				assert(label->JumpTargets() != nullptr);
 				assert(label->JumpTargets()->Head() != nullptr);
-				labels.insert(std::make_pair(label->JumpTargets()->Head()->GetName()->GetString, nodeIndex));
+				labels.insert(std::make_pair(label->JumpTargets()->Head()->GetName()->GetString(), nodeIndex));
 			}
 			++nodeIndex;
 		}
