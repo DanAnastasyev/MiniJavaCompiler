@@ -76,7 +76,12 @@ void CCodeGeneration::munchStm( CMovePtr stm )
 				std::string( "], 's1\n" ),
 				nullptr,
 				std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
-		} else if( INSTANCEOF( destMem->GetMem(), CMem ) ) {
+		} else if( INSTANCEOF( destMem->GetMem(), CTemp ) ) {
+			// MOVE( MEM( TEMP ), e2 )
+			emit( new Assembler::COper( std::string( "MOV ['s0], 's1\n" ),
+				std::make_shared<const Temp::CTempList>( munchExp( destMem->GetMem() ), nullptr ),
+				std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
+		} else if( INSTANCEOF( destMem->GetMem( ), CMem ) ) {
 			if( INSTANCEOF( stm->GetSrcExpr(), CMem ) ) {
 				// MOVE( MEM(e1), MEM(e2) )
 				emit( new Assembler::COper( std::string( "MOV ['s0], ['s1]\n" ),
