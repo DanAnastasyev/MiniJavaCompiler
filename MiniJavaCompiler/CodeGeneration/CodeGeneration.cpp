@@ -40,27 +40,33 @@ void CCodeGeneration::munchStm( CMovePtr stm )
 		auto destMem = std::dynamic_pointer_cast<const CMem>( stm->GetDestExpr() );
 		
 		if( INSTANCEOF( destMem->GetMem(), CBinop ) ) {
-			// MOVE( MEM( BINOP(PLUS, e1, CONST(i)), e2 ) )
 			auto binOp = std::dynamic_pointer_cast<const CBinop>( destMem->GetMem() );
 			if( binOp->GetBinOp() == IExpr::PLUS || binOp->GetBinOp() == IExpr::MINUS ) {
-				IExprPtr binOpExpr;
-				CConstPtr constantExpr;
-				if( INSTANCEOF( binOp->GetLeft(), CConst ) ) {
-					binOpExpr = binOp->GetRight();
-					constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetLeft() );
+				// MOVE( MEM( BINOP(PLUS, e1, CONST(i)), e2 ) )
+				if( INSTANCEOF( binOp->GetLeft( ), CConst ) || INSTANCEOF( binOp->GetRight( ), CConst ) ) {
+					IExprPtr binOpExpr;
+					CConstPtr constantExpr;
+					if( INSTANCEOF( binOp->GetLeft(), CConst ) ) {
+						binOpExpr = binOp->GetRight();
+						constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetLeft() );
+					} else {
+						binOpExpr = binOp->GetLeft();
+						constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetRight() );
+					}
+					emit( new Assembler::COper( std::string( "MOV ['s0" ) +
+						( ( binOp->GetBinOp() == IExpr::PLUS ) ? "+" : "-" ) +
+						std::to_string( constantExpr->GetValue() ) +
+						std::string( "], 's1\n" ),
+						nullptr,
+						std::make_shared<const Temp::CTempList>(
+						munchExp( binOpExpr ),
+						std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) ) );
 				} else {
-					binOpExpr = binOp->GetLeft();
-					constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetRight() );
+					// MOVE( MEM( BINOP( PLUS, e1, e2 ) ), e3 )
+					emit( new Assembler::COper( std::string( "MOV ['s0], 's1\n" ),
+						std::make_shared<const Temp::CTempList>( munchExp( binOp ), nullptr ),
+						std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
 				}
-				emit( new Assembler::COper( std::string( "MOV ['s0" ) +
-					( ( binOp->GetBinOp() == IExpr::PLUS ) ? "+" : "-" ) +
-					std::to_string( constantExpr->GetValue() ) +
-					std::string( "], 's1\n" ),
-					nullptr,
-					std::make_shared<const Temp::CTempList>(
-					munchExp( binOpExpr ),
-					std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) ) );
-
 			}
 		} else if( INSTANCEOF( destMem->GetMem(), CConst ) ) {
 			// MOVE( MEM( CONST(i) ), e2 )
