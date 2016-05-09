@@ -37,7 +37,7 @@ namespace Temp {
 		return tail;
 	}
 
-int CTemp::nextUniqueId = 0;
+	int CTemp::nextUniqueId = 0;
 
 	CTemp::CTemp()
 	{

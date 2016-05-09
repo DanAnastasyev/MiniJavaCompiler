@@ -24,8 +24,8 @@ namespace Assembler {
 	protected:
 		std::string assemblerInstruction;
 	private:
-		std::shared_ptr<const Temp::CTemp> getNthTemp( Temp::CTempListPtr list, int i );
-		std::shared_ptr<const Temp::CLabel> getNthLabel( Temp::CLabelListPtr list, int i );
+		std::shared_ptr<const Temp::CTemp> getNthTemp( Temp::CTempListPtr list, int i ) const;
+		std::shared_ptr<const Temp::CLabel> getNthLabel( Temp::CLabelListPtr list, int i ) const;
 	};
 	typedef std::shared_ptr<const CBaseInstruction> CBaseInstructionPtr;
 

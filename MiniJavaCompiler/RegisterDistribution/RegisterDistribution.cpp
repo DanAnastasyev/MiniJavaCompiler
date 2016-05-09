@@ -11,10 +11,8 @@ namespace Assembler {
 		registers( registers )
 	{
 		do {
-			std::cerr << asmFunction.size() << std::endl;
 			int cmdIndex = 0;
 			if( !uncoloredNodes.empty() ) {
-				std::cout << "REGENERATING!!!" << std::endl;
 				regenerateCode();
 				uncoloredNodes.clear();
 				edges.clear();
@@ -140,14 +138,15 @@ namespace Assembler {
 		}
 
 		for( auto it : nodeMap ) {
+			if( it.first.length() < 4 ) {
+				continue;
+			}
 			if( it.first.substr( it.first.length() - 4 ) == "__TP" ) {
 				nodes[it.second].Color = 6;
 			} else if( it.first.substr( it.first.length() - 4 ) == "__FP" ) {
 				nodes[it.second].Color = 7;
 			} else if( it.first.substr( it.first.length() - 4 ) == "__RP" ) {
 				nodes[it.second].Color = 5;
-			} else {
-				throw std::runtime_error( "invalid name" );
 			}
 		}
 	}

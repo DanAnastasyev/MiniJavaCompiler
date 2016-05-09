@@ -114,6 +114,11 @@ int main( int argc, char **argv )
 	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( irBuilder.get() );
 
+	std::vector<std::string> registers;
+	for( int i = 0; i < 6; ++i ) {
+		registers.push_back( "r" + std::to_string( i ) );
+	}
+
 	for( auto& frame : irBuilder->GetFrames() ) {
 		std::string format = "pdf";
 		std::string blocksFilename = "output\\Blocks_" + frame.GetName()->GetString();
@@ -139,17 +144,16 @@ int main( int argc, char **argv )
 
 		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
 		flushAssemblerCode( asmList, assemblerFilename );
-		Assembler::CInterferenceGraph graph( asmList, std::vector<std::string>( 4 ) );
+		Assembler::CInterferenceGraph graph( asmList, registers );
+
+		for( auto& cmd : graph.GetCode() ) {
+			std::cout << cmd->Format( graph.GetColors( ) );
+		}
 
 		//autoOpen( irTreeFilename );
 		//autoOpen( canonFilename );
 		//autoOpen( blocksFilename );
 		//autoOpen( traceFilename );
-
-		auto pizda = graph.GetCode();
-		for( auto huy : pizda ) {
-			std::cout << huy->GetAssemblerInstruction();
-		}
 	}
 
 	return 0;

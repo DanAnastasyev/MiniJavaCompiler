@@ -62,17 +62,17 @@ void CCodeGeneration::munchStm( CMovePtr stm )
 						binOpExpr = binOp->GetLeft();
 						constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetRight() );
 					}
-					emit( new Assembler::COper( std::string( "MOV ['s0" ) +
+					emit( new Assembler::COper( std::string( "MOV ['d0" ) +
 						( ( binOp->GetBinOp() == IExpr::PLUS ) ? "+" : "-" ) +
 						std::to_string( constantExpr->GetValue() ) +
-						std::string( "], 's1\n" ),
+						std::string( "], 's0\n" ),
 						nullptr,
 						std::make_shared<const Temp::CTempList>(
 						munchExp( binOpExpr ),
 						std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) ) );
 				} else {
 					// MOVE( MEM( BINOP( PLUS, e1, e2 ) ), e3 )
-					emit( new Assembler::COper( std::string( "MOV ['s0], 's1\n" ),
+					emit( new Assembler::COper( std::string( "MOV ['d0], 's0\n" ),
 						std::make_shared<const Temp::CTempList>( munchExp( binOp ), nullptr ),
 						std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
 				}
@@ -80,27 +80,27 @@ void CCodeGeneration::munchStm( CMovePtr stm )
 		} else if( INSTANCEOF( destMem->GetMem(), CConst ) ) {
 			// MOVE( MEM( CONST(i) ), e2 )
 			CConstPtr constantExpr = std::dynamic_pointer_cast<const CConst>( destMem->GetMem() );
-			emit( new Assembler::COper( std::string( "MOV ['s0+" ) +
+			emit( new Assembler::COper( std::string( "MOV ['d0+" ) +
 				std::to_string( constantExpr->GetValue( ) ) +
-				std::string( "], 's1\n" ),
+				std::string( "], 's0\n" ),
 				nullptr,
 				std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
 		} else if( INSTANCEOF( destMem->GetMem(), CTemp ) ) {
 			// MOVE( MEM( TEMP ), e2 )
-			emit( new Assembler::COper( std::string( "MOV ['s0], 's1\n" ),
+			emit( new Assembler::COper( std::string( "MOV ['d0], 's0\n" ),
 				std::make_shared<const Temp::CTempList>( munchExp( destMem->GetMem() ), nullptr ),
 				std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
 		} else if( INSTANCEOF( destMem->GetMem( ), CMem ) ) {
 			if( INSTANCEOF( stm->GetSrcExpr(), CMem ) ) {
 				// MOVE( MEM(e1), MEM(e2) )
-				emit( new Assembler::COper( std::string( "MOV ['s0], ['s1]\n" ),
+				emit( new Assembler::COper( std::string( "MOV ['d0], ['s0]\n" ),
 					nullptr,
 					std::make_shared<const Temp::CTempList>( 
 					munchExp( stm->GetSrcExpr() ),
 					std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) ) );
 			} else {
 				// MOVE( MEM(e1), e2 )
-				emit( new Assembler::COper( std::string( "MOV ['s0], 's1\n" ),
+				emit( new Assembler::COper( std::string( "MOV ['d0], 's0\n" ),
 					nullptr,
 					std::make_shared<const Temp::CTempList>(
 					munchExp( stm->GetSrcExpr() ),
@@ -110,7 +110,7 @@ void CCodeGeneration::munchStm( CMovePtr stm )
 	} else if( INSTANCEOF( stm->GetDestExpr(), CTemp ) ) { 
 		// MOVE(TEMP(i), e2)
 		CTempPtr temp = std::dynamic_pointer_cast<const CTemp>( stm->GetDestExpr() );
-		emit( new Assembler::COper( "MOV 'd0, 's0 + r0\n",
+		emit( new Assembler::COper( "MOV 'd0, 's0\n",
 			std::make_shared<const Temp::CTempList>( temp->GetTemp(), nullptr ),
 			std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
 	}
@@ -196,7 +196,7 @@ std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CMemPtr ex
 	} 
 	if( INSTANCEOF( expr->GetMem(), CConst ) ) {
 		auto constantExpr = std::dynamic_pointer_cast<const CConst>( expr->GetMem( ) );
-		emit( new Assembler::COper( std::string( "MEM 'd0, ['r0+" ) +
+		emit( new Assembler::COper( std::string( "MEM 'd0, ['s0+" ) +
 			std::to_string( constantExpr->GetValue() ) +
 			std::string( "]\n" ),
 			std::make_shared<const Temp::CTempList>( temp, nullptr ), 
@@ -256,13 +256,13 @@ std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CBinopPtr 
 
 std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CConstPtr constantExpr )
 {
+	// TODO проверить
 	std::shared_ptr<const Temp::CTemp> temp( new Temp::CTemp );
 	
-	emit( new Assembler::COper( std::string( "ADD 'd0, r0+" ) +
+	emit( new Assembler::COper( std::string( "MOV 'd0, " ) +
 		std::to_string( constantExpr->GetValue() ) +
 		std::string( "\n" ),
-		nullptr,
-		std::make_shared<const Temp::CTempList>( temp, nullptr ) ) );
+		std::make_shared<const Temp::CTempList>( temp, nullptr ), nullptr ) );
 
 	return temp;
 }

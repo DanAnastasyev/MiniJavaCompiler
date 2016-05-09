@@ -10,9 +10,6 @@ namespace Assembler {
 
 	void CGraph::AddEdge( int from, int to )
 	{
-		assert( from < int( nodes.size() ) );
-		assert( to < int( nodes.size() ) );
-
 		nodes[from].out.push_back( to );
 		nodes[to].in.push_back( from );
 	}
@@ -41,8 +38,6 @@ namespace Assembler {
 		for( auto cmd : asmFunction ) {
 			const CLabel* label = dynamic_cast<const CLabel*>( cmd );
 			if( label != nullptr ) {
-				assert( label->JumpTargets() != nullptr );
-				assert( label->JumpTargets()->Head() != nullptr );
 				labels.insert( std::make_pair( label->JumpTargets()->Head()->GetName()->GetString(), nodeIndex ) );
 			}
 			++nodeIndex;
@@ -150,32 +145,24 @@ namespace Assembler {
 
 	const std::set<std::string>& CLiveInOutCalculator::GetLiveIn( int nodeIndex ) const
 	{
-		assert( nodeIndex < int( liveIn.size() ) );
-
 		return liveIn[nodeIndex];
 	}
 
 
 	const std::set<std::string>& CLiveInOutCalculator::GetLiveOut( int nodeIndex ) const
 	{
-		assert( nodeIndex < int( liveOut.size() ) );
-
 		return liveOut[nodeIndex];
 	}
 
 
 	const std::set<std::string>& CLiveInOutCalculator::GetDefines( int nodeIndex ) const
 	{
-		assert( nodeIndex < int( defines.size() ) );
-
 		return defines[nodeIndex];
 	}
 
 
 	const std::set<std::string>& CLiveInOutCalculator::GetUses( int nodeIndex ) const
 	{
-		assert( nodeIndex < int( uses.size() ) );
-
 		return uses[nodeIndex];
 	}
 
