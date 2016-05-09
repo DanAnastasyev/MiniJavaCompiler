@@ -58,7 +58,7 @@ namespace Assembler {
 
 		Temp::CLabelListPtr JumpTargets() const override
 		{
-			return nullptr;
+			return std::make_shared<Temp::CLabelList>( label, nullptr );
 		}
 	private:
 		std::shared_ptr<const Temp::CLabel> label;
