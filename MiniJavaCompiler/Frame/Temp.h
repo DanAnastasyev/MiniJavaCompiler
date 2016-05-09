@@ -47,6 +47,9 @@ namespace Temp {
 			tail( _tail ), head( _head )
 		{}
 
+		std::shared_ptr<const CTemp> Head() const;
+		std::shared_ptr<const CTempList> Tail() const;
+
 	private:
 		std::shared_ptr<const CTemp> head;
 		std::shared_ptr<const CTempList> tail;

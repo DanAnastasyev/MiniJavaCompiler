@@ -17,6 +17,16 @@ namespace Temp {
 		return name;
 	}
 
+	std::shared_ptr<const CTemp> CTempList::Head() const
+	{
+		return head;
+	}
+
+	std::shared_ptr<const CTempList> CTempList::Tail() const
+	{
+		return tail;
+	}
+
 	std::shared_ptr<const CLabel> CLabelList::Head() const
 	{
 		return head;
