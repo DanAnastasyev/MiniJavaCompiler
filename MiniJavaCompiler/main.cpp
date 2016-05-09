@@ -92,54 +92,54 @@ int main( int argc, char **argv )
 	std::shared_ptr<IProgram> root;
 	yyparse( root );
 	std::shared_ptr<CPrettyPrinterVisitor> prettyPrinter( new CPrettyPrinterVisitor );
-	root->Accept( prettyPrinter.get( ) );
+	root->Accept( prettyPrinter.get() );
 
 	std::shared_ptr<CSymbolTableBuilderVisitor> symbolTableBuilder( new CSymbolTableBuilderVisitor );
-	root->Accept( symbolTableBuilder.get( ) );
+	root->Accept( symbolTableBuilder.get() );
 
-	if( !symbolTableBuilder->GetErrorStorage( ).GetAllErrors( ).empty( ) ) {
-		for( auto ex : symbolTableBuilder->GetErrorStorage( ).GetAllErrors( ) ) {
+	if( !symbolTableBuilder->GetErrorStorage().GetAllErrors().empty() ) {
+		for( auto ex : symbolTableBuilder->GetErrorStorage().GetAllErrors() ) {
 			std::cout << ex << std::endl;
 		}
 		return 0;
 	}
-	std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable( ) ) );
-	root->Accept( typeChecker.get( ) );
-	if( !typeChecker->GetErrorStorage( ).GetAllErrors( ).empty( ) ) {
-		for( auto ex : typeChecker->GetErrorStorage( ).GetAllErrors( ) ) {
+	std::shared_ptr<CTypeCheckerVisitor> typeChecker( new CTypeCheckerVisitor( symbolTableBuilder->GetSymbolsTable() ) );
+	root->Accept( typeChecker.get() );
+	if( !typeChecker->GetErrorStorage().GetAllErrors().empty() ) {
+		for( auto ex : typeChecker->GetErrorStorage().GetAllErrors() ) {
 			std::cout << ex << std::endl;
 		}
 		return 0;
 	}
 
-	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable( ) ) );
-	root->Accept( irBuilder.get( ) );
+	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable() ) );
+	root->Accept( irBuilder.get() );
 
-	for( auto& frame : irBuilder->GetFrames( ) ) {
+	for( auto& frame : irBuilder->GetFrames() ) {
 		std::string format = "pdf";
-		std::string blocksFilename = "output\\Blocks_" + frame.GetName( )->GetString( );
-		std::string irTreeFilename = "output\\IRTree_" + frame.GetName( )->GetString( );
-		std::string canonFilename = "output\\Canon_" + frame.GetName( )->GetString( );
-		std::string traceFilename = "output\\Trace_" + frame.GetName( )->GetString( );
-		std::string assemblerFilename = "output\\Assembler_" + frame.GetName( )->GetString( );
+		std::string blocksFilename = "output\\Blocks_" + frame.GetName()->GetString();
+		std::string irTreeFilename = "output\\IRTree_" + frame.GetName()->GetString();
+		std::string canonFilename = "output\\Canon_" + frame.GetName()->GetString();
+		std::string traceFilename = "output\\Trace_" + frame.GetName()->GetString();
+		std::string assemblerFilename = "output\\Assembler_" + frame.GetName()->GetString();
 
 		// Печатаем деревья для отдельной функции
-		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter( new IRTree::CIRTreeToDigraphConverter( ) );
+		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter( new IRTree::CIRTreeToDigraphConverter() );
 
-		frame.GetRootStm( )->Accept( irTreeToDigraphConverter.get( ) );
+		frame.GetRootStm()->Accept( irTreeToDigraphConverter.get() );
 		irTreeToDigraphConverter->Flush( irTreeFilename + ".dot" );
 
-		auto linearizedFrameStmList = CCanon::Linearize( frame.GetRootStm( ) );
+		auto linearizedFrameStmList = CCanon::Linearize( frame.GetRootStm() );
 		flushLinearized( linearizedFrameStmList, irTreeToDigraphConverter, canonFilename );
 
 		auto blocks = std::make_shared<CBasicBlocks>( linearizedFrameStmList );
 		flushBlocks( blocks, irTreeToDigraphConverter, blocksFilename );
 
 		CTraceSchedule schedule( blocks );
-		flushTrace( schedule.GetStms( ), irTreeToDigraphConverter, traceFilename );
+		flushTrace( schedule.GetStms(), irTreeToDigraphConverter, traceFilename );
 
 		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
-		Assembler::CInterferenceGraph graph( asmList, std::vector<std::string>(4) );
+		Assembler::CInterferenceGraph graph( asmList, std::vector<std::string>( 4 ) );
 
 		autoOpen( irTreeFilename );
 		autoOpen( canonFilename );

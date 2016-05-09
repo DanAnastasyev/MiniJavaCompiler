@@ -155,14 +155,14 @@
     <ClCompile Include="graphviz\Digraph.cpp">
       <Filter>Source Files\graphviz</Filter>
     </ClCompile>
-    <ClCompile Include="CodeGeneration\CodeGeneration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LifeAnalysis\LiveAnalysis.cpp">
       <Filter>Source Files\LiveAnalysis</Filter>
     </ClCompile>
     <ClCompile Include="RegisterDistribution\RegisterDistribution.cpp">
       <Filter>Source Files\RegisterDistribution</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGeneration\CodeGeneration.cpp">
+      <Filter>Source Files\CodeGeneration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

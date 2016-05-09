@@ -115,7 +115,7 @@ namespace Assembler {
 		{
 			return jumpTargets;
 		}
-		std::string GetOperator() const { return assemblerInstruction.substr(0, assemblerInstruction.find(' ')); }
+		std::string GetOperator() const { return assemblerInstruction.substr( 0, assemblerInstruction.find( ' ' ) ); }
 	private:
 		Temp::CLabelListPtr jumpTargets;
 		Temp::CTempListPtr destTempList;

@@ -4,7 +4,7 @@
 
 namespace Assembler {
 
-	CGraph::CGraph( int size ) : nodes( size ) 
+	CGraph::CGraph( int size ) : nodes( size )
 	{}
 
 

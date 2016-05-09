@@ -104,6 +104,6 @@ namespace Frame {
 
 	std::list<const Assembler::CBaseInstruction*> CFrame::GenerateCode( IRTree::CStmListPtr stmList ) const
 	{
-		return CCodeGeneration( this ).GenerateCode( stmList );
+		return Assembler::CCodeGeneration( this ).GenerateCode( stmList );
 	}
 }

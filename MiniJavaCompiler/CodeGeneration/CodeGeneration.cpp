@@ -1,6 +1,7 @@
 #include <CodeGeneration/CodeGeneration.h>
 
 using namespace IRTree;
+using namespace Assembler;
 
 #define INSTANCEOF(instance, clazz) (std::dynamic_pointer_cast<const clazz>( instance ) != nullptr)
 #define CAST(instance, clazz) (std::dynamic_pointer_cast<const clazz>(instance))
@@ -154,9 +155,9 @@ void CCodeGeneration::munchStm( IRTree::IStmPtr stm )
 	if( INSTANCEOF( stm, CSeq ) ) {
 		munchStm( CAST( stm, CSeq ) );
 	} else if( INSTANCEOF( stm, CMove ) ) {
-		munchStm( CAST( stm, CMove ) );
+		munchStm( CAST( stm, IRTree::CMove ) );
 	} else if( INSTANCEOF( stm, CLabel ) ) {
-		munchStm( CAST( stm, CLabel ) );
+		munchStm( CAST( stm, IRTree::CLabel ) );
 	} else if( INSTANCEOF( stm, CExpr ) ) {
 		munchStm( CAST( stm, CExpr ) );
 	} else if( INSTANCEOF( stm, CJump ) ) {
