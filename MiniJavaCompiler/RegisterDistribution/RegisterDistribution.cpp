@@ -8,91 +8,91 @@
 
 namespace Assembler {
 
-	CInterferenceGraph::CInterferenceGraph(const std::list<const CBaseInstruction*>& _asmFunction,
-		const std::vector<std::string>& registers) : asmFunction(_asmFunction), liveInOut(asmFunction),
-		registers(registers)
+	CInterferenceGraph::CInterferenceGraph( const std::list<const CBaseInstruction*>& _asmFunction,
+		const std::vector<std::string>& registers ) : asmFunction( _asmFunction ), liveInOut( asmFunction ),
+		registers( registers )
 	{
 		do {
 			std::cerr << asmFunction.size() << std::endl;
 			int cmdIndex = 0;
-			if (!uncoloredNodes.empty()) {
+			if( !uncoloredNodes.empty() ) {
 				std::cout << "REGENERATING!!!" << std::endl;
 				regenerateCode();
 				uncoloredNodes.clear();
 				edges.clear();
 				nodes.clear();
 				nodeMap.clear();
-				while (!pulledNodes.empty()) {
+				while( !pulledNodes.empty() ) {
 					pulledNodes.pop();
 				}
-				liveInOut = CLiveInOutCalculator(asmFunction);
+				liveInOut = CLiveInOutCalculator( asmFunction );
 			}
-			for (auto cmd : asmFunction) {
-				if (dynamic_cast< const CMove* >(cmd) == nullptr) {
+			for( auto cmd : asmFunction ) {
+				if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
 					// для каждой не move инструкции добавить ребра между всеми такими переменными a и b
 					// где a принадлежит определяемым в данной инструкции переменным
 					// b - из множества liveOut
-					for (auto a : liveInOut.GetDefines(cmdIndex)) {
-						for (auto b : liveInOut.GetLiveOut(cmdIndex)) {
-							addNode(a);
-							addNode(b);
-							addEdge(a, b);
+					for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+						for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
+							addNode( a );
+							addNode( b );
+							addEdge( a, b );
 						}
 					}
 				} else {
 					// для каждой move инструкции добавить ребра между всеми такими переменными a и b
 					// где a - куда делается MOVE (c->a)
 					// b из множества liveOut
-					std::string a = dynamic_cast< const CMove* >(cmd)->DefindedVars()->Head()->GetName()->GetString();
-					for (auto b : liveInOut.GetLiveOut(cmdIndex)) {
-						addNode(a);
-						addNode(b);
-						addEdge(a, b);
+					std::string a = dynamic_cast<const CMove*>( cmd )->DefindedVars()->Head()->GetName()->GetString();
+					for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
+						addNode( a );
+						addNode( b );
+						addEdge( a, b );
 					}
-					if (dynamic_cast< const CMove* >(cmd)->UsedVars() != nullptr) {
-						std::string b = dynamic_cast< const CMove* >(cmd)->UsedVars()->Head()->GetName()->GetString();
-						addNode(a);
-						addNode(b);
-						addMoveEdge(a, b);
+					if( dynamic_cast<const CMove*>( cmd )->UsedVars() != nullptr ) {
+						std::string b = dynamic_cast<const CMove*>( cmd )->UsedVars()->Head()->GetName()->GetString();
+						addNode( a );
+						addNode( b );
+						addMoveEdge( a, b );
 					}
 				}
-				for (auto a : liveInOut.GetDefines(cmdIndex)) {
-					addNode(a);
+				for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+					addNode( a );
 				}
-				for (auto a : liveInOut.GetUses(cmdIndex)) {
-					addNode(a);
+				for( auto a : liveInOut.GetUses( cmdIndex ) ) {
+					addNode( a );
 				}
 				++cmdIndex;
 			}
-		} while (!paint());
+		} while( !paint() );
 	}
 
 
 	// добавляет вершину в граф, если таковой еще нет
-	void CInterferenceGraph::addNode(const std::string& name)
+	void CInterferenceGraph::addNode( const std::string& name )
 	{
-		if (nodeMap.find(name) != nodeMap.end()) {
+		if( nodeMap.find( name ) != nodeMap.end() ) {
 			return;
 		}
-		nodeMap.insert(std::make_pair(name, nodes.size()));
+		nodeMap.insert( std::make_pair( name, nodes.size() ) );
 		nodes.emplace_back();
-		for (int i = 0; i < edges.size(); ++i) {
-			edges[i].push_back(ET_NoEdge);
+		for( int i = 0; i < edges.size(); ++i ) {
+			edges[i].push_back( ET_NoEdge );
 		}
-		edges.emplace_back(nodes.size(), ET_NoEdge);
+		edges.emplace_back( nodes.size(), ET_NoEdge );
 	}
 
 
 	// добавляет move-ребро в граф
-	void CInterferenceGraph::addMoveEdge(const std::string& from, const std::string& to)
+	void CInterferenceGraph::addMoveEdge( const std::string& from, const std::string& to )
 	{
 		int u = nodeMap[from];
 		int v = nodeMap[to];
-		if (u == v) {
+		if( u == v ) {
 			return;
 		}
 		// MOVE-ребро добавляется только тогда, когда не было никакого ребра между этими вершинами
-		if (edges[u][v] == ET_NoEdge) {
+		if( edges[u][v] == ET_NoEdge ) {
 			edges[u][v] = ET_MoveEdge;
 			edges[v][u] = ET_MoveEdge;
 		}
@@ -100,11 +100,11 @@ namespace Assembler {
 
 
 	// добавляет простую зависимость в граф
-	void CInterferenceGraph::addEdge(const std::string& from, const std::string& to)
+	void CInterferenceGraph::addEdge( const std::string& from, const std::string& to )
 	{
 		int u = nodeMap[from];
 		int v = nodeMap[to];
-		if (u == v) {
+		if( u == v ) {
 			return;
 		}
 		edges[u][v] = ET_Edge;
@@ -116,29 +116,29 @@ namespace Assembler {
 	bool CInterferenceGraph::paint()
 	{
 		addRegisterColors();
-		while (hasNonColoredNonStackedNodes()) {
+		while( hasNonColoredNonStackedNodes() ) {
 			int node = getColorableNode();
-			if (node == -1) {
+			if( node == -1 ) {
 				node = getMaxInterferingNode();
-				uncoloredNodes.insert(node);
+				uncoloredNodes.insert( node );
 			}
-			pulledNodes.push(node);
+			pulledNodes.push( node );
 			nodes[node].InStack = true;
 		}
-		if (!uncoloredNodes.empty()) {
+		if( !uncoloredNodes.empty() ) {
 			return false;
 		}
-		while (!pulledNodes.empty()) {
+		while( !pulledNodes.empty() ) {
 			int currNode = pulledNodes.top();
 			pulledNodes.pop();
-			std::vector<char> usedColors(registers.size(), 0);
-			for (int i = 0; i < nodes.size(); ++i) {
-				if (edges[currNode][i] != ET_NoEdge  &&  nodes[i].Color != -1 && nodes[i].Color < usedColors.size()) {
+			std::vector<char> usedColors( registers.size(), 0 );
+			for( int i = 0; i < nodes.size(); ++i ) {
+				if( edges[currNode][i] != ET_NoEdge  &&  nodes[i].Color != -1 && nodes[i].Color < usedColors.size() ) {
 					usedColors[nodes[i].Color] = 1;
 				}
 			}
-			for (int i = 0; i < usedColors.size(); ++i) {
-				if (!usedColors[i]) {
+			for( int i = 0; i < usedColors.size(); ++i ) {
+				if( !usedColors[i] ) {
 					nodes[currNode].Color = i;
 					break;
 				}
@@ -151,25 +151,25 @@ namespace Assembler {
 	// красит вершины, соответствующие регистрам
 	void CInterferenceGraph::addRegisterColors()
 	{
-		for (int i = 0; i < registers.size(); ++i) {
-			auto regNode = nodeMap.find(registers[i]);
-			if (regNode != nodeMap.end()) {
+		for( int i = 0; i < registers.size(); ++i ) {
+			auto regNode = nodeMap.find( registers[i] );
+			if( regNode != nodeMap.end() ) {
 				// если в графе есть вершина, соответствующая этому регистру, 
 				// то она должна быть покрашена до запуска основного алгоритма покраски
 				nodes[regNode->second].Color = i;
 			}
 		}
 
-		for (auto it : nodeMap) {
-			if (it.first.substr(it.first.length() - 3) == "_SP") {
+		for( auto it : nodeMap ) {
+			if( it.first.substr( it.first.length() - 3 ) == "_SP" ) {
 				// красим насильно в ESP
 				nodes[it.second].Color = 6;
 			}
-			if (it.first.substr(it.first.length() - 3) == "_FP") {
+			if( it.first.substr( it.first.length() - 3 ) == "_FP" ) {
 				// красим насильно в EBP
 				nodes[it.second].Color = 7;
 			}
-			if (it.first.substr(it.first.length() - 3) == "_RV") {
+			if( it.first.substr( it.first.length() - 3 ) == "_RV" ) {
 				// красим насильно в EDI
 				nodes[it.second].Color = 5;
 			}
@@ -181,8 +181,8 @@ namespace Assembler {
 	// и не имеют цвет
 	bool CInterferenceGraph::hasNonColoredNonStackedNodes() const
 	{
-		for (int i = 0; i < nodes.size(); ++i) {
-			if (nodes[i].Color == -1 && !nodes[i].InStack) {
+		for( int i = 0; i < nodes.size(); ++i ) {
+			if( nodes[i].Color == -1 && !nodes[i].InStack ) {
 				return true;
 			}
 		}
@@ -196,8 +196,8 @@ namespace Assembler {
 	{
 		int colorsNum = registers.size();
 
-		for (int i = 0; i < edges.size(); ++i) {
-			if (nodes[i].Color == -1 && getNeighbourNum(i) < colorsNum  &&  !nodes[i].InStack) {
+		for( int i = 0; i < edges.size(); ++i ) {
+			if( nodes[i].Color == -1 && getNeighbourNum( i ) < colorsNum  &&  !nodes[i].InStack ) {
 				return i;
 			}
 		}
@@ -211,9 +211,9 @@ namespace Assembler {
 	{
 		int maxNeighbour = -1;
 		int nodeIndex = -1;
-		for (int i = 0; i < nodes.size(); ++i) {
-			int currNeighbour = getNeighbourNum(i);
-			if (currNeighbour > maxNeighbour  &&  !nodes[i].InStack  &&  nodes[i].Color == -1) {
+		for( int i = 0; i < nodes.size(); ++i ) {
+			int currNeighbour = getNeighbourNum( i );
+			if( currNeighbour > maxNeighbour  &&  !nodes[i].InStack  &&  nodes[i].Color == -1 ) {
 				maxNeighbour = currNeighbour;
 				nodeIndex = i;
 			}
@@ -224,11 +224,11 @@ namespace Assembler {
 
 	// кол-во соседей у текущей вершины
 	// не учитывает вершины, расположенные на стеке
-	int CInterferenceGraph::getNeighbourNum(int nodeIndex) const
+	int CInterferenceGraph::getNeighbourNum( int nodeIndex ) const
 	{
 		int neighbours = 0;
-		for (int i = 0; i < edges[nodeIndex].size(); ++i) {
-			if (edges[nodeIndex][i] != ET_NoEdge  &&  !nodes[i].InStack) {
+		for( int i = 0; i < edges[nodeIndex].size(); ++i ) {
+			if( edges[nodeIndex][i] != ET_NoEdge  &&  !nodes[i].InStack ) {
 				neighbours++;
 			}
 		}
@@ -240,50 +240,50 @@ namespace Assembler {
 	void CInterferenceGraph::regenerateCode()
 	{
 		std::list<const CBaseInstruction*> newCode;
-		for (auto it : asmFunction) {
-			if (it->UsedVars() != nullptr  &&  it->UsedVars()->Head() != nullptr  &&
-				nodeMap.find(it->UsedVars()->Head()->GetName()->GetString()) != nodeMap.end()) {
-				int varIndex = nodeMap.find(it->UsedVars()->Head()->GetName()->GetString())->second;
-				if (uncoloredNodes.find(varIndex) != uncoloredNodes.end()) {
+		for( auto it : asmFunction ) {
+			if( it->UsedVars() != nullptr  &&  it->UsedVars()->Head() != nullptr  &&
+				nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) {
+				int varIndex = nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() )->second;
+				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					bool isMove = false;
-					if (dynamic_cast< const Assembler::CMove* >(it) != nullptr) {
+					if( dynamic_cast<const Assembler::CMove*>( it ) != nullptr ) {
 						isMove = true;
 					}
-					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>(Temp::CTemp());
-					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", buff, it->UsedVars()->Head()));
-					if (isMove) {
-						newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", it->DefindedVars()->Head(), buff));
+					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					if( isMove ) {
+						newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 					} else {
-						const Assembler::COper* cmd = dynamic_cast< const Assembler::COper* >(it);
-						newCode.push_back(new Assembler::COper(cmd->GetOperator() + " 's0\n", it->DefindedVars(), std::make_shared<Temp::CTempList>(Temp::CTempList(buff, nullptr))));
+						const Assembler::COper* cmd = dynamic_cast<const Assembler::COper*>( it );
+						newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->DefindedVars(), std::make_shared<Temp::CTempList>( Temp::CTempList( buff, nullptr ) ) ) );
 					}
 				} else {
-					newCode.push_back(it);
+					newCode.push_back( it );
 				}
 			} else {
-				newCode.push_back(it);
+				newCode.push_back( it );
 			}
 		}
-		asmFunction.swap(newCode);
+		asmFunction.swap( newCode );
 		newCode.clear();
-		for (auto it : asmFunction) {
-			if (it->DefindedVars() != nullptr  &&  it->DefindedVars()->Head() != nullptr  &&
-				nodeMap.find(it->DefindedVars()->Head()->GetName()->GetString()) != nodeMap.end()) {
-				int varIndex = nodeMap.find(it->DefindedVars()->Head()->GetName()->GetString())->second;
-				if (uncoloredNodes.find(varIndex) != uncoloredNodes.end()) {
-					const Assembler::CMove* cmd = dynamic_cast< const Assembler::CMove* >(it);
-					assert(cmd != nullptr);
-					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>(Temp::CTemp());
-					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", buff, it->UsedVars()->Head()));
-					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", it->DefindedVars()->Head(), buff));
+		for( auto it : asmFunction ) {
+			if( it->DefindedVars() != nullptr  &&  it->DefindedVars()->Head() != nullptr  &&
+				nodeMap.find( it->DefindedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) {
+				int varIndex = nodeMap.find( it->DefindedVars()->Head()->GetName()->GetString() )->second;
+				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
+					const Assembler::CMove* cmd = dynamic_cast<const Assembler::CMove*>( it );
+					assert( cmd != nullptr );
+					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 				} else {
-					newCode.push_back(it);
+					newCode.push_back( it );
 				}
 			} else {
-				newCode.push_back(it);
+				newCode.push_back( it );
 			}
 		}
-		asmFunction.swap(newCode);
+		asmFunction.swap( newCode );
 	}
 
 
@@ -296,14 +296,13 @@ namespace Assembler {
 	std::map<std::string, std::string> CInterferenceGraph::GetColors()
 	{
 		std::map<std::string, std::string> res;
-		registers.push_back("ESP");
-		registers.push_back("EBP");
-		for (auto it : nodeMap) {
-			res.insert(std::make_pair(it.first, registers[nodes[it.second].Color]));
+		registers.push_back( "ESP" );
+		registers.push_back( "EBP" );
+		for( auto it : nodeMap ) {
+			res.insert( std::make_pair( it.first, registers[nodes[it.second].Color] ) );
 		}
 		registers.pop_back();
 		registers.pop_back();
 		return res;
 	}
-
-} 
+}

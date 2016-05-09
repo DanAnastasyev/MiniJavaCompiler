@@ -12,7 +12,8 @@
 namespace Assembler {
 	class CVariableNode {
 	public:
-		CVariableNode() {
+		CVariableNode()
+		{
 			Color = -1;
 			InStack = false;
 		}
@@ -28,10 +29,10 @@ namespace Assembler {
 	// Граф взаимосвязанности переменных.
 	class CInterferenceGraph {
 	public:
-		explicit CInterferenceGraph(const std::list<const CBaseInstruction*>& asmFunction, const std::vector<std::string>& registers);
+		explicit CInterferenceGraph( const std::list<const CBaseInstruction*>& asmFunction, const std::vector<std::string>& registers );
 
 		const std::list<const CBaseInstruction*>& GetCode() const;
-		
+
 		std::map<std::string, std::string> GetColors();
 
 	private:
@@ -59,9 +60,9 @@ namespace Assembler {
 		// непокрашенные вершины
 		std::set<int> uncoloredNodes;
 
-		void addNode(const std::string& name);
-		void addMoveEdge(const std::string& from, const std::string& to);
-		void addEdge(const std::string& from, const std::string& to);
+		void addNode( const std::string& name );
+		void addMoveEdge( const std::string& from, const std::string& to );
+		void addEdge( const std::string& from, const std::string& to );
 
 		bool paint();
 		void regenerateCode();
@@ -70,7 +71,6 @@ namespace Assembler {
 		bool hasNonColoredNonStackedNodes() const;
 		int getColorableNode() const;
 		int getMaxInterferingNode() const;
-		int getNeighbourNum(int nodeIndex) const;
+		int getNeighbourNum( int nodeIndex ) const;
 	};
-
-} 
+}

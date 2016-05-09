@@ -4,7 +4,8 @@
 
 namespace Assembler {
 
-	CGraph::CGraph( int size ) : nodes( size ) {}
+	CGraph::CGraph( int size ) : nodes( size ) 
+	{}
 
 
 	void CGraph::AddEdge( int from, int to )
@@ -204,7 +205,7 @@ namespace Assembler {
 	void CLiveInOutCalculator::buildCommands( const std::list<const CBaseInstruction*>& asmFunction )
 	{
 		commands.clear();
-		std::copy( asmFunction.begin(), asmFunction.end(), commands.begin() );
+		std::copy( asmFunction.begin(), asmFunction.end(), std::back_inserter( commands ) );
 	}
 
 
