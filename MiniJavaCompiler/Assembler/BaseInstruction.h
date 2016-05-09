@@ -21,9 +21,9 @@ namespace Assembler {
 
 		std::string GetAssemblerInstruction() const { return assemblerInstruction; }
 		void SetAssemblerInstruction( const std::string& assemblerInstr ) { assemblerInstruction = assemblerInstr; }
-	private:
+	protected:
 		std::string assemblerInstruction;
-
+	private:
 		std::shared_ptr<const Temp::CTemp> getNthTemp( Temp::CTempListPtr list, int i );
 		std::shared_ptr<const Temp::CLabel> getNthLabel( Temp::CLabelListPtr list, int i );
 	};
@@ -115,6 +115,7 @@ namespace Assembler {
 		{
 			return jumpTargets;
 		}
+		std::string GetOperator() const { return assemblerInstruction.substr(0, assemblerInstruction.find(' ')); }
 	private:
 		Temp::CLabelListPtr jumpTargets;
 		Temp::CTempListPtr destTempList;
