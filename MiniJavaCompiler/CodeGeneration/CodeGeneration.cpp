@@ -101,7 +101,7 @@ void CCodeGeneration::munchStm( CMovePtr stm )
 	} else if( INSTANCEOF( stm->GetDestExpr(), CTemp ) ) { 
 		// MOVE(TEMP(i), e2)
 		CTempPtr temp = std::dynamic_pointer_cast<const CTemp>( stm->GetDestExpr() );
-		emit( new Assembler::COper( "ADD 'd0, 's0 + r0\n",
+		emit( new Assembler::COper( "MOV 'd0, 's0 + r0\n",
 			std::make_shared<const Temp::CTempList>( temp->GetTemp(), nullptr ),
 			std::make_shared<const Temp::CTempList>( munchExp( stm->GetSrcExpr() ), nullptr ) ) );
 	}
