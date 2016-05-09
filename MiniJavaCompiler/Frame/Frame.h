@@ -3,12 +3,14 @@
 #include <map>
 #include <memory>
 
-#include "SymbolsTable/Symbol.h"
-#include "Frame/Temp.h"
-#include "IRTree/Expressions.h"
-#include "SymbolsTable/SymbolsTable.h"
+#include <SymbolsTable/Symbol.h>
+#include <Frame/Temp.h>
+#include <IRTree/Expressions.h>
+#include <SymbolsTable/SymbolsTable.h>
+#include <Assembler/BaseInstruction.h>
 
 namespace Assembler {
+	class CBaseInstruction;
 	class CBaseInstructionList;
 }
 
@@ -30,7 +32,7 @@ namespace Frame {
 
 		std::shared_ptr<const IRTree::IStm> GetRootStm() const;
 
-		Assembler::CBaseInstructionList* GenerateCode( IRTree::CStmListPtr stmList ) const;
+		std::list<const Assembler::CBaseInstruction*> GenerateCode( IRTree::CStmListPtr stmList ) const;
 
 		static const int WORD_SIZE = 4;
 	private:

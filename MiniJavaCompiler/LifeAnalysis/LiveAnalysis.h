@@ -16,10 +16,10 @@ namespace Assembler {
 
 	class CGraph {
 	public:
-		explicit CGraph(int size);
-		void AddEdge(int from, int to);
+		explicit CGraph( int size );
+		void AddEdge( int from, int to );
 		int Size() const;
-		const CNode& GetNode(int index) const;
+		const CNode& GetNode( int index ) const;
 
 	protected:
 		std::vector<CNode> nodes;
@@ -28,23 +28,23 @@ namespace Assembler {
 
 	class CWorkFlowGraph : public CGraph {
 	public:
-		explicit CWorkFlowGraph(const std::list<const CBaseInstruction*>& asmFunction);
+		explicit CWorkFlowGraph( const std::list<const CBaseInstruction*>& asmFunction );
 
 	private:
 		std::map<std::string, int> labels;
 
-		void buildLabelMap(const std::list<const CBaseInstruction*>& asmFunction);
-		void addEdges(const std::list<const CBaseInstruction*>& asmFunction);
+		void buildLabelMap( const std::list<const CBaseInstruction*>& asmFunction );
+		void addEdges( const std::list<const CBaseInstruction*>& asmFunction );
 	};
 
 
 	class CLiveInOutCalculator {
 	public:
-		explicit CLiveInOutCalculator(const std::list<const CBaseInstruction*>& asmFunction);
-		const std::set<std::string>& GetLiveIn(int nodeIndex) const;
-		const std::set<std::string>& GetLiveOut(int nodeIndex) const;
-		const std::set<std::string>& GetDefines(int nodeIndex) const;
-		const std::set<std::string>& GetUses(int nodeIndex) const;
+		explicit CLiveInOutCalculator( const std::list<const CBaseInstruction*>& asmFunction );
+		const std::set<std::string>& GetLiveIn( int nodeIndex ) const;
+		const std::set<std::string>& GetLiveOut( int nodeIndex ) const;
+		const std::set<std::string>& GetDefines( int nodeIndex ) const;
+		const std::set<std::string>& GetUses( int nodeIndex ) const;
 
 	private:
 		CWorkFlowGraph workflow;
@@ -56,9 +56,9 @@ namespace Assembler {
 
 		std::vector<const CBaseInstruction*> commands;
 
-		bool theSame(const std::set<std::string>& x, const std::set<std::string>& y) const;
-		void buildCommands(const std::list<const CBaseInstruction*>& asmFunction);
-		void buildDefines(const std::list<const CBaseInstruction*>& asmFunction);
-		void buildUses(const std::list<const CBaseInstruction*>& asmFunction);
+		bool theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const;
+		void buildCommands( const std::list<const CBaseInstruction*>& asmFunction );
+		void buildDefines( const std::list<const CBaseInstruction*>& asmFunction );
+		void buildUses( const std::list<const CBaseInstruction*>& asmFunction );
 	};
 }

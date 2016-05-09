@@ -5,17 +5,25 @@ using namespace IRTree;
 #define INSTANCEOF(instance, clazz) (std::dynamic_pointer_cast<const clazz>( instance ) != nullptr)
 #define CAST(instance, clazz) (std::dynamic_pointer_cast<const clazz>(instance))
 
-Assembler::CBaseInstructionList* CCodeGeneration::GenerateCode( IRTree::CStmListPtr stmList )
+std::list<const Assembler::CBaseInstruction*> CCodeGeneration::getList( Assembler::CBaseInstructionList* list )
 {
-	Assembler::CBaseInstructionList* list;
+	std::list<const Assembler::CBaseInstruction*> newList;
+	for( ; list != nullptr; list = list->tail ) {
+		newList.push_back( list->head );
+	}
+	return newList;
+}
+
+std::list<const Assembler::CBaseInstruction*> CCodeGeneration::GenerateCode( IRTree::CStmListPtr stmList )
+{
 	while( stmList != nullptr ) {
 		auto stm = stmList->GetHead();
 		munchStm( stm );
 		stmList = stmList->GetTail();
 	}
-	list = instructList;
+	Assembler::CBaseInstructionList* list = instructList;
 	instructList = last = nullptr;
-	return list;
+	return getList( list );
 }
 
 void CCodeGeneration::emit( Assembler::CBaseInstruction* instruct )

@@ -9,7 +9,7 @@ public:
 	{
 	}
 
-	Assembler::CBaseInstructionList* GenerateCode( IRTree::CStmListPtr stmList );
+	std::list<const Assembler::CBaseInstruction*> GenerateCode( IRTree::CStmListPtr stmList );
 private:
 	const Frame::CFrame* frame;
 	Assembler::CBaseInstructionList* instructList;
@@ -34,4 +34,6 @@ private:
 	std::shared_ptr<const Temp::CTemp> munchExp( IRTree::IExprPtr expr );
 
 	std::shared_ptr<const Temp::CTempList> munchArgs( std::shared_ptr<const IRTree::CExprList> args );
+
+	std::list<const Assembler::CBaseInstruction*> getList( Assembler::CBaseInstructionList* list );
 };

@@ -10,6 +10,7 @@
 #include "Canon/Canon.h"
 #include "Canon/TraceSchedule.h"
 #include "Assembler/BaseInstruction.h"
+#include "RegisterDistribution/RegisterDistribution.h"
 
 
 extern int yyparse( std::shared_ptr<IProgram>& );
@@ -137,7 +138,8 @@ int main( int argc, char **argv )
 		CTraceSchedule schedule( blocks );
 		flushTrace( schedule.GetStms( ), irTreeToDigraphConverter, traceFilename );
 
-		flushAssemblerCode( frame.GenerateCode( schedule.GetStms() ), assemblerFilename + ".txt" );
+		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
+		Assembler::CInterferenceGraph graph( asmList, std::vector<std::string>(4) );
 
 		autoOpen( irTreeFilename );
 		autoOpen( canonFilename );
