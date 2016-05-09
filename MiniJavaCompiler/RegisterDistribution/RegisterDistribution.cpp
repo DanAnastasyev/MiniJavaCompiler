@@ -140,14 +140,14 @@ namespace Assembler {
 		}
 
 		for( auto it : nodeMap ) {
-			if( it.first.substr( it.first.length() - 3 ) == "_SP" ) {
+			if( it.first.substr( it.first.length() - 4 ) == "__TP" ) {
 				nodes[it.second].Color = 6;
-			}
-			if( it.first.substr( it.first.length() - 3 ) == "_FP" ) {
+			} else if( it.first.substr( it.first.length() - 4 ) == "__FP" ) {
 				nodes[it.second].Color = 7;
-			}
-			if( it.first.substr( it.first.length() - 3 ) == "_RV" ) {
+			} else if( it.first.substr( it.first.length() - 4 ) == "__RP" ) {
 				nodes[it.second].Color = 5;
+			} else {
+				throw std::runtime_error( "invalid name" );
 			}
 		}
 	}

@@ -36,7 +36,7 @@ namespace Frame {
 			IRTree::IExprPtr( new IRTree::CConst( frameRegPtr.WORD_SIZE ) ) ) ) ) ) ) );
 	}
 
-	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo, 
+	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo,
 		const SymbolsTable::CTable* table )
 	{
 		frameName = CSymbol::GetSymbol( classInfo->GetName() + "__" + methodInfo->GetName() );
@@ -45,7 +45,7 @@ namespace Frame {
 			for( int i = 0; i < classInfo->GerVars().size(); ++i ) {
 				locals[classInfo->GerVars()[i]->GetName()] = std::shared_ptr<IAccess>( new CInObject( i ) );
 			}
-		} while( classInfo->GetBaseClass() != NULL );
+		} while( classInfo->GetBaseClass() != nullptr );
 
 		// Локальные переменные метода
 		for( int i = 0; i < methodInfo->GetLocals().size(); ++i ) {
@@ -56,9 +56,9 @@ namespace Frame {
 			formals[methodInfo->GetParams()[i]->GetName()] = std::shared_ptr<IAccess>( new CFormalParamInStack( i ) );
 		}
 
-		framePtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol(frameName->GetString() + "__FP") );
-		thisPtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString( ) + "__TP" ) );
-		returnPtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString( ) + "__RP" ) );
+		framePtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString() + "__FP" ) );
+		thisPtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString() + "__TP" ) );
+		returnPtr = std::make_shared<Temp::CTemp>( CSymbol::GetSymbol( frameName->GetString() + "__RP" ) );
 	}
 
 	void CFrame::SetStatements( std::shared_ptr<const IRTree::IStm> statements )

@@ -145,6 +145,11 @@ int main( int argc, char **argv )
 		//autoOpen( canonFilename );
 		//autoOpen( blocksFilename );
 		//autoOpen( traceFilename );
+
+		auto pizda = graph.GetCode();
+		for( auto huy : pizda ) {
+			std::cout << huy->GetAssemblerInstruction();
+		}
 	}
 
 	return 0;
