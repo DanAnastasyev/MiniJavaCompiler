@@ -139,10 +139,10 @@ int main( int argc, char **argv )
 
 		flushAssemblerCode( frame.GenerateCode( schedule.GetStms() ), assemblerFilename + ".txt" );
 
-//		autoOpen( irTreeFilename );
-//		autoOpen( canonFilename );
-//		autoOpen( blocksFilename );
-		//autoOpen( traceFilename );
+		autoOpen( irTreeFilename );
+		autoOpen( canonFilename );
+		autoOpen( blocksFilename );
+		autoOpen( traceFilename );
 	}
 
 	return 0;

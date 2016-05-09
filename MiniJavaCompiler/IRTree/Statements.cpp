@@ -27,7 +27,7 @@ namespace IRTree
 	CExprList* CMove::Kids() const
 	{
 		if( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ) != nullptr ) {
-			return new CExprList( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr ), std::make_shared<const CExprList>( srcExpr, nullptr ) );
+			return new CExprList( std::dynamic_pointer_cast<const IRTree::CMem>( destExpr )->GetMem(), std::make_shared<const CExprList>( srcExpr, nullptr ) );
 		} else {
 			return new CExprList( srcExpr, nullptr );
 		}
