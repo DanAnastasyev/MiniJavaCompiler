@@ -28,7 +28,7 @@ namespace Assembler {
 	// Граф взаимосвязанности переменных.
 	class CInterferenceGraph {
 	public:
-		explicit CInterferenceGraph(const std::list<const CBaseInstruction*>& asmFunction, const std::vector<const std::string>& registers);
+		explicit CInterferenceGraph(const std::list<const CBaseInstruction*>& asmFunction, const std::vector<std::string>& registers);
 
 		const std::list<const CBaseInstruction*>& GetCode() const;
 		
@@ -51,7 +51,7 @@ namespace Assembler {
 		CLiveInOutCalculator liveInOut;
 
 		// список доступных регистров
-		std::vector<const std::string> registers;
+		std::vector<std::string> registers;
 
 		// стек убранных вершин
 		std::stack<int> pulledNodes;

@@ -55,6 +55,9 @@
     <Filter Include="Source Files\LiveAnalysis">
       <UniqueIdentifier>{9144e484-3b33-4f9d-afeb-a499cfbf267b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RegisterDistribution">
+      <UniqueIdentifier>{98ed1a82-3c02-4592-afe0-9b4168bd0d6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -152,11 +155,14 @@
     <ClCompile Include="graphviz\Digraph.cpp">
       <Filter>Source Files\graphviz</Filter>
     </ClCompile>
+    <ClCompile Include="CodeGeneration\CodeGeneration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="LifeAnalysis\LiveAnalysis.cpp">
       <Filter>Source Files\LiveAnalysis</Filter>
     </ClCompile>
-    <ClCompile Include="CodeGeneration\CodeGeneration.cpp">
-      <Filter>Source Files\CodeGeneration</Filter>
+    <ClCompile Include="RegisterDistribution\RegisterDistribution.cpp">
+      <Filter>Source Files\RegisterDistribution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -237,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="LifeAnalysis\LiveAnalysis.h">
       <Filter>Source Files\LiveAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterDistribution\RegisterDistribution.h">
+      <Filter>Source Files\RegisterDistribution</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

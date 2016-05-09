@@ -42,6 +42,7 @@
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
     <ClCompile Include="LifeAnalysis\LiveAnalysis.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RegisterDistribution\RegisterDistribution.cpp" />
     <ClCompile Include="RuleClasses\Class.cpp" />
     <ClCompile Include="RuleClasses\Expression.cpp" />
     <ClCompile Include="RuleClasses\Formal.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
     <ClInclude Include="LifeAnalysis\LiveAnalysis.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="RegisterDistribution\RegisterDistribution.h" />
     <ClInclude Include="RuleClasses\PositionStorage.h" />
     <ClInclude Include="RuleClasses\RuleClasses.h" />
     <ClInclude Include="SymbolsTable\Symbol.h" />

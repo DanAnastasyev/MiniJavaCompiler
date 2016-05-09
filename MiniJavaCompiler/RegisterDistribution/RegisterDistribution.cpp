@@ -9,7 +9,7 @@
 namespace Assembler {
 
 	CInterferenceGraph::CInterferenceGraph(const std::list<const CBaseInstruction*>& _asmFunction,
-		const std::vector<const std::string>& registers) : asmFunction(_asmFunction), liveInOut(asmFunction),
+		const std::vector<std::string>& registers) : asmFunction(_asmFunction), liveInOut(asmFunction),
 		registers(registers)
 	{
 		do {
@@ -249,13 +249,13 @@ namespace Assembler {
 					if (dynamic_cast< const Assembler::CMove* >(it) != nullptr) {
 						isMove = true;
 					}
-					Temp::CTemp* buff = new Temp::CTemp();
-					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", std::make_shared<Temp::CTemp>(buff), it->UsedVars()->Head()));
+					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>(Temp::CTemp());
+					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", buff, it->UsedVars()->Head()));
 					if (isMove) {
-						newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", it->DefindedVars()->Head(), std::make_shared<Temp::CTemp>(buff)));
+						newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", it->DefindedVars()->Head(), buff));
 					} else {
 						const Assembler::COper* cmd = dynamic_cast< const Assembler::COper* >(it);
-						newCode.push_back(new Assembler::COper(cmd->GetOperator() + " 's0\n", it->DefindedVars(), std::make_shared<Temp::CTempList>(new Temp::CTempList(std::make_shared<Temp::CTemp>(buff), nullptr))));
+						newCode.push_back(new Assembler::COper(cmd->GetOperator() + " 's0\n", it->DefindedVars(), std::make_shared<Temp::CTempList>(Temp::CTempList(buff, nullptr))));
 					}
 				} else {
 					newCode.push_back(it);
@@ -273,9 +273,9 @@ namespace Assembler {
 				if (uncoloredNodes.find(varIndex) != uncoloredNodes.end()) {
 					const Assembler::CMove* cmd = dynamic_cast< const Assembler::CMove* >(it);
 					assert(cmd != nullptr);
-					Temp::CTemp* buff = new Temp::CTemp();
-					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", std::make_shared<Temp::CTemp>(buff), it->UsedVars()->Head()));
-					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", it->DefindedVars()->Head(), std::make_shared<Temp::CTemp>(buff)));
+					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>(Temp::CTemp());
+					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", buff, it->UsedVars()->Head()));
+					newCode.push_back(new Assembler::CMove("mov 'd0, 's0\n", it->DefindedVars()->Head(), buff));
 				} else {
 					newCode.push_back(it);
 				}
