@@ -164,6 +164,9 @@
     <ClCompile Include="CodeGeneration\CodeGeneration.cpp">
       <Filter>Source Files\CodeGeneration</Filter>
     </ClCompile>
+    <ClCompile Include="Assembler\BaseInstruction.cpp">
+      <Filter>Source Files\Assembler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">

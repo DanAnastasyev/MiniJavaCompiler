@@ -3,7 +3,6 @@
 #include <Assembler/BaseInstruction.h>
 
 namespace Assembler {
-
 	class CCodeGeneration {
 	public:
 		CCodeGeneration( const Frame::CFrame* _frame ) :
@@ -38,5 +37,4 @@ namespace Assembler {
 
 		std::list<const Assembler::CBaseInstruction*> getList( Assembler::CBaseInstructionList* list );
 	};
-
 }

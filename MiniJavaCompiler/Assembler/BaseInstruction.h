@@ -17,7 +17,7 @@ namespace Assembler {
 		virtual Temp::CTempListPtr DefindedVars() const = 0;
 		virtual Temp::CLabelListPtr JumpTargets() const = 0;
 
-		std::string Format( Temp::CTempListPtr varsMapping ) const;
+		std::string Format( const std::map<std::string, std::string>& varsMapping ) const;
 
 		std::string GetAssemblerInstruction() const { return assemblerInstruction; }
 		void SetAssemblerInstruction( const std::string& assemblerInstr ) { assemblerInstruction = assemblerInstr; }

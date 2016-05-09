@@ -154,9 +154,9 @@ void CCodeGeneration::munchStm( IRTree::IStmPtr stm )
 {
 	if( INSTANCEOF( stm, CSeq ) ) {
 		munchStm( CAST( stm, CSeq ) );
-	} else if( INSTANCEOF( stm, CMove ) ) {
+	} else if( INSTANCEOF( stm, IRTree::CMove ) ) {
 		munchStm( CAST( stm, IRTree::CMove ) );
-	} else if( INSTANCEOF( stm, CLabel ) ) {
+	} else if( INSTANCEOF( stm, IRTree::CLabel ) ) {
 		munchStm( CAST( stm, IRTree::CLabel ) );
 	} else if( INSTANCEOF( stm, CExpr ) ) {
 		munchStm( CAST( stm, CExpr ) );

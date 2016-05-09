@@ -74,12 +74,11 @@ void flushTrace(
 	irTreeToDigraphConverter->Flush( traceFilename + ".dot" );
 }
 
-void flushAssemblerCode( Assembler::CBaseInstructionList* instructionList, const std::string& fileName )
+void flushAssemblerCode( const std::list<const Assembler::CBaseInstruction*>& instructionList, const std::string& fileName )
 {
 	std::ofstream file( fileName );
-	while( instructionList != nullptr ) {
-		file << instructionList->head->GetAssemblerInstruction();
-		instructionList = instructionList->tail;
+	for( auto instr : instructionList ) {
+		file << instr->GetAssemblerInstruction();
 	}
 }
 
@@ -139,12 +138,13 @@ int main( int argc, char **argv )
 		flushTrace( schedule.GetStms(), irTreeToDigraphConverter, traceFilename );
 
 		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
+		flushAssemblerCode( asmList, assemblerFilename );
 		Assembler::CInterferenceGraph graph( asmList, std::vector<std::string>( 4 ) );
 
-		autoOpen( irTreeFilename );
-		autoOpen( canonFilename );
-		autoOpen( blocksFilename );
-		autoOpen( traceFilename );
+		//autoOpen( irTreeFilename );
+		//autoOpen( canonFilename );
+		//autoOpen( blocksFilename );
+		//autoOpen( traceFilename );
 	}
 
 	return 0;

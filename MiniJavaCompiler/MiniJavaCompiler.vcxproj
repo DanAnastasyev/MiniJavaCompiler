@@ -26,6 +26,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assembler\BaseInstruction.cpp" />
     <ClCompile Include="BuildOutputs\lexer.cpp" />
     <ClCompile Include="BuildOutputs\parser.tab.cpp" />
     <ClCompile Include="Canon\BasicBlocks.cpp" />

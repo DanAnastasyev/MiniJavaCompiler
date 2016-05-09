@@ -5,7 +5,9 @@
 
 namespace Assembler {
 	CInterferenceGraph::CInterferenceGraph( const std::list<const CBaseInstruction*>& _asmFunction,
-		const std::vector<std::string>& registers ) : asmFunction( _asmFunction ), liveInOut( asmFunction ),
+		const std::vector<std::string>& registers ) : 
+		asmFunction( _asmFunction ), 
+		liveInOut( asmFunction ),
 		registers( registers )
 	{
 		do {
@@ -179,7 +181,7 @@ namespace Assembler {
 		int nodeIndex = -1;
 		for( int i = 0; i < nodes.size(); ++i ) {
 			int currNeighbour = getNeighbourNum( i );
-			if( currNeighbour > maxNeighbour  &&  !nodes[i].InStack  &&  nodes[i].Color == -1 ) {
+			if( currNeighbour > maxNeighbour && !nodes[i].InStack && nodes[i].Color == -1 ) {
 				maxNeighbour = currNeighbour;
 				nodeIndex = i;
 			}
@@ -202,8 +204,9 @@ namespace Assembler {
 	{
 		std::list<const CBaseInstruction*> newCode;
 		for( auto it : asmFunction ) {
-			if( it->UsedVars() != nullptr  &&  it->UsedVars()->Head() != nullptr  &&
-				nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) {
+			if( it->UsedVars() != nullptr && it->UsedVars()->Head() != nullptr 
+				&& nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) 
+			{
 				int varIndex = nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() )->second;
 				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					bool isMove = false;
@@ -216,7 +219,8 @@ namespace Assembler {
 						newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 					} else {
 						const Assembler::COper* cmd = dynamic_cast<const Assembler::COper*>( it );
-						newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->DefindedVars(), std::make_shared<Temp::CTempList>( Temp::CTempList( buff, nullptr ) ) ) );
+						newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->DefindedVars(), 
+							std::make_shared<Temp::CTempList>( Temp::CTempList( buff, nullptr ) ) ) );
 					}
 				} else {
 					newCode.push_back( it );
@@ -228,8 +232,9 @@ namespace Assembler {
 		asmFunction.swap( newCode );
 		newCode.clear();
 		for( auto it : asmFunction ) {
-			if( it->DefindedVars() != nullptr  &&  it->DefindedVars()->Head() != nullptr  &&
-				nodeMap.find( it->DefindedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) {
+			if( it->DefindedVars() != nullptr && it->DefindedVars()->Head() != nullptr 
+				&& nodeMap.find( it->DefindedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) 
+			{
 				int varIndex = nodeMap.find( it->DefindedVars()->Head()->GetName()->GetString() )->second;
 				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					const Assembler::CMove* cmd = dynamic_cast<const Assembler::CMove*>( it );
