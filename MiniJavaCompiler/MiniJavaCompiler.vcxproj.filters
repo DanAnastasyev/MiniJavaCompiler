@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Assembler">
       <UniqueIdentifier>{5001db04-9927-4e3a-9ecc-964582330ea8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\LiveAnalysis">
+      <UniqueIdentifier>{9144e484-3b33-4f9d-afeb-a499cfbf267b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="lexer.l">
@@ -149,6 +152,12 @@
     <ClCompile Include="graphviz\Digraph.cpp">
       <Filter>Source Files\graphviz</Filter>
     </ClCompile>
+    <ClCompile Include="CodeGeneration\CodeGeneration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LifeAnalysis\LiveAnalysis.cpp">
+      <Filter>Source Files\LiveAnalysis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -220,11 +229,14 @@
     <ClInclude Include="graphviz\Digraph.h">
       <Filter>Source Files\graphviz</Filter>
     </ClInclude>
-	<ClInclude Include="CodeGeneration\CodeGeneration.h">
+    <ClInclude Include="CodeGeneration\CodeGeneration.h">
       <Filter>Source Files\CodeGeneration</Filter>
     </ClInclude>
     <ClInclude Include="Assembler\BaseInstruction.h">
       <Filter>Source Files\Assembler</Filter>
+    </ClInclude>
+    <ClInclude Include="LifeAnalysis\LiveAnalysis.h">
+      <Filter>Source Files\LiveAnalysis</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,12 +245,6 @@
     </None>
     <None Include="example\Factorial.java">
       <Filter>Source Files\examples</Filter>
-    </None>
-    <None Include="Canon\traceSchedule.java">
-      <Filter>Source Files\Canon</Filter>
-    </None>
-    <None Include="Canon\basicBlocks.java">
-      <Filter>Source Files\Canon</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

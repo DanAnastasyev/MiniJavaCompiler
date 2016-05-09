@@ -40,6 +40,7 @@
     <ClCompile Include="IRTree\Expressions.cpp" />
     <ClCompile Include="IRTree\Statements.cpp" />
     <ClCompile Include="LexicalScanner\LexicalScanner.cpp" />
+    <ClCompile Include="LifeAnalysis\LiveAnalysis.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RuleClasses\Class.cpp" />
     <ClCompile Include="RuleClasses\Expression.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="IRTree\Expressions.h" />
     <ClInclude Include="IRTree\Statements.h" />
     <ClInclude Include="LexicalScanner\LexicalScanner.h" />
+    <ClInclude Include="LifeAnalysis\LiveAnalysis.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="RuleClasses\PositionStorage.h" />
     <ClInclude Include="RuleClasses\RuleClasses.h" />
