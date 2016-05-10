@@ -115,7 +115,7 @@ int main( int argc, char **argv )
 	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( irBuilder.get() );
 
-	std::vector<std::string> registers = { "EAX", "EBX", "ECX", "EDX", "EEX", "EFX" };
+	std::vector<std::string> registers = { "eax", "ebx", "ecx", "edx", "edi", "esi" };
 
 	for( auto& frame : irBuilder->GetFrames() ) {
 		std::string format = "pdf";
@@ -147,14 +147,15 @@ int main( int argc, char **argv )
 		auto prologue = builder.AddPrologue( frame );
 		auto epilogue = builder.AddEpilogue( frame );
 
+		std::ofstream finalAsmCodeStream("output\\Final_" + frame.GetName()->GetString() + ".asm");
 		for( auto& cmd : prologue ) {
-			std::cout << cmd << std::endl;
+			finalAsmCodeStream << cmd << std::endl;
 		}
 		for( auto& cmd : graph.GetCode() ) {
-			std::cout << cmd->Format( graph.GetColors() );
+			finalAsmCodeStream << cmd->Format( graph.GetColors() );
 		}
 		for( auto& cmd : epilogue ) {
-			std::cout << cmd << std::endl;
+			finalAsmCodeStream << cmd << std::endl;
 		}
 
 		//autoOpen( irTreeFilename );

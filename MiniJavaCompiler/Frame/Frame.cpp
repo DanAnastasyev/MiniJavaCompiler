@@ -38,7 +38,7 @@ namespace Frame {
 
 	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo,
 		const SymbolsTable::CTable* table ) :
-		registers( { "EAX", "EBX", "ECX", "EDX", "EEX", "EFX" } )
+		registers( { "eax", "ebx", "ecx", "edx", "edi", "esi" } )
 	{
 		frameName = CSymbol::GetSymbol( classInfo->GetName() + "__" + methodInfo->GetName() );
 		do {
