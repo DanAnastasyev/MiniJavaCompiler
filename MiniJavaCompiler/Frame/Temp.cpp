@@ -5,7 +5,7 @@ namespace Temp {
 
 	CLabel::CLabel()
 	{
-		name = CSymbol::GetSymbol( std::to_string( nextUniqueId++ ) );
+		name = CSymbol::GetSymbol( "label" + std::to_string( nextUniqueId++ ) );
 	}
 
 	CLabel::CLabel( const CSymbol* label ) :

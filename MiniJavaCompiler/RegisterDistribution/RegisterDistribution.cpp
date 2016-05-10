@@ -237,8 +237,8 @@ namespace Assembler {
 				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					const Assembler::CMove* cmd = dynamic_cast<const Assembler::CMove*>( it );
 					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
-					newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
-					newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 				} else {
 					newCode.push_back( it );
 				}

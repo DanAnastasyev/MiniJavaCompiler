@@ -10,13 +10,13 @@ namespace PrologEpilogueBuilder {
 		std::vector<std::string> prologIList;
 		prologIList.push_back( "; prologue begin" );
 		prologIList.push_back( frame.GetName()->GetString() + ":" );
-		prologIList.push_back( "PUSH EBP" );
-		prologIList.push_back( "MOV EBP, ESP" );
+		prologIList.push_back( "push ebp" );
+		prologIList.push_back( "mov ebp, esp" );
 		
 		int espShift = Frame::CFrame::WORD_SIZE * frame.GetLocalCount();
-		prologIList.push_back( "SUB ESP, " + std::to_string( espShift ) );
+		prologIList.push_back( "sub esp, " + std::to_string( espShift ) );
 		for( const auto& regName : frame.Registers() ) {
-			prologIList.push_back( "PUSH " + regName );
+			prologIList.push_back( "push " + regName );
 		}
 		prologIList.push_back( "; prologue end" );
 		return prologIList;
@@ -32,12 +32,12 @@ namespace PrologEpilogueBuilder {
 		epilogIList.push_back( "; epilogue begin" );
 		int espShift = Frame::CFrame::WORD_SIZE * frame.GetLocalCount();
 		for( const auto& item : regs ) {
-			epilogIList.push_back( "POP " + item );
+			epilogIList.push_back( "pop " + item );
 		}
 
-		epilogIList.push_back( "ADD ESP, " + std::to_string( espShift ) );
-		epilogIList.push_back( "POP EBP" );
-		epilogIList.push_back( "RET" );
+		epilogIList.push_back( "add esp, " + std::to_string( espShift ) );
+		epilogIList.push_back( "pop ebp" );
+		epilogIList.push_back( "ret" );
 		epilogIList.push_back( "; epilogue end" );
 		return epilogIList;
 	}
