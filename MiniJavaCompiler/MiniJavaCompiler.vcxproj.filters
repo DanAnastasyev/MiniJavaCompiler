@@ -167,6 +167,9 @@
     <ClCompile Include="Assembler\BaseInstruction.cpp">
       <Filter>Source Files\Assembler</Filter>
     </ClCompile>
+    <ClCompile Include="Frame\PrologueEpilogueBuilder.cpp">
+      <Filter>Source Files\Frame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -249,6 +252,9 @@
     </ClInclude>
     <ClInclude Include="RegisterDistribution\RegisterDistribution.h">
       <Filter>Source Files\RegisterDistribution</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame\PrologueEpilogueBuilder.h">
+      <Filter>Source Files\Frame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

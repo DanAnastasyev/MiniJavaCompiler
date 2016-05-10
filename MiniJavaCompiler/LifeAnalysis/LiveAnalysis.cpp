@@ -1,12 +1,8 @@
 #include "LiveAnalysis.h"
-#include <assert.h>
-
 
 namespace Assembler {
-
 	CGraph::CGraph( int size ) : nodes( size )
 	{}
-
 
 	void CGraph::AddEdge( int from, int to )
 	{
@@ -14,12 +10,10 @@ namespace Assembler {
 		nodes[to].in.push_back( from );
 	}
 
-
 	int CGraph::Size() const
 	{
 		return nodes.size();
 	}
-
 
 	const CNode& CGraph::GetNode( int index ) const
 	{
@@ -59,7 +53,6 @@ namespace Assembler {
 			nodeIndex++;
 		}
 	}
-
 
 	namespace {
 		class CTopSort {
@@ -142,31 +135,25 @@ namespace Assembler {
 		}
 	}
 
-
 	const std::set<std::string>& CLiveInOutCalculator::GetLiveIn( int nodeIndex ) const
 	{
 		return liveIn[nodeIndex];
 	}
-
 
 	const std::set<std::string>& CLiveInOutCalculator::GetLiveOut( int nodeIndex ) const
 	{
 		return liveOut[nodeIndex];
 	}
 
-
 	const std::set<std::string>& CLiveInOutCalculator::GetDefines( int nodeIndex ) const
 	{
 		return defines[nodeIndex];
 	}
 
-
 	const std::set<std::string>& CLiveInOutCalculator::GetUses( int nodeIndex ) const
 	{
 		return uses[nodeIndex];
 	}
-
-
 
 	bool CLiveInOutCalculator::theSame( const std::set<std::string>& x, const std::set<std::string>& y ) const
 	{
@@ -188,13 +175,11 @@ namespace Assembler {
 		return true;
 	}
 
-
 	void CLiveInOutCalculator::buildCommands( const std::list<const CBaseInstruction*>& asmFunction )
 	{
 		commands.clear();
 		std::copy( asmFunction.begin(), asmFunction.end(), std::back_inserter( commands ) );
 	}
-
 
 	void CLiveInOutCalculator::buildDefines( const std::list<const CBaseInstruction*>& asmFunction )
 	{
@@ -209,7 +194,6 @@ namespace Assembler {
 			++cmdIndex;
 		}
 	}
-
 
 	void CLiveInOutCalculator::buildUses( const std::list<const CBaseInstruction*>& asmFunction )
 	{

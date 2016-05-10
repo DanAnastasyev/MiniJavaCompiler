@@ -30,6 +30,9 @@ namespace Frame {
 
 		const CSymbol* GetName() const;
 
+		const std::vector<const std::string>& Registers() const;
+		size_t GetLocalCount() const;
+
 		std::shared_ptr<const IRTree::IStm> GetRootStm() const;
 
 		std::list<const Assembler::CBaseInstruction*> GenerateCode( IRTree::CStmListPtr stmList ) const;
@@ -38,6 +41,7 @@ namespace Frame {
 	private:
 		std::map<std::string, std::shared_ptr<IAccess>> formals;
 		std::map<std::string, std::shared_ptr<IAccess>> locals;
+		std::vector<const std::string> registers;
 
 		const CSymbol* frameName;
 

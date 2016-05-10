@@ -1,6 +1,5 @@
 #include "RegisterDistribution.h"
 
-#include <assert.h>
 #include <iostream>
 
 namespace Assembler {
@@ -213,9 +212,9 @@ namespace Assembler {
 						isMove = true;
 					}
 					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
-					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
 					if( isMove ) {
-						newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
+						newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 					} else {
 						const Assembler::COper* cmd = dynamic_cast<const Assembler::COper*>( it );
 						newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->DefindedVars(), 
@@ -237,10 +236,9 @@ namespace Assembler {
 				int varIndex = nodeMap.find( it->DefindedVars()->Head()->GetName()->GetString() )->second;
 				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					const Assembler::CMove* cmd = dynamic_cast<const Assembler::CMove*>( it );
-					assert( cmd != nullptr );
 					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
-					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
-					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
+					newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 				} else {
 					newCode.push_back( it );
 				}

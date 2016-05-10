@@ -97,7 +97,16 @@ namespace Frame {
 		return frameName;
 	}
 
-	std::shared_ptr<const IRTree::IStm> CFrame::GetRootStm() const
+	const std::vector<const std::string>& CFrame::Registers() const {
+		return registers;
+	}
+
+	size_t CFrame::GetLocalCount() const
+	{
+		return locals.size();
+	}
+
+std::shared_ptr<const IRTree::IStm> CFrame::GetRootStm() const
 	{
 		return root;
 	}

@@ -35,6 +35,7 @@
     <ClCompile Include="CodeGeneration\CodeGeneration.cpp" />
     <ClCompile Include="ErrorStorage.cpp" />
     <ClCompile Include="Frame\Frame.cpp" />
+    <ClCompile Include="Frame\PrologueEpilogueBuilder.cpp" />
     <ClCompile Include="Frame\Temp.cpp" />
     <ClCompile Include="graphviz\Digraph.cpp" />
     <ClCompile Include="graphviz\IRTreeToDigraphConverter.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="CodeGeneration\CodeGeneration.h" />
     <ClInclude Include="ErrorStorage.h" />
     <ClInclude Include="Frame\Frame.h" />
+    <ClInclude Include="Frame\PrologueEpilogueBuilder.h" />
     <ClInclude Include="Frame\Temp.h" />
     <ClInclude Include="grammar.h" />
     <ClInclude Include="graphviz\Digraph.h" />
