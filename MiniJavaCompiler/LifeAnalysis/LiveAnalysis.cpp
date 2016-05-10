@@ -107,7 +107,7 @@ namespace Assembler {
 			setsChanged = false;
 			for( auto nodeIndex : revTopsort ) {
 				std::set<std::string> newLiveIn = liveOut[nodeIndex];
-				auto currList = commands[nodeIndex]->DefindedVars();
+				auto currList = commands[nodeIndex]->DefinedVars();
 				while( currList != nullptr  &&  currList->Head() != nullptr ) {
 					auto inSet = newLiveIn.find( currList->Head()->GetName()->GetString() );
 					if( inSet != newLiveIn.end() ) {
@@ -186,7 +186,7 @@ namespace Assembler {
 		defines.resize( asmFunction.size() );
 		int cmdIndex = 0;
 		for( auto cmd : asmFunction ) {
-			auto def = cmd->DefindedVars();
+			auto def = cmd->DefinedVars();
 			while( def != nullptr  &&  def->Head() != nullptr ) {
 				defines[cmdIndex].insert( def->Head()->GetName()->GetString() );
 				def = def->Tail();

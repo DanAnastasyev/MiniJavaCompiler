@@ -140,6 +140,11 @@ int main( int argc, char **argv )
 		CTraceSchedule schedule( blocks );
 		flushTrace( schedule.GetStms(), irTreeToDigraphConverter, traceFilename );
 
+//		autoOpen( irTreeFilename );
+//		autoOpen( canonFilename );
+//		autoOpen( blocksFilename );
+//		autoOpen( traceFilename );
+
 		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
 		flushAssemblerCode( asmList, assemblerFilename );
 		Assembler::CInterferenceGraph graph( asmList, registers );
@@ -157,11 +162,6 @@ int main( int argc, char **argv )
 		for( auto& cmd : epilogue ) {
 			finalAsmCodeStream << cmd << std::endl;
 		}
-
-		//autoOpen( irTreeFilename );
-		//autoOpen( canonFilename );
-		//autoOpen( blocksFilename );
-		//autoOpen( traceFilename );
 	}
 
 	return 0;

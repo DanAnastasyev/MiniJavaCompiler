@@ -4,7 +4,7 @@
 std::string Assembler::CBaseInstruction::Format( const std::map<std::string, std::string>& varsMapping ) const
 {
 	Temp::CTempListPtr src = UsedVars();
-	Temp::CTempListPtr dst = DefindedVars();
+	Temp::CTempListPtr dst = DefinedVars();
 	Temp::CLabelListPtr jumps = JumpTargets();
 
 	std::string instr;
