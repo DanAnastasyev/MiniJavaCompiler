@@ -37,7 +37,8 @@ namespace Frame {
 	}
 
 	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo,
-		const SymbolsTable::CTable* table )
+		const SymbolsTable::CTable* table ) :
+		registers( { "EAX", "EBX", "ECX", "EDX", "EEX", "EFX" } )
 	{
 		frameName = CSymbol::GetSymbol( classInfo->GetName() + "__" + methodInfo->GetName() );
 		do {
@@ -106,7 +107,7 @@ namespace Frame {
 		return locals.size();
 	}
 
-std::shared_ptr<const IRTree::IStm> CFrame::GetRootStm() const
+	std::shared_ptr<const IRTree::IStm> CFrame::GetRootStm() const
 	{
 		return root;
 	}

@@ -28,7 +28,7 @@ std::string Assembler::CBaseInstruction::Format( const std::map<std::string, std
 					break;
 				}
 				case 'l': {
-					instr += (static_cast<const COper*>(this))->JumpTargets()->Head()->GetName()->GetString() + '\n';
+					instr += jumps->Head()->GetName()->GetString() + '\n';
 					breakFlag = true;
 					break;
 				}
