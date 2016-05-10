@@ -212,9 +212,9 @@ namespace Assembler {
 						isMove = true;
 					}
 					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
-					newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
 					if( isMove ) {
-						newCode.push_back( new Assembler::CMove( "MOV 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
+						newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefindedVars()->Head(), buff ) );
 					} else {
 						const Assembler::COper* cmd = dynamic_cast<const Assembler::COper*>( it );
 						newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->DefindedVars(), 
@@ -257,8 +257,8 @@ namespace Assembler {
 	std::map<std::string, std::string> CInterferenceGraph::GetColors()
 	{
 		std::map<std::string, std::string> res;
-		registers.push_back( "ESP" );
-		registers.push_back( "EBP" );
+		registers.push_back( "esp" );
+		registers.push_back( "ebp" );
 		for( auto it : nodeMap ) {
 			res.insert( std::make_pair( it.first, registers[nodes[it.second].Color] ) );
 		}
