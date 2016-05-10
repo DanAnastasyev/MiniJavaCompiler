@@ -11,6 +11,7 @@
 #include "Canon/TraceSchedule.h"
 #include "Assembler/BaseInstruction.h"
 #include "RegisterDistribution/RegisterDistribution.h"
+#include "Frame/PrologueEpilogueBuilder.h"
 
 
 extern int yyparse( std::shared_ptr<IProgram>& );
@@ -114,10 +115,7 @@ int main( int argc, char **argv )
 	std::shared_ptr<CIRBuilderVisitor> irBuilder( new CIRBuilderVisitor( symbolTableBuilder->GetSymbolsTable() ) );
 	root->Accept( irBuilder.get() );
 
-	std::vector<std::string> registers;
-	for( int i = 0; i < 6; ++i ) {
-		registers.push_back( "r" + std::to_string( i ) );
-	}
+	std::vector<std::string> registers = { "EAX", "EBX", "ECX", "EDX", "EEX", "EFX" };
 
 	for( auto& frame : irBuilder->GetFrames() ) {
 		std::string format = "pdf";
@@ -125,7 +123,7 @@ int main( int argc, char **argv )
 		std::string irTreeFilename = "output\\IRTree_" + frame.GetName()->GetString();
 		std::string canonFilename = "output\\Canon_" + frame.GetName()->GetString();
 		std::string traceFilename = "output\\Trace_" + frame.GetName()->GetString();
-		std::string assemblerFilename = "output\\Assembler_" + frame.GetName()->GetString();
+		std::string assemblerFilename = "output\\Assembler_" + frame.GetName()->GetString() + ".txt";
 
 		// Печатаем деревья для отдельной функции
 		std::shared_ptr<IRTree::CIRTreeToDigraphConverter> irTreeToDigraphConverter( new IRTree::CIRTreeToDigraphConverter() );
@@ -145,9 +143,18 @@ int main( int argc, char **argv )
 		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
 		flushAssemblerCode( asmList, assemblerFilename );
 		Assembler::CInterferenceGraph graph( asmList, registers );
+		PrologEpilogueBuilder::IntermidInstructionBuilder builder;
+		auto prologue = builder.AddPrologue( frame );
+		auto epilogue = builder.AddEpilogue( frame );
 
+		for( auto& cmd : prologue ) {
+			std::cout << cmd << std::endl;
+		}
 		for( auto& cmd : graph.GetCode() ) {
-			std::cout << cmd->Format( graph.GetColors( ) );
+			std::cout << cmd->Format( graph.GetColors() );
+		}
+		for( auto& cmd : epilogue ) {
+			std::cout << cmd << std::endl;
 		}
 
 		//autoOpen( irTreeFilename );
