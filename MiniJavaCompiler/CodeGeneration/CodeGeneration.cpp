@@ -137,8 +137,10 @@ void CCodeGeneration::munchStm( IRTree::CCondJumpPtr stm )
 		throw std::exception( "wrong conditional jump" );
 	}
 	auto binOp = CAST( stm->GetExpr(), CBinop );
-	emit( new Assembler::COper( "cmp 's0, 's1\n", nullptr, std::make_shared<const Temp::CTempList>( munchExp( binOp->GetLeft() ),
-		std::make_shared<const Temp::CTempList>( munchExp( binOp->GetRight() ), nullptr ) ) ) );
+	auto leftTemp = munchExp( binOp->GetLeft() );
+	auto rightTemp = munchExp( binOp->GetRight() );
+	emit( new Assembler::COper( "cmp 's0, 's1\n", nullptr, std::make_shared<const Temp::CTempList>( leftTemp,
+		std::make_shared<const Temp::CTempList>( rightTemp, nullptr ) ) ) );
 
 	// TODO считаем, что CCondJump может идти только по < и >= (появляется в TraceSchedule)
 	std::string oper;
@@ -169,89 +171,151 @@ void CCodeGeneration::munchStm( IRTree::IStmPtr stm )
 
 std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CMemPtr expr )
 {
-	std::shared_ptr<const Temp::CTemp> temp( new Temp::CTemp );
-	if( INSTANCEOF( expr->GetMem(), CBinop ) ) {
-		// mem( BINOP(PLUS,e1,CONST(i)), e2 )
-		auto binOp = std::dynamic_pointer_cast<const CBinop>( expr->GetMem() );
-		if( (binOp->GetBinOp() == IExpr::PLUS || binOp->GetBinOp() == IExpr::MINUS) && 
-			( INSTANCEOF( binOp->GetLeft(), CConst) || INSTANCEOF( binOp->GetRight(), CConst ) ) ) 
-		{
-			IExprPtr binOpExpr;
-			CConstPtr constantExpr;
-			if( INSTANCEOF( binOp->GetLeft(), CConst ) ) {
-				binOpExpr = binOp->GetRight();
-				constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetLeft() );
-			} else {
-				binOpExpr = binOp->GetLeft();
-				constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetRight() );
-			}
-			emit( new Assembler::COper( std::string( "mem 'd0, ['s0" ) +
-				( ( binOp->GetBinOp() == IExpr::PLUS ) ? "+" : "-" ) +
-				std::to_string( constantExpr->GetValue() ) +
-				std::string( "]\n" ),
-				std::make_shared<const Temp::CTempList>( temp, nullptr ),
-				std::make_shared<const Temp::CTempList>( munchExp( binOpExpr ), nullptr ) ) );
-			return temp;
-		}
-	} 
-	if( INSTANCEOF( expr->GetMem(), CConst ) ) {
-		auto constantExpr = std::dynamic_pointer_cast<const CConst>( expr->GetMem( ) );
-		emit( new Assembler::COper( std::string( "mem 'd0, ['s0+" ) +
-			std::to_string( constantExpr->GetValue() ) +
-			std::string( "]\n" ),
-			std::make_shared<const Temp::CTempList>( temp, nullptr ), 
-			nullptr ) );
-		return temp;
-	} 
-	emit( new Assembler::COper( "mem 'd0, ['s0+0]\n",
-		std::make_shared<const Temp::CTempList>( temp, nullptr ),
-		std::make_shared<const Temp::CTempList>( munchExp( expr->GetMem() ), nullptr ) ) );
+	auto temp = std::make_shared<const Temp::CTemp>();
+	emit( new Assembler::CMove( "mov 'd0, ['s0]\n", temp, munchExp( expr->GetMem() ) ) );
 	return temp;
 }
 
-static bool isArithmeticOperation( int op )
+std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExpJump( IRTree::CBinopPtr binOp )
 {
-	return op == IExpr::PLUS || op == IExpr::MINUS || op == IExpr::MUL || op == IExpr::DIV;
+	auto temp = std::make_shared<Temp::CTemp>();
+	emit( new Assembler::COper( "mov 'd0, 0\n", std::make_shared<const Temp::CTempList>( temp, nullptr ), nullptr ) );
+
+	auto left = std::make_shared<Temp::CTemp>();
+	auto right = std::make_shared<Temp::CTemp>();
+	emit( new Assembler::CMove( "mov 'd0, 's0\n", left, munchExp( binOp->GetLeft() ) ) );
+	emit( new Assembler::CMove( "mov 'd0, 's0\n", right, munchExp( binOp->GetRight() ) ) );
+
+	auto source = std::make_shared<const Temp::CTempList>( left, std::make_shared<const Temp::CTempList>( right, nullptr ) );
+
+	emit( new COper( "cmp 's0, s1\n", nullptr, source ) );
+
+	auto label = std::make_shared<const Temp::CLabel>( );
+
+	emit( new COper( "jnl 'l0\n", nullptr, nullptr, std::make_shared<const Temp::CLabelList>( label, nullptr ) ) );
+	emit( new COper( "mov 'd0, 1\n", std::make_shared<const Temp::CTempList>( temp, nullptr ), nullptr ) );
+	emit( new CLabel( label->GetName()->GetString() + ":\n", label ) );
+
+	return temp;
 }
 
 std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CBinopPtr binOp )
 {
-	std::shared_ptr<const Temp::CTemp> temp( new Temp::CTemp );
-
-	if( isArithmeticOperation( binOp->GetBinOp() ) ) {
-		std::string oper;
-		switch( binOp->GetBinOp() ) {
-			case IExpr::PLUS: oper = "add"; break;
-			case IExpr::MINUS: oper = "sub"; break;
-			case IExpr::MUL: oper = "mul"; break;
-			case IExpr::DIV: oper = "div"; break;
-		}
-
-		if( INSTANCEOF( binOp->GetLeft(), CConst ) || INSTANCEOF( binOp->GetRight(), CConst ) ) {
-			IExprPtr binOpExpr;
-			CConstPtr constantExpr;
-			if( INSTANCEOF( binOp->GetLeft(), CConst ) ) {
-				binOpExpr = binOp->GetRight();
-				constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetLeft() );
-			} else {
-				binOpExpr = binOp->GetLeft();
-				constantExpr = std::dynamic_pointer_cast<const CConst>( binOp->GetRight() );
-			}
-			emit( new Assembler::COper( std::string( oper + " 'd0, 's0+" ) +
-				std::to_string( constantExpr->GetValue() ) +
-				std::string( "\n" ),
-				std::make_shared<const Temp::CTempList>( temp, nullptr ),
-				std::make_shared<const Temp::CTempList>( munchExp( binOpExpr ), nullptr ) ) );
-		} else {
-			emit( new Assembler::COper( oper + " 'd0, 's0+'s1\n",
-				std::make_shared<const Temp::CTempList>( temp, nullptr ),
-				std::make_shared<const Temp::CTempList>( munchExp( binOp->GetLeft() ),
-				std::make_shared<const Temp::CTempList>( munchExp( binOp->GetRight() ), nullptr ) ) ) );
-		}
-	} else {
-		// TODO логические операции
+	if( binOp->GetBinOp() == CBinop::LESS || binOp->GetBinOp() == CBinop::GE ) {
+		munchExpJump( binOp );
 	}
-	return temp;
+
+	if( INSTANCEOF( binOp->GetLeft(), CConst ) && INSTANCEOF( binOp->GetRight(), CConst ) ) {
+		// const-const
+		int leftVal = std::dynamic_pointer_cast<const CConst>( binOp->GetLeft( ) )->GetValue();
+		int rightVal = std::dynamic_pointer_cast<const CConst>( binOp->GetRight( ) )->GetValue();
+		auto temp = std::make_shared<const Temp::CTemp>();
+		// пишем в frame->GetEAX() левую константу
+		emit( new Assembler::CMove( "mov 'd0, " + std::to_string( leftVal ) + "\n", frame->GetEAX(), nullptr ) );
+		if( binOp->GetBinOp() == CBinop::MUL ) {
+			emit( new Assembler::CMove( "mov 'd0, 0\n", frame->GetEDX(), nullptr ) );
+		}
+		if( binOp->GetBinOp() == CBinop::PLUS ) {
+			emit( new Assembler::COper( "add 'd0, " + std::to_string( rightVal ) + "\n",
+				std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr ), 
+				nullptr ) );
+		} else if( binOp->GetBinOp( ) == CBinop::MINUS ) {
+			emit( new Assembler::COper( "sub 'd0, " + std::to_string( rightVal ) + "\n",
+				std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr ),
+				nullptr ) );
+		} else if( binOp->GetBinOp() == CBinop::MUL ) {
+			emit( new Assembler::COper( "mul " + std::to_string( rightVal ) + "\n", 
+				std::make_shared<const Temp::CTempList>( frame->GetEAX(), std::make_shared<const Temp::CTempList>( frame->GetEDX(), nullptr ) ), 
+				nullptr ) );
+		}
+		emit( new Assembler::CMove( "mov 'd0, 's0\n\n", temp, frame->GetEAX() ) );
+		return temp;
+	}
+	if( INSTANCEOF( binOp->GetLeft(), CConst ) ) {
+		// const-expr
+		int leftVal = std::dynamic_pointer_cast<const CConst>( binOp->GetLeft( ) )->GetValue( );
+		auto temp = std::make_shared<const Temp::CTemp>( );
+		auto rightTemp = munchExp( binOp->GetRight() );
+		// пишем в frame->GetEAX() левую константу
+		emit( new Assembler::CMove( "mov 'd0, " + std::to_string( leftVal ) + "\n", frame->GetEAX(), nullptr ) );
+		// запоминаем правое
+		emit( new Assembler::CMove( "mov 'd0, 's0\n", temp, rightTemp ) );
+		if( binOp->GetBinOp( ) == CBinop::MUL ) {
+			emit( new Assembler::CMove( "mov 'd0, 0\n", frame->GetEDX(), nullptr ) );
+		}
+		std::shared_ptr<const Temp::CTempList> usedRegisters;
+		if( binOp->GetBinOp( ) == CBinop::PLUS ) {
+			usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr );
+			emit( new Assembler::COper( "add 'd0, 's0\n", usedRegisters,
+				std::make_shared<const Temp::CTempList>( temp, nullptr ) ) );
+		} else if( binOp->GetBinOp( ) == CBinop::MINUS ) {
+			usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr );
+			emit( new Assembler::COper( "sub 'd0, 's0\n", usedRegisters,
+				std::make_shared<const Temp::CTempList>( temp, nullptr ) ) );
+		} else if( binOp->GetBinOp( ) == CBinop::MUL ) {
+			usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), std::make_shared<const Temp::CTempList>( frame->GetEDX(), nullptr ) );
+			emit( new Assembler::COper( "mul 's0\n", usedRegisters,
+				std::make_shared<const Temp::CTempList>( temp, nullptr ) ) );
+		}
+		auto temp2 = std::make_shared<const Temp::CTemp>();
+		emit( new Assembler::CMove( "mov 'd0, 's0\n\n", temp2, usedRegisters->Head() ) );
+		return temp2;
+	}
+	if( INSTANCEOF( binOp->GetRight(), CConst ) ) {
+		// expr-const
+		int rightVal = std::dynamic_pointer_cast<const CConst>( binOp->GetRight() )->GetValue();
+		auto leftTemp = munchExp( binOp->GetLeft() );
+		auto temp = std::make_shared<const Temp::CTemp>();
+		// запоминаем левое
+		emit( new Assembler::CMove( "mov 'd0, 's0\n", frame->GetEAX(), leftTemp ) );
+		if( binOp->GetBinOp( ) == CBinop::MUL ) {
+			emit( new Assembler::CMove( "mov 'd0, 0\n", frame->GetEDX(), nullptr ) );
+		}
+		std::shared_ptr<const Temp::CTempList> usedRegisters;
+		if( binOp->GetBinOp( ) == CBinop::PLUS ) {
+			usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr );
+			emit( new Assembler::COper( "add 'd0, " + std::to_string( rightVal ) + "\n", usedRegisters,
+				nullptr ) );
+		} else if( binOp->GetBinOp( ) == CBinop::MINUS ) {
+			usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr );
+			emit( new Assembler::COper( "sub 'd0, " + std::to_string( rightVal ) + "\n", usedRegisters,
+				nullptr ) );
+		} else if( binOp->GetBinOp( ) == CBinop::MUL ) {
+			usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), std::make_shared<const Temp::CTempList>( frame->GetEDX(), nullptr ) );
+			emit( new Assembler::COper( "mul " + std::to_string( rightVal ) + "\n", usedRegisters,
+				nullptr ) );
+		}
+		emit( new Assembler::CMove( "mov 'd0, 's0\n\n", temp, usedRegisters->Head() ) );
+		return temp;
+	}
+	// expr-expr
+	auto temp1 = std::make_shared<const Temp::CTemp>();
+	auto temp2 = std::make_shared<const Temp::CTemp>();
+	auto leftTemp = munchExp( binOp->GetLeft() );
+	auto rightTemp = munchExp( binOp->GetRight() );
+	// пишем в frame->GetEAX() левую константу
+	emit( new Assembler::CMove( "mov 'd0, 's0\n", frame->GetEAX(), leftTemp ) );
+	// запоминаем правое
+	emit( new Assembler::CMove( "mov 'd0, 's0\n", temp2, rightTemp ) );
+	if( binOp->GetBinOp( ) == CBinop::MUL ) {
+		emit( new Assembler::CMove( "mov 'd0, 0\n", frame->GetEDX(), nullptr ) );
+	}
+	std::shared_ptr<const Temp::CTempList> usedRegisters;
+	if( binOp->GetBinOp( ) == CBinop::PLUS ) {
+		usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr );
+		emit( new Assembler::COper( "add 'd0, 's0\n", usedRegisters,
+			std::make_shared<const Temp::CTempList>( temp2, nullptr ) ) );
+	} else if( binOp->GetBinOp( ) == CBinop::MINUS ) {
+		usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), nullptr );
+		emit( new Assembler::COper( "sub 'd0, 's0\n", usedRegisters,
+			std::make_shared<const Temp::CTempList>( temp2, nullptr ) ) );
+	} else if( binOp->GetBinOp( ) == CBinop::MUL ) {
+		usedRegisters = std::make_shared<const Temp::CTempList>( frame->GetEAX(), std::make_shared<const Temp::CTempList>( frame->GetEDX(), nullptr ) );
+		emit( new Assembler::COper( "mul 's0\n", usedRegisters,
+			std::make_shared<const Temp::CTempList>( temp2, nullptr ) ) );
+	}
+	emit( new Assembler::CMove( "mov 'd0, 's0\n\n", temp1, usedRegisters->Head( ) ) );
+	return temp1;
 }
 
 std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CConstPtr constantExpr )
@@ -279,11 +343,18 @@ std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CNamePtr e
 
 std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::CCallPtr expr )
 {
-	auto temporaries = munchArgs( expr->GetArguments() );
-	emit( new Assembler::COper( "call 'l0\n", nullptr, nullptr, 
+	auto temps = munchArgs( expr->GetArguments() );
+	//if( !temps.empty() ) {
+	//	for( auto t : temps ) {
+	//		emit( new Assembler::COper( "push 's0\n", nullptr,
+	//			std::make_shared<const Temp::CTempList>( t, nullptr ) ) );
+	//	}
+	//}
+	emit( new Assembler::COper( "call 'l0\n",
+		std::make_shared<const Temp::CTempList>( frame->GetEAX( ), std::make_shared<const Temp::CTempList>( frame->GetEDX( ), nullptr ) ),
+		nullptr,
 		std::make_shared<const Temp::CLabelList>( std::make_shared<const Temp::CLabel>( expr->GetFunctionName() ), nullptr ) ) );
-
-	return std::make_shared<const Temp::CTemp>();
+	return frame->GetEAX();
 }
 
 std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::IExprPtr expr )
@@ -308,19 +379,17 @@ std::shared_ptr<const Temp::CTemp> CCodeGeneration::munchExp( IRTree::IExprPtr e
 	}
 }
 
-std::shared_ptr<const Temp::CTempList> CCodeGeneration::munchArgs( std::shared_ptr<const IRTree::CExprList> args )
+std::list<std::shared_ptr<const Temp::CTemp>> CCodeGeneration::munchArgs( std::shared_ptr<const IRTree::CExprList> args )
 {
-	if( args == nullptr ) {
-		return nullptr;
-	}
-	std::shared_ptr<const Temp::CTempList> temporariesList;
+	std::list<std::shared_ptr<const Temp::CTemp>> temps;
 	while( args ) {
-		std::shared_ptr<const Temp::CTemp> temp( new Temp::CTemp() );
-		emit( new Assembler::CMove( "mov 'd0, 's0\n", temp, munchExp( args->GetHead() ) ) );
-
-		temporariesList = std::make_shared<const Temp::CTempList>( temp, temporariesList );
+		temps.push_back( munchExp( args->GetHead( ) ) );
+		emit( new Assembler::COper( "push 's0\n", nullptr,
+			std::make_shared<const Temp::CTempList>( temps.back(), nullptr ) ) );
+		//emit( new Assembler::COper( "mov 'd0 's0\n", 
+		//	std::make_shared<const Temp::CTempList>( temps.back(), nullptr ), 
+		//	std::make_shared<const Temp::CTempList>( munchExp( args->GetHead() ), nullptr ) ) );
 		args = args->GetTail();
 	}
-
-	return temporariesList;
+	return temps;
 }

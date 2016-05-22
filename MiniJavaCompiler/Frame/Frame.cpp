@@ -38,9 +38,10 @@ namespace Frame {
 
 	CFrame::CFrame( const SymbolsTable::CClassInfo* classInfo, const SymbolsTable::CMethodInfo* methodInfo,
 		const SymbolsTable::CTable* table ) :
-		registers( { "eax", "ebx", "ecx", "edx", "edi", "esi" } )
+		registers( { "eax", "ebx", "ecx", "edx", "edi", "esi" } ),
+		eax( new Temp::CTemp( CSymbol::GetSymbol( "eax" ) ) ), edx( new Temp::CTemp( CSymbol::GetSymbol( "edx" ) ) )
 	{
-		frameName = CSymbol::GetSymbol( classInfo->GetName() + "__" + methodInfo->GetName() );
+		frameName = CSymbol::GetSymbol( methodInfo->GetName() );
 		do {
 			// Поля класса
 			for( int i = 0; i < classInfo->GerVars().size(); ++i ) {

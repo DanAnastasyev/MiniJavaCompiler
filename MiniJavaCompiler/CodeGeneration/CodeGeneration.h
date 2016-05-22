@@ -26,6 +26,7 @@ namespace Assembler {
 		void munchStm( IRTree::IStmPtr stm );
 
 		std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CMemPtr expr );
+		std::shared_ptr<const Temp::CTemp> munchExpJump( IRTree::CBinopPtr binOp );
 		std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CBinopPtr expr );
 		std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CConstPtr expr );
 		std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CTempPtr expr );
@@ -33,7 +34,7 @@ namespace Assembler {
 		std::shared_ptr<const Temp::CTemp> munchExp( IRTree::CCallPtr expr );
 		std::shared_ptr<const Temp::CTemp> munchExp( IRTree::IExprPtr expr );
 
-		std::shared_ptr<const Temp::CTempList> munchArgs( std::shared_ptr<const IRTree::CExprList> args );
+		std::list<std::shared_ptr<const Temp::CTemp>> munchArgs( std::shared_ptr<const IRTree::CExprList> args );
 
 		std::list<const Assembler::CBaseInstruction*> getList( Assembler::CBaseInstructionList* list );
 	};

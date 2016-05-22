@@ -3,7 +3,6 @@
 #include <Assembler/BaseInstruction.h>
 
 #include <set>
-#include <string>
 #include <vector>
 #include <map>
 

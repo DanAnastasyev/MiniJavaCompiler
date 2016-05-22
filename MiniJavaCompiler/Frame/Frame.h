@@ -37,11 +37,15 @@ namespace Frame {
 
 		std::list<const Assembler::CBaseInstruction*> GenerateCode( IRTree::CStmListPtr stmList ) const;
 
+		std::shared_ptr<const Temp::CTemp> GetEAX( ) const { return eax; }
+		std::shared_ptr<const Temp::CTemp> GetEDX() const { return edx; }
+
 		static const int WORD_SIZE = 4;
 	private:
 		std::map<std::string, std::shared_ptr<IAccess>> formals;
 		std::map<std::string, std::shared_ptr<IAccess>> locals;
 		std::vector<const std::string> registers;
+		std::shared_ptr<const Temp::CTemp> eax, edx;
 
 		const CSymbol* frameName;
 

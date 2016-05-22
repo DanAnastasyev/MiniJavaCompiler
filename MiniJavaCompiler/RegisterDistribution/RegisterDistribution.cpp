@@ -3,14 +3,18 @@
 #include <iostream>
 
 namespace Assembler {
+	#define INSTANCEOF(instance, clazz) (std::dynamic_pointer_cast<const clazz>( instance ) != nullptr)
+	#define CAST(instance, clazz) (std::dynamic_pointer_cast<const clazz>(instance))
+	
 	CInterferenceGraph::CInterferenceGraph( const std::list<const CBaseInstruction*>& _asmFunction,
-		const std::vector<std::string>& registers ) : 
-		asmFunction( _asmFunction ), 
+		const std::vector<std::string>& registers ) :
+		asmFunction( _asmFunction ),
 		liveInOut( asmFunction ),
 		registers( registers )
 	{
 		do {
 			int cmdIndex = 0;
+			// Если не получилось всё раскрасить, перестраиваем граф и начинаем сначала
 			if( !uncoloredNodes.empty() ) {
 				regenerateCode();
 				uncoloredNodes.clear();
@@ -22,6 +26,7 @@ namespace Assembler {
 				}
 				liveInOut = CLiveInOutCalculator( asmFunction );
 			}
+			// Строим граф
 			for( auto cmd : asmFunction ) {
 				if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
 					for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
@@ -38,7 +43,7 @@ namespace Assembler {
 						addNode( b );
 						addEdge( a, b );
 					}
-					if( dynamic_cast<const CMove*>( cmd )->UsedVars() != nullptr ) {
+					if( dynamic_cast<const CMove*>( cmd )->UsedVars()->Head() != nullptr ) {
 						std::string b = dynamic_cast<const CMove*>( cmd )->UsedVars()->Head()->GetName()->GetString();
 						addNode( a );
 						addNode( b );
@@ -93,11 +98,14 @@ namespace Assembler {
 		edges[v][u] = ET_Edge;
 	}
 
+	// Пытаемся покрасить граф
 	bool CInterferenceGraph::paint()
 	{
+		// Красит вершины, соответствующие регистрам
 		addRegisterColors();
 		while( hasNonColoredNonStackedNodes() ) {
 			int node = getColorableNode();
+			// simplify
 			if( node == -1 ) {
 				node = getMaxInterferingNode();
 				uncoloredNodes.insert( node );
@@ -113,7 +121,7 @@ namespace Assembler {
 			pulledNodes.pop();
 			std::vector<char> usedColors( registers.size(), 0 );
 			for( int i = 0; i < nodes.size(); ++i ) {
-				if( edges[currNode][i] != ET_NoEdge  &&  nodes[i].Color != -1 && nodes[i].Color < usedColors.size() ) {
+				if( edges[currNode][i] != ET_NoEdge && nodes[i].Color != -1 && nodes[i].Color < usedColors.size() ) {
 					usedColors[nodes[i].Color] = 1;
 				}
 			}
@@ -141,11 +149,11 @@ namespace Assembler {
 				continue;
 			}
 			if( it.first.substr( it.first.length() - 4 ) == "__TP" ) {
-				nodes[it.second].Color = 6;
+				nodes[it.second].Color = 6; // ESP
 			} else if( it.first.substr( it.first.length() - 4 ) == "__FP" ) {
-				nodes[it.second].Color = 7;
+				nodes[it.second].Color = 7; // EBP
 			} else if( it.first.substr( it.first.length() - 4 ) == "__RP" ) {
-				nodes[it.second].Color = 5;
+				nodes[it.second].Color = 5; // EDI
 			}
 		}
 	}
@@ -165,7 +173,7 @@ namespace Assembler {
 		int colorsNum = registers.size();
 
 		for( int i = 0; i < edges.size(); ++i ) {
-			if( nodes[i].Color == -1 && getNeighbourNum( i ) < colorsNum  &&  !nodes[i].InStack ) {
+			if( nodes[i].Color == -1 && getNeighbourNum( i ) < colorsNum && !nodes[i].InStack ) {
 				return i;
 			}
 		}
@@ -191,7 +199,7 @@ namespace Assembler {
 	{
 		int neighbours = 0;
 		for( int i = 0; i < edges[nodeIndex].size(); ++i ) {
-			if( edges[nodeIndex][i] != ET_NoEdge  &&  !nodes[i].InStack ) {
+			if( edges[nodeIndex][i] != ET_NoEdge && !nodes[i].InStack ) {
 				neighbours++;
 			}
 		}
@@ -202,22 +210,21 @@ namespace Assembler {
 	{
 		std::list<const CBaseInstruction*> newCode;
 		for( auto it : asmFunction ) {
-			if( it->UsedVars() != nullptr && it->UsedVars()->Head() != nullptr 
-				&& nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) 
-			{
+			if( it->UsedVars() != nullptr && it->UsedVars()->Head() != nullptr
+				&& nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) {
 				int varIndex = nodeMap.find( it->UsedVars()->Head()->GetName()->GetString() )->second;
 				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					bool isMove = false;
 					if( dynamic_cast<const Assembler::CMove*>( it ) != nullptr ) {
 						isMove = true;
 					}
-					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
-					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
+					//newCode.push_back( new Assembler::COper( "push 's0\n", nullptr, std::make_shared<const Temp::CTempList>( it->UsedVars()->Head(), nullptr ) ) );
+					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp( ) );
 					if( isMove ) {
-						newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefinedVars()->Head(), buff ) );
+						newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefinedVars( )->Head( ), buff ) );
 					} else {
 						const Assembler::COper* cmd = dynamic_cast<const Assembler::COper*>( it );
-						newCode.push_back( new Assembler::COper( cmd->GetOperator() + " 's0\n", it->DefinedVars(), 
+						newCode.push_back( new Assembler::COper( cmd->GetOperator( ) + " 's0\n", it->DefinedVars( ),
 							std::make_shared<Temp::CTempList>( Temp::CTempList( buff, nullptr ) ) ) );
 					}
 				} else {
@@ -230,15 +237,15 @@ namespace Assembler {
 		asmFunction.swap( newCode );
 		newCode.clear();
 		for( auto it : asmFunction ) {
-			if( it->DefinedVars() != nullptr && it->DefinedVars()->Head() != nullptr 
-				&& nodeMap.find( it->DefinedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) 
-			{
+			if( it->DefinedVars() != nullptr && it->DefinedVars()->Head() != nullptr
+				&& nodeMap.find( it->DefinedVars()->Head()->GetName()->GetString() ) != nodeMap.end() ) {
 				int varIndex = nodeMap.find( it->DefinedVars()->Head()->GetName()->GetString() )->second;
 				if( uncoloredNodes.find( varIndex ) != uncoloredNodes.end() ) {
 					const Assembler::CMove* cmd = dynamic_cast<const Assembler::CMove*>( it );
-					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp() );
-					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars()->Head() ) );
-					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefinedVars()->Head(), buff ) );
+					const std::shared_ptr<Temp::CTemp> buff = std::make_shared<Temp::CTemp>( Temp::CTemp( ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", buff, it->UsedVars( )->Head( ) ) );
+					newCode.push_back( new Assembler::CMove( "mov 'd0, 's0\n", it->DefinedVars( )->Head( ), buff ) );
+					//newCode.push_back( new Assembler::COper( "pop 's0\n", nullptr, std::make_shared<const Temp::CTempList>( it->DefinedVars()->Head(), nullptr ) ) );
 				} else {
 					newCode.push_back( it );
 				}
