@@ -13,7 +13,6 @@ namespace Assembler {
 		registers( registers )
 	{
 		do {
-			int cmdIndex = 0;
 			// Если не получилось всё раскрасить, перестраиваем граф и начинаем сначала
 			if( !uncoloredNodes.empty() ) {
 				regenerateCode();
@@ -26,39 +25,45 @@ namespace Assembler {
 				}
 				liveInOut = CLiveInOutCalculator( asmFunction );
 			}
-			// Строим граф
-			for( auto cmd : asmFunction ) {
-				if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
-					for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
-						for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
-							addNode( a );
-							addNode( b );
-							addEdge( a, b );
-						}
-					}
-				} else {
-					std::string a = dynamic_cast<const CMove*>( cmd )->DefinedVars()->Head()->GetName()->GetString();
+			build();
+		} while( !paint() );
+	}
+
+	// Строим граф
+	void CInterferenceGraph::build()
+	{
+		int cmdIndex = 0;
+		for( auto cmd : asmFunction ) {
+			if( dynamic_cast<const CMove*>( cmd ) == nullptr ) {
+				for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
 					for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
 						addNode( a );
 						addNode( b );
 						addEdge( a, b );
 					}
-					if( dynamic_cast<const CMove*>( cmd )->UsedVars()->Head() != nullptr ) {
-						std::string b = dynamic_cast<const CMove*>( cmd )->UsedVars()->Head()->GetName()->GetString();
-						addNode( a );
-						addNode( b );
-						addMoveEdge( a, b );
-					}
 				}
-				for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+			} else {
+				std::string a = dynamic_cast<const CMove*>( cmd )->DefinedVars( )->Head( )->GetName( )->GetString( );
+				for( auto b : liveInOut.GetLiveOut( cmdIndex ) ) {
 					addNode( a );
+					addNode( b );
+					addEdge( a, b );
 				}
-				for( auto a : liveInOut.GetUses( cmdIndex ) ) {
+				if( dynamic_cast<const CMove*>( cmd )->UsedVars( )->Head( ) != nullptr ) {
+					std::string b = dynamic_cast<const CMove*>( cmd )->UsedVars( )->Head( )->GetName( )->GetString( );
 					addNode( a );
+					addNode( b );
+					addMoveEdge( a, b );
 				}
-				++cmdIndex;
 			}
-		} while( !paint() );
+			for( auto a : liveInOut.GetDefines( cmdIndex ) ) {
+				addNode( a );
+			}
+			for( auto a : liveInOut.GetUses( cmdIndex ) ) {
+				addNode( a );
+			}
+			++cmdIndex;
+		}
 	}
 
 	void CInterferenceGraph::addNode( const std::string& name )

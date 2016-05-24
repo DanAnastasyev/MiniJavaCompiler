@@ -15,7 +15,7 @@ std::list<const Assembler::CBaseInstruction*> CCodeGeneration::getList( Assemble
 	return newList;
 }
 
-std::list<const Assembler::CBaseInstruction*> CCodeGeneration::GenerateCode( IRTree::CStmListPtr stmList )
+Assembler::CBaseInstructionList* CCodeGeneration::GenerateCode( IRTree::CStmListPtr stmList )
 {
 	while( stmList != nullptr ) {
 		auto stm = stmList->GetHead();
@@ -24,7 +24,7 @@ std::list<const Assembler::CBaseInstruction*> CCodeGeneration::GenerateCode( IRT
 	}
 	Assembler::CBaseInstructionList* list = instructList;
 	instructList = last = nullptr;
-	return getList( list );
+	return list;
 }
 
 void CCodeGeneration::emit( Assembler::CBaseInstruction* instruct )

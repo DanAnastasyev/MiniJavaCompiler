@@ -9,7 +9,7 @@ namespace Assembler {
 			frame( _frame ), instructList( nullptr ), last( nullptr )
 		{}
 
-		std::list<const Assembler::CBaseInstruction*> GenerateCode( IRTree::CStmListPtr stmList );
+		Assembler::CBaseInstructionList * GenerateCode( IRTree::CStmListPtr stmList );
 	private:
 		const Frame::CFrame* frame;
 		Assembler::CBaseInstructionList* instructList;

@@ -35,7 +35,7 @@ namespace Frame {
 
 		std::shared_ptr<const IRTree::IStm> GetRootStm() const;
 
-		std::list<const Assembler::CBaseInstruction*> GenerateCode( IRTree::CStmListPtr stmList ) const;
+		Assembler::CBaseInstructionList * GenerateCode( IRTree::CStmListPtr stmList ) const;
 
 		std::shared_ptr<const Temp::CTemp> GetEAX( ) const { return eax; }
 		std::shared_ptr<const Temp::CTemp> GetEDX() const { return edx; }

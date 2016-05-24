@@ -10,8 +10,9 @@
 #include "Canon/Canon.h"
 #include "Canon/TraceSchedule.h"
 #include "Assembler/BaseInstruction.h"
-#include "RegisterDistribution/RegisterDistribution.h"
 #include "Frame/PrologueEpilogueBuilder.h"
+#include "FlowGraph.h"
+#include "InterferenceGraph.h"
 
 
 extern int yyparse( std::shared_ptr<IProgram>& );
@@ -145,23 +146,69 @@ int main( int argc, char **argv )
 //		autoOpen( blocksFilename );
 //		autoOpen( traceFilename );
 
-		std::list<const Assembler::CBaseInstruction*> asmList = frame.GenerateCode( schedule.GetStms() );
-		flushAssemblerCode( asmList, assemblerFilename );
-		Assembler::CInterferenceGraph graph( asmList, registers );
-		PrologEpilogueBuilder::IntermidInstructionBuilder builder;
-		auto prologue = builder.AddPrologue( frame );
-		auto epilogue = builder.AddEpilogue( frame );
+		Assembler::CBaseInstructionList* asmList = frame.GenerateCode( schedule.GetStms( ) );
+		AssemFlowGraph afg( asmList );
 
-		std::ofstream finalAsmCodeStream("output\\Final_" + frame.GetName()->GetString() + ".asm");
-		for( auto& cmd : prologue ) {
-			finalAsmCodeStream << cmd << std::endl;
+		std::map<const Temp::CTemp*, bool> onStack;
+
+		CInterferenceGraph* inteferenceGraph = new CInterferenceGraph( afg.GetNodes( ), &afg, &frame, onStack );
+		//inteferenceGraph->WriteGraph( "interference" + std::to_string( 0 ) + ".txt", false, 0 );
+		int colorNum = 6;
+		int step = 0;
+
+		inteferenceGraph->SetColors( colorNum );
+		//inteferenceGraph->WriteGraph( "interferenceColored" + std::to_string( 0 ) + "step" + std::to_string( step ) + ".txt", true, colorNum );
+
+		while( !inteferenceGraph->IsColored( colorNum ) ) {
+			step++;
+			asmList = inteferenceGraph->UpdateInstructionList( asmList, colorNum, &frame, afg );
+			onStack = inteferenceGraph->GetOnStack( );
+			afg = AssemFlowGraph( asmList );
+			inteferenceGraph = new CInterferenceGraph( afg.GetNodes( ), &afg, &frame, onStack );
+			inteferenceGraph->SetColors( colorNum );
+			//inteferenceGraph->WriteGraph( "interferenceColored" + std::to_string( 0 ) + "step" + std::to_string( step ) + ".txt", true, colorNum );
 		}
-		for( auto& cmd : graph.GetCode() ) {
-			finalAsmCodeStream << cmd->Format( graph.GetColors() );
+
+		Assembler::CBaseInstructionList* instListhead = asmList;
+		Assembler::CBaseInstructionList* prev = asmList;
+
+		// убрали MOVE a <- a
+		for( Assembler::CBaseInstructionList* curr = instListhead; curr != 0; curr = curr->tail ) {
+			const Assembler::CMove* instr = dynamic_cast<const Assembler::CMove*>( curr->head );
+			if( ( instr != 0 && inteferenceGraph->GetColorMap()[instr->DefinedVars()->Head().get()] == 
+				inteferenceGraph->GetColorMap( )[instr->UsedVars( )->Head().get()] ) ) 
+			{
+				prev->tail = curr->tail;
+			} else {
+				prev = curr;
+			}
 		}
-		for( auto& cmd : epilogue ) {
-			finalAsmCodeStream << cmd << std::endl;
+
+		asmList = instListhead;
+		std::ofstream finalAsmCodeStream( "output\\Final_" + frame.GetName( )->GetString( ) + ".asm" );
+		while( asmList != NULL ) {
+			finalAsmCodeStream << asmList->head->Format( inteferenceGraph->GetColorStringsMap( ) );
+			asmList = asmList->tail;
 		}
+		finalAsmCodeStream << std::endl;
+
+
+		//flushAssemblerCode( asmList, assemblerFilename );
+		//Assembler::CInterferenceGraph graph( asmList, registers );
+		//PrologEpilogueBuilder::IntermidInstructionBuilder builder;
+		//auto prologue = builder.AddPrologue( frame );
+		//auto epilogue = builder.AddEpilogue( frame );
+
+		//std::ofstream finalAsmCodeStream("output\\Final_" + frame.GetName()->GetString() + ".asm");
+		//for( auto& cmd : prologue ) {
+		//	finalAsmCodeStream << cmd << std::endl;
+		//}
+		//for( auto& cmd : graph.GetCode() ) {
+		//	finalAsmCodeStream << cmd->Format( graph.GetColors() );
+		//}
+		//for( auto& cmd : epilogue ) {
+		//	finalAsmCodeStream << cmd << std::endl;
+		//}
 	}
 
 	return 0;

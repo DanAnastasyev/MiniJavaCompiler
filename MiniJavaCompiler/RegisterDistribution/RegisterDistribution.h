@@ -44,6 +44,7 @@ namespace Assembler {
 		void addNode( const std::string& name );
 		void addMoveEdge( const std::string& from, const std::string& to );
 		void addEdge( const std::string& from, const std::string& to );
+		void build();
 
 		bool paint();
 		void regenerateCode();

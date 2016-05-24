@@ -170,6 +170,15 @@
     <ClCompile Include="Frame\PrologueEpilogueBuilder.cpp">
       <Filter>Source Files\Frame</Filter>
     </ClCompile>
+    <ClCompile Include="FlowGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InterferenceGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Position.h">
@@ -255,6 +264,15 @@
     </ClInclude>
     <ClInclude Include="Frame\PrologueEpilogueBuilder.h">
       <Filter>Source Files\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="FlowGraph.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterferenceGraph.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
